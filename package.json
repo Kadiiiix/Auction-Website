@@ -19,5 +19,8 @@
   "homepage": "https://github.com/Kadiiiix/Auction-Website#readme",
   "dependencies": {
     "mongodb": "^6.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7"
   }
 }
