@@ -1,17 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css"; // Assuming you have global styles defined
+import App from "./App"; // Importing App component from App.js
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+// ReactDOM.render is the function that instructs React to attach your App component to a specific DOM element.
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <App /> // Your App component is being rendered here
+  </React.StrictMode>,
+  document.getElementById("root") // This 'root' ID matches the div ID in your index.html
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
