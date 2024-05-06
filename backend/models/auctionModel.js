@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const auctionSchema = new mongoose.Schema({
-  picture: String, // URL of the product picture
-  name: String, // Name/short description of the product
-  condition: { type: String, enum: ['new', 'used'] }, // Condition of the item (new/used)
-  category: String, // Category of the item
-  closingDate: Date, // Auction closing date
+  picture: { type: String, required: true }, // URL of the product picture
+  name: { type: String, required: true }, // Name/short description of the product
+  condition: { type: String, enum: ['new', 'used'], required: true }, // Condition of the item (new/used)
+  category: { type: String, required: true }, // Category of the item
+  closingDate: { type: Date, required: true }, // Auction closing date
   additionalPhotos: [String], // Array of URLs of additional photos
   startingBid: Number, // Starting bid amount
   allowInstantPurchase: Boolean, // Whether instant purchasing is allowed
