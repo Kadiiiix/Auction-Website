@@ -93,3 +93,13 @@ exports.deleteAuction = async (req, res) => {
       res.status(500).json({ error: 'Internal server error.' });
     }
   };
+
+  exports.getAllAuctions = async (req, res) => {
+    try {
+      const auctions = await Auction.find();
+      res.status(200).json(auctions);
+    } catch (error) {
+      console.error('Error fetching auctions:', error);
+      res.status(500).json({ error: 'Internal server error.' });
+    }
+  };
