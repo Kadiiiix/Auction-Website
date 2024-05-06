@@ -3,6 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
+const auctionRoutes = require('./routes/auctionRoutes');
 
 const app = express();
 const port = 3000;
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Mount userRoutes middleware
 app.use('/api/users', userRoutes);
+app.use('/api/auctions', auctionRoutes);
 
 // Start the server after establishing the MongoDB connection
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
