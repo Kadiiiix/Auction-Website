@@ -6,7 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const auctionRoutes = require('./routes/auctionRoutes');
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 // MongoDB connection setup using the URI
 const uri = "mongodb+srv://kasapovicm:Ux3ekVeLxabRf6Ll@izlozba.qhvhcuo.mongodb.net/?retryWrites=true&w=majority&appName=IzlozBa";
