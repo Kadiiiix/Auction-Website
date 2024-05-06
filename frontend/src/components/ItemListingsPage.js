@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import AuctionItem from "./AuctionItem"; // Import the AuctionItem component
 
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
@@ -7,7 +8,6 @@ const ItemListingsPage = () => {
   useEffect(() => {
     const fetchAuctionListings = async () => {
       try {
-        
         const response = await axios.get("http://localhost:4000/api/auctions");
         setAuctionListings(response.data);
       } catch (error) {
@@ -20,15 +20,9 @@ const ItemListingsPage = () => {
 
   return (
     <div className="item-listings-page">
-      <h2>Popular Auctions</h2>
       <div className="auction-items">
         {auctionListings.map((listing) => (
-          <div key={listing._id}>
-            {/* Render auction listing details */}
-            <p>Title: {listing.title}</p>
-            <p>Highest Bid: {listing.highestBid}</p>
-            {/* Add more details as needed */}
-          </div>
+          <AuctionItem key={listing._id} item={listing} /> 
         ))}
       </div>
     </div>
