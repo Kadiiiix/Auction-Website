@@ -2,20 +2,33 @@
 import React from "react";
 
 function AuctionItem({ item }) {
-  const { title, highestBid, daysRemaining, image } = item; // Destructure item object
+  const {
+    picture,
+    name,
+    condition,
+    category,
+    closingDate,
+    additionalPhotos,
+    startingBid,
+    allowInstantPurchase,
+    description,
+    location,
+    age,
+  } = item; // Destructure item object
 
   return (
     <div style={styles.container}>
-      <img src={image} alt={title} style={styles.image} />
-      <div style={styles.info}>
-        <h3>{title}</h3>
-        <p>Auction Ending in {daysRemaining} days</p>
-        <p>Highest Bid: ${highestBid}</p>
-        <button style={styles.button}>Bid Now</button>
-      </div>
+      {/* Render auction listing details */}
+      <p>Picture: {picture}</p>
+      <p>Name: {name}</p>
+      <p>Condition: {condition}</p>
+      <p>Category: {category}</p>
+      <p>Closing Date: {closingDate}</p>
+      {/* Render other properties as needed */}
     </div>
   );
 }
+
 
 const styles = {
   container: {
