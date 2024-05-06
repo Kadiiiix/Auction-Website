@@ -52,11 +52,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route
-            path="/items/:id"
-            element={<AuctionItem items={items} />}
+            path="/items"
+            element={<ItemListingsPage items={items} />}
           />
+          <Route path="/items/:id" element={<AuctionItem items={items} />} />
         </Routes>
       </div>
     </Router>
