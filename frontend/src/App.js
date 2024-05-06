@@ -1,5 +1,10 @@
+// App.js
 import React from "react";
-import AuctionItem from "./components/AuctionItem.js"; // Ensure the path is correct based on your structure
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import ItemListingsPage from "./components/ItemListingsPage";
+import AuctionItem from "./components/AuctionItem"; // Import the IndividualItemPage component
 
 function App() {
   const items = [
@@ -8,34 +13,53 @@ function App() {
       title: "Antique Dresser",
       highestBid: 100,
       daysRemaining: 2,
-      image: "dresser.png", // Relative path from the public directory
+      image: "dresser.png",
     },
-    // Add more items as needed
+    {
+      id: 2,
+      title: "Antique Dresser",
+      highestBid: 100,
+      daysRemaining: 2,
+      image: "dresser.png",
+    },
+    {
+      id: 3,
+      title: "Antique Dresser",
+      highestBid: 100,
+      daysRemaining: 2,
+      image: "dresser.png",
+    },
   ];
 
   return (
-    <div
-      className="App"
-      style={{
-        padding: "20px",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <h1>IzložBa</h1>
-      <h2>Popular Auctions</h2>
-      {items.map((item) => (
-        <AuctionItem
-          key={item.id}
-          title={item.title}
-          highestBid={item.highestBid}
-          daysRemaining={item.daysRemaining}
-          image={`/${item.image}`} // This will resolve to http://localhost:3000/dresser.png when running locally
-        />
-      ))}
-    </div>
+    <Router>
+      <div className="App">
+        <h1>IzložBa</h1>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/register">Register</Link>
+            </li>
+            <li>
+              <Link to="/items">Items</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/items" element={<ItemListingsPage items={items} />} />
+          <Route
+            path="/items/:id"
+            element={<AuctionItem items={items} />}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

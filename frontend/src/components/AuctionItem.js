@@ -1,6 +1,9 @@
+// AuctionItem.js
 import React from "react";
 
-function AuctionItem({ title, highestBid, daysRemaining, image }) {
+function AuctionItem({ item }) {
+  const { title, highestBid, daysRemaining, image } = item; // Destructure item object
+
   return (
     <div style={styles.container}>
       <img src={image} alt={title} style={styles.image} />

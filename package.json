@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/Kadiiiix/Auction-Website#readme",
   "dependencies": {
-    "mongodb": "^6.5.0"
+    "mongodb": "^6.5.0",
+    "react-router-dom": "^6.23.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.7"
