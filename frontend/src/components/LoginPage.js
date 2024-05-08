@@ -20,6 +20,9 @@ const LoginPage = () => {
 
   return (
     <div className="container">
+      <div className = "upperHeader">
+      <h2 className="header">Login</h2>
+      </div>
       <h2 className="header">Login</h2>
       <form onSubmit={handleSubmit} className="form">
         <div className="inputGroup">

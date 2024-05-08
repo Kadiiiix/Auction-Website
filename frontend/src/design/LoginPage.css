@@ -9,6 +9,16 @@
   border-radius: 8px;
 }
 
+.upperHeader {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+
 .header {
   text-align: center;
   color: #333;
