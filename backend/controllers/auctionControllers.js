@@ -1,4 +1,5 @@
 const Auction = require('../models/auctionModel');
+const User = require("../models/userModel");
 
 exports.createAuction = async (req, res) => {
  //const userId = req.user.id;

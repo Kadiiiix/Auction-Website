@@ -17,6 +17,7 @@ const auctionSchema = new mongoose.Schema({
   description: String, // Long description of the product
   location: String, // Location of the item
   age: Number, // Age of the item
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Auction = mongoose.model('Auction', auctionSchema);
