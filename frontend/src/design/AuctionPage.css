@@ -1,0 +1,72 @@
+.auction-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .information {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+  }
+  
+  .one-block {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .one-block:not(:last-child) {
+    border-right: 1px solid #ccc;
+  }
+  
+  .one-block:last-child {
+    margin-right: 0;
+  }
+  
+  .upper-title {
+    font-weight: bold;
+  }
+  
+  .photo-bidding {
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .auction-photo {
+    width: 200px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  .bidding {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px; /* Adjust spacing between photo and bidding */
+  }
+  
+  .highest,
+  .minimal {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .bid-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .separator {
+    width: 100%; /* Full width */
+    height: 1px; /* Thickness of separator */
+    background-color: #ccc; /* Color of separator */
+    margin: 10px 0; /* Adjust spacing */
+  }
+  
+  .placing-bids {
+    margin-top: 20px;
+  }
+  
+  .bid {
+    margin-right: 10px; /* Adjust spacing between button and input */
+  }
+  
