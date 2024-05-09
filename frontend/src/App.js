@@ -6,6 +6,7 @@ import RegisterPage from "./components/RegisterPage";
 import ItemListingsPage from "./components/ItemListingsPage";
 import AuctionItem from "./components/AuctionItem"; // Import the IndividualItemPage component
 import "../src/design/MainHeader.css";
+import AuctionPage from "./components/AuctionPage";
 
 
 import CreateAuction from "./components/CreateAuction";
@@ -88,6 +89,7 @@ function App() {
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           <Route path="/create" element={<CreateAuction />} />
+          <Route path="/auction/:id" element={<AuctionPage items={items} />} />
         </Routes>
       </div>
     </Router>
