@@ -56,19 +56,20 @@ const AuctionPage = () => {
             </div>
         </div>
         <div className='photo-bidding'>
-            <img className='auction-photo' src={item.picture} alt={item.name}></img>
+            <img className='auction-photo' src={item.picture} alt={item.name}/>
             <div className='bidding'>
                 <div className='highest'>
                     <p className='bid-title'>Highest Bid</p>
-                    <p className='highest-bid'>1000</p>
+                    <p className='highest-bid'>1000 KM</p>
                 </div>
+                <hr className='separator' />
                 <div className='minimal'>
                     <p className='bid-title'>Minimal Bid</p>
-                    <p className='minimal-bid'>{item.startingBid}</p>
+                    <p className='minimal-bid'>{item.startingBid} KM</p>
                 </div>
                 <div className='placing-bids'>
                         <button className='bid'>Place Bid</button>
-                        <input
+                        <input className='input'
                             type="number"
                             value={bidAmount}
                             onChange={handleBidChange}
