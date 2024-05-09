@@ -1,4 +1,3 @@
-// AuctionItem.js
 import React from "react";
 
 function AuctionItem({ item }) {
@@ -18,17 +17,53 @@ function AuctionItem({ item }) {
 
   return (
     <div style={styles.container}>
-      {/* Render auction listing details */}
-      <p>Picture: {picture}</p>
-      <p>Name: {name}</p>
-      <p>Condition: {condition}</p>
-      <p>Category: {category}</p>
-      <p>Closing Date: {closingDate}</p>
-      {/* Render other properties as needed */}
+      <img src={picture} alt={name} style={styles.image} />
+      <div style={styles.info}>
+        <p>
+          <strong>Name:</strong> {name}
+        </p>
+        <p>
+          <strong>Condition:</strong> {condition}
+        </p>
+        <p>
+          <strong>Category:</strong> {category}
+        </p>
+        <p>
+          <strong>Closing Date:</strong>{" "}
+          {new Date(closingDate).toLocaleDateString()}
+        </p>
+        {/* Render other properties as needed */}
+        <p>
+          <strong>Description:</strong> {description}
+        </p>
+        <p>
+          <strong>Location:</strong> {location}
+        </p>
+        <p>
+          <strong>Age:</strong> {age}
+        </p>
+        {/* Additional photos */}
+        {additionalPhotos && additionalPhotos.length > 0 && (
+          <div>
+            <p>
+              <strong>Additional Photos:</strong>
+            </p>
+            <div style={styles.additionalPhotos}>
+              {additionalPhotos.map((photo, index) => (
+                <img
+                  key={index}
+                  src={photo}
+                  alt={`Additional Photo ${index + 1}`}
+                  style={styles.additionalPhoto}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-
 
 const styles = {
   container: {
@@ -38,20 +73,28 @@ const styles = {
     border: "1px solid #ccc",
     marginBottom: "20px",
     padding: "10px",
-    maxWidth: "300px",
+    maxWidth: "500px",
   },
   image: {
     width: "100%",
     height: "auto",
+    marginBottom: "10px",
   },
   info: {
-    textAlign: "center",
+    textAlign: "left",
   },
-  button: {
-    backgroundColor: "yellow",
-    border: "none",
-    padding: "10px 20px",
-    cursor: "pointer",
+  additionalPhotos: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    marginTop: "10px",
+  },
+  additionalPhoto: {
+    width: "100px",
+    height: "auto",
+    marginRight: "5px",
+    marginBottom: "5px",
   },
 };
 

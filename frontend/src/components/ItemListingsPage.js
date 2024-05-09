@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import AuctionItem from "./AuctionItem"; // Import the AuctionItem component
-
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
 
@@ -22,7 +22,9 @@ const ItemListingsPage = () => {
     <div className="item-listings-page">
       <div className="auction-items">
         {auctionListings.map((listing) => (
-          <AuctionItem key={listing._id} item={listing} /> 
+          <Link to={`/auction/${listing._id}`} key={listing._id}>
+            <AuctionItem item={listing} /> 
+          </Link>
         ))}
       </div>
     </div>

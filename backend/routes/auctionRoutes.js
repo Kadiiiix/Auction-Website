@@ -7,5 +7,5 @@ router.post('/', auctionController.createAuction);
 router.delete('/:id', auctionController.deleteAuction);
 router.put('/:id/extend', auctionController.extendAuction);
 router.get('/', auctionController.getAllAuctions);
-
+router.get('/:id', auctionController.getAuction);
 module.exports = router;
