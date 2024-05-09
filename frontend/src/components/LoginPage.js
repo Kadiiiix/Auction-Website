@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import "../design/LoginPage.css";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [redirectToHome, setRedirectToHome] = useState(false);
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -13,10 +14,35 @@ const LoginPage = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add logic to handle login submission
+
+    try {
+      const response = await fetch("http://localhost:4000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      console.log("Response:", response);
+      if (response.ok) {
+        // If login successful, set redirectToHome to true
+        setRedirectToHome(true);
+      } else {
+        // Handle error (e.g., display error message)
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error
+    }
   };
+
+  // Redirect to home page if redirectToHome is true
+  if (redirectToHome) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="container">
