@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const auctionController = require("../controllers/favoriteControllers");
+const favoriteController = require("../controllers/favoriteControllers");
 
-router.post("/add/:auctionId/:userId", auctionController.addToFavorites);
+router.post("/add/:auctionId/:userId", favoriteController.addToFavorites);
 
-// Route to remove an auction from favorites
 router.delete(
   "/remove/:auctionId/:userId",
-  auctionController.removeFromFavorites
+  favoriteController.removeFromFavorites
 );
 module.exports = router;
