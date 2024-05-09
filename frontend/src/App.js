@@ -5,7 +5,11 @@ import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
 import ItemListingsPage from "./components/ItemListingsPage";
 import AuctionItem from "./components/AuctionItem"; // Import the IndividualItemPage component
+import "../src/design/MainHeader.css";
+
+
 import CreateAuction from "./components/CreateAuction";
+
 function App() {
   const items = [
     {
@@ -34,8 +38,8 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <h1>IzložBa</h1>
-        <nav>
+        <div className = "UpperHeader">
+
           <ul>
             <li>
               <Link to="/login">Login</Link>
@@ -50,7 +54,33 @@ function App() {
               <Link to="/create">New</Link>
             </li>
           </ul>
-        </nav>
+
+        </div>
+
+        <div className="LowerHeader">
+
+          <div className="Title">
+            <h2>IzložBa</h2>
+          </div>
+
+          <div className="List">
+
+            <ul>
+              <li><a href="/login">Home</a></li>
+              <li><a href="/register">Categories</a></li>
+            </ul>
+            
+          </div>
+
+          <div className="SearchBar">
+
+           <form>
+            <input type="text" placeholder="" />
+            <button type="submit">Search</button>
+           </form>
+            
+          </div>
+        </div>
 
         <Routes>
           <Route path="/login" element={<LoginPage />} />
