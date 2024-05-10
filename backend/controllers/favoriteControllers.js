@@ -1,11 +1,12 @@
 const User = require("../models/userModel");
 const Auction = require("../models/auctionModel");
 const { verifyToken } = require("../middleware/middleware");
+
 exports.addToFavorites = async (req, res) => {
   const auctionId = req.params.auctionId;
   const userId = req.params.userId;
   try {
-    verifyToken(req, res, async () => {
+    
       const auction = await Auction.findById(auctionId);
       const user = await User.findById(userId);
   
@@ -29,7 +30,6 @@ exports.addToFavorites = async (req, res) => {
       res
         .status(200)
         .json({ message: "Auction added to favorites successfully", user });
-    });
   } catch (error) {
     console.error("Error adding auction to favorites:", error);
     res.status(500).json({ error: "Internal server error" });
