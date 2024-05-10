@@ -7,14 +7,15 @@ import HomePage from "./components/HomePage";
 import RegisterPage from "./components/RegisterPage";
 import ItemListingsPage from "./components/ItemListingsPage";
 import AuctionItem from "./components/AuctionItem";
-import "../src/design/MainHeader.css";
 import AuctionPage from "./components/AuctionPage";
 import CreateAuction from "./components/CreateAuction";
-
+import FavoritesPage from "./components/FavoritesPage";
+import "../src/design/MainHeader.css";
 
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [userId, setUserId] = useState("");
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -38,40 +39,21 @@ function App() {
   useEffect(() => {
     // Check if token exists
     const token = localStorage.getItem("token");
-    if (token) {
+    const storedUserId = localStorage.getItem("userId");
+    if (token && storedUserId) {
       setLoggedIn(true);
+      setUserId(storedUserId);
       }
   }, []);
 
   const items = [
-    {
-      id: 1,
-      title: "Antique Dresser",
-      highestBid: 100,
-      daysRemaining: 2,
-      image: "dresser.png",
-    },
-    {
-      id: 2,
-      title: "Antique Dresser",
-      highestBid: 100,
-      daysRemaining: 2,
-      image: "dresser.png",
-    },
-    {
-      id: 3,
-      title: "Antique Dresser",
-      highestBid: 100,
-      daysRemaining: 2,
-      image: "dresser.png",
-    },
+
   ];
 
   return (
     <Router>
       <div className="App">
         <div className="UpperHeader">
-
           <ul>
             {!loggedIn && (
               <>
@@ -91,6 +73,9 @@ function App() {
                 <li>
                   <button onClick={handleLogout}>Logout</button>
                 </li>
+                <li>
+                  <Link to="/favorites">My Favorites</Link>
+                </li>
               </>
             )}
             <li>
@@ -105,8 +90,12 @@ function App() {
           </div>
           <div className="List">
             <ul>
-              <li><Link to="/homepage">Home</Link></li>
-              <li><Link to="/register">Categories</Link></li>
+              <li>
+                <Link to="/homepage">Home</Link>
+              </li>
+              <li>
+                <Link to="/register">Categories</Link>
+              </li>
             </ul>
           </div>
           <div className="SearchBar">
@@ -123,15 +112,35 @@ function App() {
           </div>
         </div>
         <Routes>
-          <Route path="/homepage" element={<HomePage searchQuery={searchQuery} />} />
-          <Route path="/login" element={<LoginPage setLoggedIn={setLoggedIn} />} />
+          <Route
+            path="/homepage"
+            element={<HomePage searchQuery={searchQuery} />}
+          />
+          <Route
+            path="/login"
+            element={<LoginPage setLoggedIn={setLoggedIn} />}
+          />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           {loggedIn ? (
             <Route path="/create" element={<CreateAuction />} />
-          ) : <Route path="/login" element={<LoginPage setLoggedIn={setLoggedIn} />} />}
-          <Route path="/auction/:id" element={<AuctionPage setLoggedIn={loggedIn} />} />
+          ) : (
+            <Route
+              path="/login"
+              element={<LoginPage setLoggedIn={setLoggedIn} />}
+            />
+          )}
+          <Route
+            path="/auction/:id"
+            element={<AuctionPage setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/favorites"
+            element={
+              <FavoritesPage userId={userId} setLoggedIn={loggedIn} />
+            }
+          />
         </Routes>
       </div>
     </Router>
