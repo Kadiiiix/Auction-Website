@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import "../design/AuctionPage.css";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
-import { Button } from "antd";
 
-const AuctionPage = ({ setLoggedIn }) => {
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import '../design/AuctionPage.css';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { Button } from 'antd';
+import CommentSection from './Comments';
+
+const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
@@ -75,6 +77,39 @@ const AuctionPage = ({ setLoggedIn }) => {
     fetchAuction();
   }, [id]);
 
+  const handleRemoveFromFavorites= async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      const headers = {
+        "Content-Type": "application/json", 
+      };
+
+      const response = await fetch(
+        `http://localhost:4000/api/favorite/remove/${id}/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: null,
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to remove auction from favorites");
+      }
+      const responseData = await response.json();
+
+      console.log(responseData);
+      setLiked(false);
+    } catch (error) {
+      console.error("Error removing auction from favorites:", error);
+      
+    }
+  };
+
+  
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
 
@@ -94,7 +129,6 @@ const AuctionPage = ({ setLoggedIn }) => {
           setLiked(true);
         } else {
           setLiked(false);
-          console.log(liked);
         }
       } catch (error) {
         console.error("error fetching likes:", error);
@@ -140,7 +174,12 @@ const AuctionPage = ({ setLoggedIn }) => {
             <div className="favorite">
               {liked ? ( // If setLiked is true
                 <>
-                  <Button disabled={!setLoggedIn} className="likeButton">
+                  <Button
+                    onClick={handleRemoveFromFavorites}
+                    disabled={!setLoggedIn}
+                    className="likeButton"
+                  >
+
                     {" "}
                     {/* Changed from loggedIn to isLoggedIn */}
                     <HeartFilled />
@@ -191,6 +230,7 @@ const AuctionPage = ({ setLoggedIn }) => {
             {/* Add more conditional rendering for other optional fields */}
           </div>
         </div>
+        {item && <CommentSection auctionId={id} />}
       </>
     );
   };
