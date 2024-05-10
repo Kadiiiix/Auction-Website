@@ -1,0 +1,58 @@
+.ContainerAuctionItem{
+    display: flex;
+    flex-direction: row;
+    alignItems: flex-start;
+    border: 1px solid black;
+    margin: 10vh;
+    padding: 10px;
+    background-color: #F5F7F8;
+    
+
+}
+
+.ImageAuctionItem{
+
+    width:30%;
+    border: 1px solid black;
+
+}
+
+.InfoAndButton{
+    display: flex;
+    flex-direction: column;
+    alignItems: center;
+    justify-content: center;
+    margin: 1vh;
+    width: 100%;
+    
+}
+
+.InfoAuctionItem h2{
+    text-decoration: none;
+    color: #45474B;
+    font-size: 3vh;
+}
+
+.InfoAuctionItem p{
+    color: black;
+    font-size: 2vh;
+}
+
+.ButtonAuctionItem{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ButtonAuctionItem button {
+
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    width: 30vh; /* Adjust the width of the input field */
+    height: 5vh; /* Adjust the height of the input field */
+    font-size: 16px; /* Adjust the font size of the input text */
+    padding: 5px; /* Adjust the padding inside the input field */
+    border-radius: 1vh; /* Optional: Add rounded corners */
+    background-color: #F4CE14;
+    border: none;
+    color: white;
+}

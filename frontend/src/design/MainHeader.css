@@ -1,6 +1,7 @@
 .App {
     display: flex; /* Use flexbox */
     flex-direction: column; /* Stack elements vertically */
+    min-height: 100vh;
 }
 
 .UpperHeader {
