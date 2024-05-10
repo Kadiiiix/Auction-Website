@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "../design/LoginPage.css";
 
-const LoginPage = () => {
+const LoginPage = ({setLoggedIn}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirectToHome, setRedirectToHome] = useState(false);
@@ -30,6 +30,9 @@ const LoginPage = () => {
       if (response.ok) {
         // If login successful, set redirectToHome to true
         setRedirectToHome(true);
+        localStorage.setItem("token", data.token);
+        console.log("evo ga", data.token);
+        setLoggedIn(true);
       } else {
         // Handle error (e.g., display error message)
       }
