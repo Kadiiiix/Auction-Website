@@ -102,5 +102,12 @@
     border-radius: 5px;
   }
 
-
-  
+  .favorite {
+    display: flex;
+    justify-content: left;
+    padding: 5px;
+  }
+  .text {
+    margin-left: 5px;
+  }
+    

@@ -17,6 +17,7 @@ function App() {
   const handleLogout = () => {
     // Clear token and log out
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     setLoggedIn(false);
   };
 
@@ -25,7 +26,7 @@ function App() {
     const token = localStorage.getItem("token");
     if (token) {
       setLoggedIn(true);
-    }
+      }
   }, []);
 
   const items = [
@@ -117,7 +118,7 @@ function App() {
           {loggedIn ? (
             <Route path="/create" element={<CreateAuction />} />
           ) : <Route path="/login" element={<LoginPage setLoggedIn={setLoggedIn} />} />}
-          <Route path="/auction/:id" element={<AuctionPage items={items} />} />
+          <Route path="/auction/:id" element={<AuctionPage setLoggedIn={loggedIn} />} />
         </Routes>
       </div>
     </Router>

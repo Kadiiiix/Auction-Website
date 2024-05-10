@@ -26,11 +26,12 @@ const LoginPage = ({setLoggedIn}) => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      console.log("Response:", response);
+      console.log(data);
       if (response.ok) {
         // If login successful, set redirectToHome to true
         setRedirectToHome(true);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.userId);
         setLoggedIn(true);
       } else {
         // Handle error (e.g., display error message)
