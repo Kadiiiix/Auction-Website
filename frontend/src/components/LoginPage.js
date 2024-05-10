@@ -31,7 +31,6 @@ const LoginPage = ({setLoggedIn}) => {
         // If login successful, set redirectToHome to true
         setRedirectToHome(true);
         localStorage.setItem("token", data.token);
-        console.log("evo ga", data.token);
         setLoggedIn(true);
       } else {
         // Handle error (e.g., display error message)
@@ -44,7 +43,7 @@ const LoginPage = ({setLoggedIn}) => {
 
   // Redirect to home page if redirectToHome is true
   if (redirectToHome) {
-    return <Navigate to="/" />;
+    return <Navigate to="/items" />;
   }
 
   return (

@@ -14,6 +14,12 @@ function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const handleLogout = () => {
+    // Clear token and log out
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+  };
+
   useEffect(() => {
     // Check if token exists
     const token = localStorage.getItem("token");
@@ -49,24 +55,34 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <div className = "UpperHeader">
-
+      <div className="UpperHeader">
           <ul>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
+            {!loggedIn && (
+              <>
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+                <li>
+                  <Link to="/register">Register</Link>
+                </li>
+              </>
+            )}
+            {loggedIn && (
+              <>
+                <li>
+                  <Link to="/create">New</Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout}>Logout</button>
+                </li>
+              </>
+            )}
             <li>
               <Link to="/items">Items</Link>
             </li>
-            <li>
-              <Link to="/create">New</Link>
-            </li>
           </ul>
-
         </div>
+
 
         <div className="LowerHeader">
 
