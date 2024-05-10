@@ -93,15 +93,13 @@ async function hashPassword(password) {
 
 exports.listFavorites = async (req, res) => {
   try {
-    // Verify token before proceeding
-    verifyToken(req, res, async () => {
       const userId = req.params.userId;
       const user = await User.findById(userId).populate('favorites');
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
       res.status(200).json(user.favorites);
-    });
+    
   } catch (error) {
     console.error('Error listing favorites:', error);
     res.status(500).json({ error: 'Internal server error' });
