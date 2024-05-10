@@ -1,5 +1,5 @@
 // App.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage";
@@ -7,11 +7,21 @@ import ItemListingsPage from "./components/ItemListingsPage";
 import AuctionItem from "./components/AuctionItem"; // Import the IndividualItemPage component
 import "../src/design/MainHeader.css";
 import AuctionPage from "./components/AuctionPage";
-
-
 import CreateAuction from "./components/CreateAuction";
 
+
 function App() {
+
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if token exists
+    const token = localStorage.getItem("token");
+    if (token) {
+      setLoggedIn(true);
+    }
+  }, []);
+
   const items = [
     {
       id: 1,
@@ -84,11 +94,13 @@ function App() {
         </div>
 
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage setLoggedIn={setLoggedIn} />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
-          <Route path="/create" element={<CreateAuction />} />
+          {loggedIn ? (
+            <Route path="/create" element={<CreateAuction />} />
+          ) : <Route path="/login" element={<LoginPage setLoggedIn={setLoggedIn} />} />}
           <Route path="/auction/:id" element={<AuctionPage items={items} />} />
         </Routes>
       </div>

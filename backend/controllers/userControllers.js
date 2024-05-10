@@ -1,5 +1,11 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+const { verifyToken } = require("../middleware/middleware");
+
+const generateToken = (user) => {
+  return jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' }); // Expires in 1 hour
+};
 
 exports.registerUser = async (req, res) => {
   try {
@@ -60,13 +66,17 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ error: "Incorrect password." });
     }
 
-    // If user exists and password is correct, return success message
-    return res.status(200).json({ message: "Login successful.", user });
+    // If user exists and password is correct, generate token
+    const token = generateToken(user);
+
+    // Return success message along with the token
+    return res.status(200).json({ message: "Login successful.", token });
   } catch (error) {
     console.error("Error logging in:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
+
 
 // Password validation function
 function validatePassword(password) {
@@ -83,14 +93,17 @@ async function hashPassword(password) {
 
 exports.listFavorites = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const user = await User.findById(userId).populate("favorites");
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json(user.favorites);
+    // Verify token before proceeding
+    verifyToken(req, res, async () => {
+      const userId = req.params.userId;
+      const user = await User.findById(userId).populate('favorites');
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.status(200).json(user.favorites);
+    });
   } catch (error) {
-    console.error("Error listing favorites:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error listing favorites:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
