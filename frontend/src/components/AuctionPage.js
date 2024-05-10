@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import '../design/AuctionPage.css';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { Button } from 'antd';
+import CommentSection from './Comments';
 
 const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
@@ -73,7 +74,36 @@ const AuctionPage = ({setLoggedIn}) => {
     fetchAuction();
   }, [id]);
 
- 
+  const handleRemoveFromFavorites= async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      const headers = {
+        "Content-Type": "application/json", 
+      };
+
+      const response = await fetch(
+        `http://localhost:4000/api/favorite/remove/${id}/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: null,
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to remove auction from favorites");
+      }
+      const responseData = await response.json();
+
+      console.log(responseData);
+      setLiked(false);
+    } catch (error) {
+      console.error("Error removing auction from favorites:", error);
+      
+    }
+  };
 
   
   useEffect(() => {
@@ -91,7 +121,6 @@ const AuctionPage = ({setLoggedIn}) => {
           setLiked(true);
         } else {
           setLiked(false);
-          console.log(liked);
         }
       } catch (error) {
         console.error("error fetching likes:", error);
@@ -133,26 +162,43 @@ const AuctionPage = ({setLoggedIn}) => {
                 placeholder="Enter bid"
               />
             </div>
-            <div className='favorite'>
+            <div className="favorite">
               {liked ? ( // If setLiked is true
                 <>
-                  <Button disabled={!setLoggedIn} className='likeButton'> {/* Changed from loggedIn to isLoggedIn */}
+                  <Button
+                    onClick={handleRemoveFromFavorites}
+                    disabled={!setLoggedIn}
+                    className="likeButton"
+                  >
+                    {" "}
+                    {/* Changed from loggedIn to isLoggedIn */}
                     <HeartFilled />
                   </Button>
-                  <p className='text'>You have liked this auction!</p>
+                  <p className="text">You have liked this auction!</p>
                 </>
-              ) : ( // If setLiked is false
+              ) : (
+                // If setLiked is false
                 <>
-                  <Button onClick={handleAddToFavorites} className='likeButton' disabled={!setLoggedIn}> {/* Changed from loggedIn to isLoggedIn */}
+                  <Button
+                    onClick={handleAddToFavorites}
+                    className="likeButton"
+                    disabled={!setLoggedIn}
+                  >
+                    {" "}
+                    {/* Changed from loggedIn to isLoggedIn */}
                     <HeartOutlined />
                   </Button>
-                  {setLoggedIn ? ( <>
-                    <p className='text'>Like this auction</p> 
-                   </>) : (
-                    <> 
-                      <p className='text'><a href="http://localhost:3000/login">Login</a> to like</p> 
-                      </>
-                   )}
+                  {setLoggedIn ? (
+                    <>
+                      <p className="text">Like this auction</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text">
+                        <a href="http://localhost:3000/login">Login</a> to like
+                      </p>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -168,6 +214,7 @@ const AuctionPage = ({setLoggedIn}) => {
             {/* Add more conditional rendering for other optional fields */}
           </div>
         </div>
+        {item && <CommentSection auctionId={id} />}
       </>
     );
   };
