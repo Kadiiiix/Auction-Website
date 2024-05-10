@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import '../design/AuctionPage.css';
-import { HeartOutlined } from '@ant-design/icons';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { Button } from 'antd';
 
 const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
   const [bidAmount, setBidAmount] = useState('');
+  const [liked, setLiked] = useState(false);
+  const [likeNumber, setLikeNumber] = useState('');
+
+
 
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
@@ -48,6 +52,7 @@ const AuctionPage = ({setLoggedIn}) => {
       const responseData = await response.json();
   
       console.log(responseData);
+      setLiked(true);
       // Handle success or update UI accordingly
     } catch (error) {
       console.error('Error adding auction to favorites:', error);
@@ -69,6 +74,34 @@ const AuctionPage = ({setLoggedIn}) => {
   }, [id]);
 
  
+
+  
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    
+    const fetchLikes = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/api/users/${userId}/favorites`);
+        const likes = response.data;
+  
+        const auctionIdToCheck = id;
+        const auctionExists = likes.some(auction => auction._id === auctionIdToCheck);
+        
+        if (auctionExists) {
+          setLiked(true);
+        } else {
+          setLiked(false);
+          console.log(liked);
+        }
+      } catch (error) {
+        console.error("error fetching likes:", error);
+      }
+    };
+    
+    fetchLikes();
+  }, []); 
+  
+ 
   const renderAuctionInfo = () => {
     return (
       <>
@@ -76,7 +109,7 @@ const AuctionPage = ({setLoggedIn}) => {
           {renderInfoBlock('Item ID', item._id)}
           {renderInfoBlock('End date', item.closingDate)}
           {renderInfoBlock('Author', 'bice autor')} {/* Replace with author information */}
-          {renderInfoBlock('Likes', 'bice lajk')} {/* Replace with likes information */}
+          {renderInfoBlock('Likes', item.likedBy.length)} {/* Replace with likes information */}
         </div>
         <div className='photo-bidding'>
           <img className='auction-photo' src={item.picture} alt={item.name} />
@@ -91,7 +124,7 @@ const AuctionPage = ({setLoggedIn}) => {
               <p className='minimal-bid'>{item.startingBid} KM</p>
             </div>
             <div className='placing-bids'>
-              <button className='bid'>Place Bid</button>
+              <Button className='bid'>Place Bid</Button>
               <input
                 className='input'
                 type="number"
@@ -101,10 +134,27 @@ const AuctionPage = ({setLoggedIn}) => {
               />
             </div>
             <div className='favorite'>
-              <Button onClick = {handleAddToFavorites} disabled={!setLoggedIn}> {/* Change from loggedIn to setLoggedIn */}
-                <HeartOutlined />
-              </Button>
-              <p className='text'>Add to favorites</p>
+              {liked ? ( // If setLiked is true
+                <>
+                  <Button disabled={!setLoggedIn} className='likeButton'> {/* Changed from loggedIn to isLoggedIn */}
+                    <HeartFilled />
+                  </Button>
+                  <p className='text'>You have liked this auction!</p>
+                </>
+              ) : ( // If setLiked is false
+                <>
+                  <Button onClick={handleAddToFavorites} className='likeButton' disabled={!setLoggedIn}> {/* Changed from loggedIn to isLoggedIn */}
+                    <HeartOutlined />
+                  </Button>
+                  {setLoggedIn ? ( <>
+                    <p className='text'>Like this auction</p> 
+                   </>) : (
+                    <> 
+                      <p className='text'><a href="http://localhost:3000/login">Login</a> to like</p> 
+                      </>
+                   )}
+                </>
+              )}
             </div>
           </div>
         </div>
