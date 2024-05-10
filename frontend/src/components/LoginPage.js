@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import "../design/LoginPage.css";
 
-const LoginPage = () => {
+const LoginPage = ({setLoggedIn}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirectToHome, setRedirectToHome] = useState(false);
@@ -26,10 +26,13 @@ const LoginPage = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      console.log("Response:", response);
+      console.log(data);
       if (response.ok) {
         // If login successful, set redirectToHome to true
         setRedirectToHome(true);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.userId);
+        setLoggedIn(true);
       } else {
         // Handle error (e.g., display error message)
       }
@@ -41,7 +44,7 @@ const LoginPage = () => {
 
   // Redirect to home page if redirectToHome is true
   if (redirectToHome) {
-    return <Navigate to="/" />;
+    return <Navigate to="/items" />;
   }
 
   return (
