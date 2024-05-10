@@ -1,5 +1,6 @@
 import React from "react";
-import "../design/AuctionItem.css"
+import "../design/AuctionItem.css";
+import Timer from "./Timer";
 
 function AuctionItem({ item }) {
   const {
@@ -28,7 +29,7 @@ function AuctionItem({ item }) {
 
           <h2>{name}</h2>
           <p>Condition: {condition}</p>
-          <p>Closing Date: {new Date(closingDate).toLocaleDateString()}</p>
+          <p>Closing Date: <Timer closingDate={closingDate}/></p>
           <p>Age: {age}</p>
 
         </div>

@@ -1,0 +1,13 @@
+/* FavoritesPage.css */
+
+.favorite-list {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+}
+.no-underline {
+    text-decoration: none;
+  }
+
+.page-title {
+  text-align: center; /* Center the text horizontally */
+}
