@@ -95,7 +95,7 @@ function App() {
                 <Link to="/homepage">Home</Link>
               </li>
               <li>
-                <Link to="/register">Categories</Link>
+                <Link to="/categories">Categories</Link>
               </li>
             </ul>
           </div>
