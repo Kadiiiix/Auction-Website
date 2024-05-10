@@ -10,6 +10,7 @@ import AuctionItem from "./components/AuctionItem";
 import AuctionPage from "./components/AuctionPage";
 import CreateAuction from "./components/CreateAuction";
 import FavoritesPage from "./components/FavoritesPage";
+import CategoriesPage from "./components/CategoriesPage";
 import "../src/design/MainHeader.css";
 
 function App() {
@@ -94,7 +95,7 @@ function App() {
                 <Link to="/homepage">Home</Link>
               </li>
               <li>
-                <Link to="/register">Categories</Link>
+                <Link to="/categories">Categories</Link>
               </li>
             </ul>
           </div>
@@ -137,9 +138,11 @@ function App() {
           />
           <Route
             path="/favorites"
-            element={
-              <FavoritesPage userId={userId} setLoggedIn={loggedIn} />
-            }
+            element={<FavoritesPage userId={userId} setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/categories"
+            element={<CategoriesPage  setLoggedIn={loggedIn} />}
           />
         </Routes>
       </div>

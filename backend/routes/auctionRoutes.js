@@ -11,4 +11,5 @@ router.delete('/:id', auctionController.deleteAuction);
 router.put('/:id/extend', auctionController.extendAuction);
 router.get('/', auctionController.getAllAuctions);
 router.get('/:id', auctionController.getAuction);
+router.get('/category/:category', auctionController.getAuctionsByCategory);
 module.exports = router;

@@ -120,3 +120,24 @@ exports.getAuction = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.getAuctionsByCategory = async (req, res) => {
+  const { category } = req.params; 
+  console.log(category); 
+
+  try {
+    const auctions = await Auction.find({ category: category });
+
+    if (!auctions || auctions.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No auctions found in this category" });
+    }
+
+    res.status(200).json(auctions);
+  } catch (error) {
+    console.error("Error fetching auctions by category:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};  
+
