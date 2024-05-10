@@ -59,6 +59,37 @@ const AuctionPage = ({setLoggedIn}) => {
       // Handle error or show error message
     }
   };
+  const handleRemoveFromFavorites= async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      const headers = {
+        "Content-Type": "application/json", 
+      };
+
+      const response = await fetch(
+        `http://localhost:4000/api/favorite/remove/${id}/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: null,
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to remove auction from favorites");
+      }
+      const responseData = await response.json();
+
+      console.log(responseData);
+      setLiked(false);
+    } catch (error) {
+      console.error("Error removing auction from favorites:", error);
+      
+    }
+  };
+  
   
   
   useEffect(() => {
@@ -105,66 +136,91 @@ const AuctionPage = ({setLoggedIn}) => {
   const renderAuctionInfo = () => {
     return (
       <>
-        <div className='information'>
-          {renderInfoBlock('Item ID', item._id)}
-          {renderInfoBlock('End date', item.closingDate)}
-          {renderInfoBlock('Author', 'bice autor')} {/* Replace with author information */}
-          {renderInfoBlock('Likes', item.likedBy.length)} {/* Replace with likes information */}
+        <div className="information">
+          {renderInfoBlock("Item ID", item._id)}
+          {renderInfoBlock("End date", item.closingDate)}
+          {renderInfoBlock("Author", "bice autor")}{" "}
+          {/* Replace with author information */}
+          {renderInfoBlock("Likes", item.likedBy.length)}{" "}
+          {/* Replace with likes information */}
         </div>
-        <div className='photo-bidding'>
-          <img className='auction-photo' src={item.picture} alt={item.name} />
-          <div className='bidding'>
-            <div className='highest'>
-              <p className='bid-title'>Highest Bid</p>
-              <p className='highest-bid'>1000 KM</p>
+        <div className="photo-bidding">
+          <img className="auction-photo" src={item.picture} alt={item.name} />
+          <div className="bidding">
+            <div className="highest">
+              <p className="bid-title">Highest Bid</p>
+              <p className="highest-bid">1000 KM</p>
             </div>
-            <hr className='separator' />
-            <div className='minimal'>
-              <p className='bid-title'>Minimal Bid</p>
-              <p className='minimal-bid'>{item.startingBid} KM</p>
+            <hr className="separator" />
+            <div className="minimal">
+              <p className="bid-title">Minimal Bid</p>
+              <p className="minimal-bid">{item.startingBid} KM</p>
             </div>
-            <div className='placing-bids'>
-              <Button className='bid'>Place Bid</Button>
+            <div className="placing-bids">
+              <Button className="bid">Place Bid</Button>
               <input
-                className='input'
+                className="input"
                 type="number"
                 value={bidAmount}
                 onChange={handleBidChange}
                 placeholder="Enter bid"
               />
             </div>
-            <div className='favorite'>
+            <div className="favorite">
               {liked ? ( // If setLiked is true
                 <>
-                  <Button disabled={!setLoggedIn} className='likeButton'> {/* Changed from loggedIn to isLoggedIn */}
+                  <Button
+                    onClick={handleRemoveFromFavorites}
+                    disabled={!setLoggedIn}
+                    className="likeButton"
+                  >
+                    {" "}
+                    {/* Changed from loggedIn to isLoggedIn */}
                     <HeartFilled />
                   </Button>
-                  <p className='text'>You have liked this auction!</p>
+                  <p className="text">You have liked this auction!</p>
                 </>
-              ) : ( // If setLiked is false
+              ) : (
+                // If setLiked is false
                 <>
-                  <Button onClick={handleAddToFavorites} className='likeButton' disabled={!setLoggedIn}> {/* Changed from loggedIn to isLoggedIn */}
+                  <Button
+                    onClick={handleAddToFavorites}
+                    className="likeButton"
+                    disabled={!setLoggedIn}
+                  >
+                    {" "}
+                    {/* Changed from loggedIn to isLoggedIn */}
                     <HeartOutlined />
                   </Button>
-                  {setLoggedIn ? ( <>
-                    <p className='text'>Like this auction</p> 
-                   </>) : (
-                    <> 
-                      <p className='text'><a href="http://localhost:3000/login">Login</a> to like</p> 
-                      </>
-                   )}
+                  {setLoggedIn ? (
+                    <>
+                      <p className="text">Like this auction</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text">
+                        <a href="http://localhost:3000/login">Login</a> to like
+                      </p>
+                    </>
+                  )}
                 </>
               )}
             </div>
           </div>
         </div>
 
-        <div className='more'>
-          <div className='description-container'>
+        <div className="more">
+          <div className="description-container">
             <h3 className="subtitle">Description</h3>
-            {item.description && <p className='description'>{item.description}</p>}
-            {item.condition && <p className='description'>Condition: {item.condition}</p>}
-            {item.location && <p className='description'>Location: {item.location}</p>}
+            {item.description && (
+              <p className="description">{item.description}</p>
+            )}
+            {item.condition && (
+              <p className="description">Condition: {item.condition}</p>
+            )}
+            {item.location && (
+              <p className="description">Location: {item.location}</p>
+            )}
             {/* Add more conditional rendering for other optional fields */}
           </div>
         </div>
