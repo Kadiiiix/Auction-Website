@@ -1,33 +1,26 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from 'react';
+import axios from 'axios';
+import { Form, Input, Select, DatePicker, InputNumber, Checkbox, Button } from 'antd';
 
-const CreateAuction = ({ currentUser }) => {
-  const [formData, setFormData] = useState({
-    picture: "",
-    name: "",
-    condition: "",
-    category: "",
-    closingDate: "",
-    //createdBy: currentUser.id,
-    additionalPhotos: [],
-    startingBid: "",
-    allowInstantPurchase: false,
-    description: "",
-    location: "",
-    age: "",
-  });
+const { Option } = Select;
+const { TextArea } = Input;
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const CreateAuction = () => {
+  const categories = [
+    'decoration',
+    'electronics',
+    'clothes and shoes',
+    'vehicle',
+    'car parts',
+    'tech',
+    'sports',
+    'other'
+  ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (formData) => {
+    console.log(formData);
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/auctions",
-        formData
-      );
+      const response = await axios.post("http://localhost:4000/api/auctions", formData);
       console.log("Auction created:", response.data);
       // Handle success, redirect, or show a success message
     } catch (error) {
@@ -37,89 +30,139 @@ const CreateAuction = ({ currentUser }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Auction form fields */}
-      <input
-        type="text"
-        name="picture"
-        value={formData.picture}
-        onChange={handleChange}
-        placeholder="Picture URL"
-      />
-      <input
-        type="text"
+    <Form
+      labelCol={{ span: 4 }}
+      wrapperCol={{ span: 14 }}
+      layout="horizontal"
+      style={{ maxWidth: 1000 }}
+      onFinish={handleSubmit}
+    >
+      <Form.Item
+        label="Auction Name"
         name="name"
-        value={formData.name}
-        onChange={handleChange}
-        placeholder="Name"
-      />
-      <input
-        type="text"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter Auction Name!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Condition"
         name="condition"
-        value={formData.condition}
-        onChange={handleChange}
-        placeholder="Condition"
-      />
-      <input
-        type="text"
+        rules={[
+          {
+            required: true,
+            message: 'Please select condition.',
+          },
+        ]}
+      >
+        <Select placeholder="Select condition">
+          <Option value="new">New</Option>
+          <Option value="used">Used</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        label="Category"
         name="category"
-        value={formData.category}
-        onChange={handleChange}
-        placeholder="Category"
-      />
-      <input
-        type="datetime-local"
+        rules={[
+          {
+            required: true,
+            message: 'Please select category.',
+          },
+        ]}
+      >
+        <Select placeholder="Select the category">
+          {categories.map(category => (
+            <Option key={category} value={category}>{category}</Option>
+          ))}
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        label="Closing Date"
         name="closingDate"
-        value={formData.closingDate}
-        onChange={handleChange}
-        placeholder="Closing Date"
-      />
-      <input
-        type="text"
+        rules={[
+          {
+            required: true,
+            message: 'Please select closing date.',
+          },
+        ]}
+      >
+        <DatePicker />
+      </Form.Item>
+
+      <Form.Item
+        label="Minimal Bid"
         name="startingBid"
-        value={formData.startingBid}
-        onChange={handleChange}
-        placeholder="Starting Bid"
-      />
-      <input
-        type="checkbox"
-        name="allowInstantPurchase"
-        checked={formData.allowInstantPurchase}
-        onChange={(e) =>
-          setFormData({ ...formData, allowInstantPurchase: e.target.checked })
-        }
-      />
-      <input
-        type="text"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter starting bid.',
+          },
+        ]}
+      >
+        <InputNumber />
+      </Form.Item>
+
+      <Form.Item
+        label="Description"
         name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Description"
-      />
-      <input
-        type="text"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter description.',
+          },
+        ]}
+      >
+        <TextArea rows={4} />
+      </Form.Item>
+
+      <Form.Item
+        label="Location"
         name="location"
-        value={formData.location}
-        onChange={handleChange}
-        placeholder="Location"
-      />
-      <input
-        type="number"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter location.',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Age"
         name="age"
-        value={formData.age}
-        onChange={handleChange}
-        placeholder="Age"
-      />
-      {/* Additional photos */}
-      <input
-        type="text"
-        name="additionalPhotos"
-        value={formData.additionalPhotos}
-        onChange={handleChange}
-        placeholder="Additional Photos (comma-separated URLs)"
-      />
-      <button type="submit">Create Auction</button>
-    </form>
+        rules={[
+          {
+            required: true,
+            message: 'Please enter age of the product.',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label=""
+        name="allowInstantPurchase"
+        valuePropName="checked"
+        initialValue={false}
+      >
+        <Checkbox>Allow Instant Purchase</Checkbox>
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
+        <Button type="primary" htmlType="submit">
+          Create Auction
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
