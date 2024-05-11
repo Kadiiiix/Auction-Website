@@ -124,7 +124,7 @@ function App() {
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           {loggedIn ? (
-            <Route path="/create" element={<CreateAuction />} />
+            <Route path="/create" element={<CreateAuction userId={userId}/>} />
           ) : (
             <Route
               path="/login"

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Form, Input, Select, DatePicker, InputNumber, Checkbox, Button } from 'antd';
-
+import { Form, Input, Select, DatePicker, InputNumber, Checkbox, Button, notification } from 'antd';
+import "../design/CreateAuction.css"
 const { Option } = Select;
 const { TextArea } = Input;
 
-const CreateAuction = () => {
+const CreateAuction = ({userId}) => {
+
+  const [username, setUsername] = useState("");
+
   const categories = [
     'decoration',
     'electronics',
@@ -17,24 +20,56 @@ const CreateAuction = () => {
     'other'
   ];
 
+  useEffect(() => {
+    const fetchAuction = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/users/${userId}`
+        );
+        setUsername(response.data);
+      } catch (error) {
+        console.error("Error fetching an auction");
+      }
+    };
+    fetchAuction();
+  }, [userId]);
+
+  
   const handleSubmit = async (formData) => {
-    console.log(formData);
     try {
       const response = await axios.post("http://localhost:4000/api/auctions", formData);
       console.log("Auction created:", response.data);
+  
+      // Display success notification
+      notification.success({
+        message: 'Auction Created',
+        description: 'The auction has been created successfully.',
+      });
+  
       // Handle success, redirect, or show a success message
     } catch (error) {
       console.error("Error creating auction:", error);
+  
+      // Display error notification
+      notification.error({
+        message: 'Error',
+        description: 'Failed to create the auction. Please try again later.',
+      });
+  
       // Handle error, show error message, etc.
     }
   };
+  
 
   return (
+    <div className='full-container'>
+      <div className='form-container'>
+      <h2 className='header'>Hello, {username}! Start your own auction! <br/>Please fill in information:</h2>
     <Form
       labelCol={{ span: 4 }}
-      wrapperCol={{ span: 14 }}
+      wrapperCol={{ span: 17 }}
       layout="horizontal"
-      style={{ maxWidth: 1000 }}
+      style={{  }}
       onFinish={handleSubmit}
     >
       <Form.Item
@@ -149,20 +184,22 @@ const CreateAuction = () => {
       </Form.Item>
 
       <Form.Item
-        label=""
+        label="Allow Instant Purchase"
         name="allowInstantPurchase"
         valuePropName="checked"
         initialValue={false}
       >
-        <Checkbox>Allow Instant Purchase</Checkbox>
+        <Checkbox></Checkbox>
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" className='button'>
           Create Auction
         </Button>
       </Form.Item>
     </Form>
+    </div>
+    </div>
   );
 };
 
