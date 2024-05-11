@@ -1,28 +1,19 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, notification } from 'antd';
 import "../design/RegisterPage.css"; // Import the CSS file
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
   const [redirectToHome, setRedirectToHome] = useState(false);
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values) => {
+    const { email, username, password } = values;
     try {
       const response = await fetch("http://localhost:4000/api/users/register", {
         method: "POST",
@@ -34,60 +25,114 @@ const RegisterPage = () => {
       const data = await response.json();
       console.log("Response:", response);
       if (response.ok) {
-        // If login successful, set redirectToHome to true
+        // If registration successful, set redirectToHome to true
         setRedirectToHome(true);
+        // Display success notification
+        notification.success({
+          message: 'Registration Successful',
+          description: 'You have successfully registered.',
+        });
       } else {
         // Handle error (e.g., display error message)
+        // Display error notification
+        notification.error({
+          message: 'Registration Failed',
+          description: 'Registration failed. Please try again later.',
+        });
       }
     } catch (error) {
       console.error("Error:", error);
       // Handle error
+      // Display error notification
+      notification.error({
+        message: 'Error',
+        description: 'An error occurred while trying to register. Please try again later.',
+      });
     }
   };
+  
 
   // Redirect to home page if redirectToHome is true
   if (redirectToHome) {
-    return <Navigate to="/" />;
+    return <Navigate to="/items" />;
   }
 
   return (
-    <div className="register-container">
-      <h2 className="register-header">Register</h2>
-      <form onSubmit={handleSubmit} className="register-form">
-        <div>
-          <label className="register-label">Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={handleUsernameChange}
-            required
-            className="register-input"
+    <div className="container">
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={handleSubmit}
+      >
+        <h2 className="header">Register</h2>
+        <Form.Item
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your username!',
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+        </Form.Item>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your email!',
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Password!',
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            placeholder="Password"
           />
-        </div>
-        <div>
-          <label className="register-label">Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-            className="register-input"
+        </Form.Item>
+        <Form.Item
+          name="confirmPassword"
+          rules={[
+            {
+              required: true,
+              message: 'Please confirm your password!',
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('The two passwords that you entered do not match!'));
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            placeholder="Confirm Password"
           />
-        </div>
-        <div>
-          <label className="register-label">Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-            className="register-input"
-          />
-        </div>
-        <button type="submit" className="register-button">
-          Register
-        </button>
-      </form>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="login-form-button">
+            Register
+          </Button>
+          Already have an account? <a href="http://localhost:3000/login">Log in!</a>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

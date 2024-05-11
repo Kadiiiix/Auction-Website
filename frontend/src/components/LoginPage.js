@@ -1,22 +1,14 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, notification } from 'antd';
 import "../design/LoginPage.css";
 
-const LoginPage = ({setLoggedIn}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const LoginPage = ({ setLoggedIn }) => {
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values) => {
+    const { email, password } = values; // Destructure values to get email and password
     try {
       const response = await fetch("http://localhost:4000/api/users/login", {
         method: "POST",
@@ -33,15 +25,30 @@ const LoginPage = ({setLoggedIn}) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
         setLoggedIn(true);
+        // Display success notification
+        notification.success({
+          message: 'Login Successful',
+          description: 'You have successfully logged in.',
+        });
       } else {
         // Handle error (e.g., display error message)
+        // Display error notification
+        notification.error({
+          message: 'Login Failed',
+          description: 'Incorrect email or password. Please try again.',
+        });
       }
     } catch (error) {
       console.error("Error:", error);
       // Handle error
+      // Display error notification
+      notification.error({
+        message: 'Error',
+        description: 'An error occurred while trying to log in. Please try again later.',
+      });
     }
   };
-
+  
   // Redirect to home page if redirectToHome is true
   if (redirectToHome) {
     return <Navigate to="/items" />;
@@ -49,35 +56,52 @@ const LoginPage = ({setLoggedIn}) => {
 
   return (
     <div className="container">
-      <div className = "upperHeader">
-      <h2 className="header">Login</h2>
-      </div>
-      <h2 className="header">Login</h2>
-      <form onSubmit={handleSubmit} className="form">
-        <div className="inputGroup">
-          <label className="label">Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-            className="input"
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={handleSubmit}
+      >
+        <h2 className="header">Login</h2>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your email!',
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Password!',
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            placeholder="Password"
           />
-        </div>
-        <div className="inputGroup">
-          <label className="label">Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-            className="input"
-          />
-        </div>
-        <button type="submit" className="button">
-          Login
-        </button>
-      </form>
+        </Form.Item>
+        <Form.Item>
+          <a className="login-form-forgot" href="">
+            Forgot password
+          </a>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="login-form-button">
+            Log in
+          </Button>
+          Or <a href="http://localhost:3000/register">Register now!</a>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
