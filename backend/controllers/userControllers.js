@@ -7,6 +7,21 @@ const generateToken = (user) => {
   return jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' }); // Expires in 1 hour
 };
 
+exports.getUsernameFromUserId = async (req, res) => {
+  try {
+      const userId = req.params.userId;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.status(200).json(user.username);
+    
+  } catch (error) {
+    console.error('Error getting username:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 exports.registerUser = async (req, res) => {
   try {
     const { email, username, password } = req.body;
