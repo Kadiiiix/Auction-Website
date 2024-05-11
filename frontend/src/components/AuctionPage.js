@@ -13,6 +13,7 @@ const AuctionPage = ({setLoggedIn}) => {
   const [bidAmount, setBidAmount] = useState("");
   const [liked, setLiked] = useState(false);
   const [likeNumber, setLikeNumber] = useState("");
+  const [author, setAuthor] = useState("");
 
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
@@ -108,6 +109,21 @@ const AuctionPage = ({setLoggedIn}) => {
     }
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/users/${item.createdBy}`
+        );
+        setAuthor(response.data);
+      } catch (error) {
+        console.error("Error fetching an auction");
+      }
+    };
+    fetchUser();
+  }, [item]);
+
+
   
 
   useEffect(() => {
@@ -144,7 +160,7 @@ const AuctionPage = ({setLoggedIn}) => {
         <div className="information">
           {renderInfoBlock("Item ID", item._id)}
           {renderInfoBlock("End date", item.closingDate)}
-          {renderInfoBlock("Author", "bice autor")}{" "}
+          {renderInfoBlock("Author", author)}{" "}
           {/* Replace with author information */}
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
           {/* Replace with likes information */}

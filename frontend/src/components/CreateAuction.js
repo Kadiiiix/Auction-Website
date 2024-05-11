@@ -21,7 +21,7 @@ const CreateAuction = ({userId}) => {
   ];
 
   useEffect(() => {
-    const fetchAuction = async () => {
+    const fetchUser = async () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/api/users/${userId}`
@@ -31,13 +31,13 @@ const CreateAuction = ({userId}) => {
         console.error("Error fetching an auction");
       }
     };
-    fetchAuction();
+    fetchUser();
   }, [userId]);
 
   
   const handleSubmit = async (formData) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/auctions", formData);
+      const response = await axios.post("http://localhost:4000/api/auctions", {...formData, createdBy: userId});
       console.log("Auction created:", response.data);
   
       // Display success notification

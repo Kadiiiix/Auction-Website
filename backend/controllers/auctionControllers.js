@@ -1,7 +1,6 @@
 const Auction = require('../models/auctionModel');
 
 exports.createAuction = async (req, res) => {
- //const userId = req.user.id;
   try {
     const {
       picture,
@@ -15,6 +14,7 @@ exports.createAuction = async (req, res) => {
       description,
       location,
       age,
+      createdBy,
     } = req.body;
 
     // Create a new auction
@@ -25,12 +25,12 @@ exports.createAuction = async (req, res) => {
       category,
       closingDate,
       additionalPhotos,
-      //createdBy: userId,
       startingBid,
       allowInstantPurchase,
       description,
       location,
       age,
+      createdBy,
     });
 
     // Save the auction to the database
