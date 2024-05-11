@@ -6,11 +6,8 @@ const auctionSchema = new mongoose.Schema({
   condition: { type: String, enum: ["new", "used"], required: true }, // Condition of the item (new/used)
   category: { type: String, required: true }, // Category of the item
   closingDate: { type: Date, required: true }, // Auction closing date
-  /*createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },*/
+  createdBy: {
+    type: String},
   additionalPhotos: [String], // Array of URLs of additional photos
   startingBid: Number, // Starting bid amount
   allowInstantPurchase: Boolean, // Whether instant purchasing is allowed
