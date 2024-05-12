@@ -1,16 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Form, Input, Button } from 'antd';
+import "./../design/AuctionPage.css";
 
 const CommentSection = ({ auctionId }) => {
     const [newComment, setNewComment] = useState('');
     const [comments, setComments] = useState([]);
-  
+    const [form] = Form.useForm();
+    const [author, setAuthor] = useState("");
+
     const handleChange = (e) => {
       setNewComment(e.target.value);
     };
-  
-    const fetchAuction = async () => {
+
+    const userId = localStorage.getItem("userId");
+
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:4000/api/users/${userId}`
+          );
+          setAuthor(response.data);
+        } catch (error) {
+          console.error("Error fetching an auction");
+        }
+      };
+      fetchUser();
+    }, []);
+
+    const formatDate = (timestamp) => {
+      const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+      const formattedDate = new Date(timestamp).toLocaleString('en-US', options);
+      return formattedDate.replace(',', '');
+    };
+
+    useEffect(() => {
+      const fetchComments = async () => {
         try {
           const response = await axios.get(`http://localhost:4000/api/auctions/${auctionId}/comments`);
           setComments(response.data);
@@ -18,9 +44,10 @@ const CommentSection = ({ auctionId }) => {
           console.error("Error fetching comments:", error);
         }
       };
+      fetchComments();
+    }, );
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
   
       try {
           const userId = localStorage.getItem('userId');
@@ -38,9 +65,8 @@ const CommentSection = ({ auctionId }) => {
           
           if (response.status === 201) {
               console.log("Comment posted successfully");
-              // Fetch comments again to get updated comments with usernames
-              fetchAuction();
-              setNewComment(''); // Clear the input field after posting
+              setNewComment('');
+              form.resetFields(); // Clear the input field after posting
           } else {
               console.log("Failed to post comment");
           }
@@ -54,28 +80,47 @@ const CommentSection = ({ auctionId }) => {
       <div>
             <h2>Comments ({comments.length})</h2>
             {comments.map((comment, index) => (
-                <div key={index}>
-                    <p>{comment.userId.username}: {comment.comment}</p>
-                    <p>{comment.timePosted}</p>
+              <div className='single-comment' key={index}>
+                <div className='username-time'>
+                  <p className='username'>{comment.userId.username}:</p>
+                  <p className='time'>{formatDate(comment.timePosted)}</p>
                 </div>
+                <p className="comment-text">{comment.comment}</p>
+              </div>
             ))}
         </div>
-        <div>
-                {/* Box to add a new comment */}
-                <form onSubmit={handleSubmit}>
-                    <textarea
-                        value={newComment}
-                        onChange={handleChange}
-                        placeholder="Add a comment..."
-                        rows={4}
-                        cols={50} />
-                    <br />
-                    <button type="submit">Post Comment</button>
-                </form>
-            </div>
+        {userId ? (
+          <>
+            <div className='adding-comment'>
+          <h2>Add your comment {author}:</h2>
+        <Form form={form} onFinish={handleSubmit}>
+          <Form.Item
+            name="newComment"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter your comment!',
+              },
+            ]}
+          >
+            <Input.TextArea 
+              value={newComment} 
+              onChange={handleChange} 
+              showCount 
+              maxLength={100} 
+              placeholder='Add a comment...'
+            />
+          </Form.Item>
+          
+          <Button type="primary" htmlType='submit' className='button'>Post Comment</Button>
+        </Form>
+        </div>
+          </>
+        ) : (
+          <h2><a href="http://localhost:3000/login">Log In</a> or <a href="http://localhost:3000/register">Register</a> to post a comment!</h2>
+        )}
       </>
     );
-  };
-  
-  export default CommentSection;
-  
+};
+
+export default CommentSection;

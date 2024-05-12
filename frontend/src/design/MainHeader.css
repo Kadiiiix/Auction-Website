@@ -2,6 +2,7 @@
     display: flex; /* Use flexbox */
     flex-direction: column; /* Stack elements vertically */
     min-height: 100vh;
+    width: 100%;
 }
 
 .UpperHeader {
@@ -59,7 +60,7 @@
     background-color: #F5F7F8; /* Black background color */
     text-align: center; /* Center the content horizontally */
     display: flex; /* Use flexbox */
-    //align-items: center; 
+    /*align-items: center; */
     justify-content: flex-start;
 
 }
@@ -106,7 +107,7 @@
     height: 17vh;
     background-color: #F5F7F8; /* Black background color */
     display: flex; /* Use flexbox */
-    //justify-content: center; /* Align items to the right */
+    /*justify-content: center; /* Align items to the right */
     align-items: flex-end; /* Align items vertically */
 }
 
@@ -123,7 +124,7 @@
 
 .SearchBar button {
 
-    //margin-bottom: 3vh;
+    /*margin-bottom: 3vh;*/
     width: 10vh; /* Adjust the width of the input field */
     height: 3.7vh; /* Adjust the height of the input field */
     font-size: 16px; /* Adjust the font size of the input text */
