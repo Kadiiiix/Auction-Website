@@ -163,7 +163,7 @@ const AuctionPage = ({setLoggedIn}) => {
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
         </div>
         <div className="photo-bidding">
-          <img className="auction-photo" src={item.picture} alt={item.name} />
+          <img className='auction-photo' src={process.env.PUBLIC_URL + '/dresser.png'} alt="Dresser" />
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>

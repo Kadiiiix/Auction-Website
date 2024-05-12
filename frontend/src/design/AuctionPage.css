@@ -20,7 +20,7 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
   }
-
+/*
   .single-comment{
     margin-bottom: 10px;
     margin-right: 0;
@@ -32,7 +32,7 @@
     align-items: flex-start;
     background-color: rgba(185, 201, 209, 0.393);
     border-radius: 5px;
-  }
+  }*/
 
   .single-comment {
     margin-bottom: 10px;
@@ -116,8 +116,8 @@
   }
   
   .auction-photo {
-    width: 200px; /* Adjust width as needed */
-    height: auto; /* Maintain aspect ratio */
+    width: 500px;
+    height: auto; /* Adjust width as needed */ /* Maintain aspect ratio */
   }
   
   .bidding {
