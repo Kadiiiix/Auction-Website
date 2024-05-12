@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Navigate } from "react-router-dom";
 import { Form, Input, Select, DatePicker, InputNumber, Checkbox, Button, notification } from 'antd';
+import sedan from "../design/sedan.png";
 import "../design/CreateAuction.css"
 const { Option } = Select;
 const { TextArea } = Input;
@@ -8,16 +10,34 @@ const { TextArea } = Input;
 const CreateAuction = ({userId}) => {
 
   const [username, setUsername] = useState("");
+  const [redirectToAuction, setRedirectToAuction] = useState(false);
+  const [auctionId, setAuctionId] = useState("");
 
   const categories = [
-    'decoration',
-    'electronics',
-    'clothes and shoes',
-    'vehicle',
-    'car parts',
-    'tech',
-    'sports',
-    'other'
+    { id: 1, name: "Vehicles", image: sedan },
+    { id: 2, name: "Real Estate", image: sedan },
+    { id: 3, name: "Electronics", image: sedan },
+    { id: 4, name: "Antiques", image: sedan },
+    { id: 5, name: "Artwork", image: sedan },
+    { id: 6, name: "Home Appliances", image: sedan },
+    { id: 7, name: "Clothing and Footwear", image: sedan },
+    { id: 8, name: "Sports Equipment", image: sedan },
+    { id: 9, name: "Collectibles", image: sedan },
+    { id: 10, name: "Decorative Items", image: sedan },
+    { id: 11, name: "Books and Magazines", image: sedan },
+    { id: 12, name: "Hobbies and Crafts", image: sedan },
+    { id: 13, name: "Health and Beauty", image: sedan },
+    { id: 14, name: "Tools and Equipment", image: sedan },
+    { id: 15, name: "Musical Instruments", image: sedan },
+    { id: 16, name: "Art Supplies", image: sedan },
+    { id: 17, name: "Home Furniture", image: sedan },
+    { id: 18, name: "Technical Equipment", image: sedan },
+    { id: 19, name: "Music & Movies", image: sedan },
+    { id: 20, name: "Tools & DIY", image: sedan },
+    { id: 21, name: "Computer Accessories", image: sedan },
+    { id: 22, name: "Video Games & Consoles", image: sedan },
+    { id: 23, name: "Crafts", image: sedan },
+    { id: 24, name: "Spare Parts and Accessories", image: sedan },
   ];
 
   useEffect(() => {
@@ -34,7 +54,6 @@ const CreateAuction = ({userId}) => {
     fetchUser();
   }, [userId]);
 
-  
   const handleSubmit = async (formData) => {
     try {
       const response = await axios.post("http://localhost:4000/api/auctions", {...formData, createdBy: userId});
@@ -45,6 +64,10 @@ const CreateAuction = ({userId}) => {
         message: 'Auction Created',
         description: 'The auction has been created successfully.',
       });
+
+      console.log(response.data.auction._id)
+      setRedirectToAuction(true);
+      setAuctionId(response.data.auction._id);
   
       // Handle success, redirect, or show a success message
     } catch (error) {
@@ -65,6 +88,9 @@ const CreateAuction = ({userId}) => {
     <div className='full-container'>
       <div className='form-container'>
       <h2 className='header'>Hello, {username}! Start your own auction! <br/>Please fill in information:</h2>
+      {redirectToAuction ? (
+          <Navigate to={`/auction/${auctionId}`} />
+        ) : (
     <Form
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 17 }}
@@ -113,7 +139,7 @@ const CreateAuction = ({userId}) => {
       >
         <Select placeholder="Select the category">
           {categories.map(category => (
-            <Option key={category} value={category}>{category}</Option>
+            <Option key={category.id} value={category.name}>{category.name}</Option>
           ))}
         </Select>
       </Form.Item>
@@ -198,6 +224,7 @@ const CreateAuction = ({userId}) => {
         </Button>
       </Form.Item>
     </Form>
+    )}
     </div>
     </div>
   );

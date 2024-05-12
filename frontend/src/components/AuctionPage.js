@@ -76,7 +76,7 @@ const AuctionPage = ({setLoggedIn}) => {
       }
     };
     fetchAuction();
-  }, [id]);
+  },[id] );
 
   const handleRemoveFromFavorites= async () => {
     try {
@@ -150,7 +150,6 @@ const AuctionPage = ({setLoggedIn}) => {
         console.error("error fetching likes:", error);
       }
     };
-
     fetchLikes();
   }, []);
 
@@ -161,9 +160,7 @@ const AuctionPage = ({setLoggedIn}) => {
           {renderInfoBlock("Item ID", item._id)}
           {renderInfoBlock("End date", item.closingDate)}
           {renderInfoBlock("Author", author)}{" "}
-          {/* Replace with author information */}
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
-          {/* Replace with likes information */}
         </div>
         <div className="photo-bidding">
           <img className="auction-photo" src={item.picture} alt={item.name} />
@@ -230,23 +227,12 @@ const AuctionPage = ({setLoggedIn}) => {
             </div>
           </div>
         </div>
-
-        <div className="more">
-          <div className="description-container">
-            <h3 className="subtitle">Description</h3>
-            {item.description && (
-              <p className="description">{item.description}</p>
-            )}
-            {item.condition && (
-              <p className="description">Condition: {item.condition}</p>
-            )}
-            {item.location && (
-              <p className="description">Location: {item.location}</p>
-            )}
-            {/* Add more conditional rendering for other optional fields */}
-          </div>
+        <div className='additional'>
+        {renderAdditionalInfo()}
         </div>
+        <div className='comments'>
         {item && <CommentSection auctionId={id} />}
+        </div>
       </>
     );
   };
@@ -256,6 +242,31 @@ const AuctionPage = ({setLoggedIn}) => {
       <div className="one-block">
         <p className="upper-title">{upperTitle}</p>
         <p className="lower-title">{lowerTitle}</p>
+      </div>
+    );
+  };
+
+  const renderAdditionalInfo = () => {
+    const auctionProperties = [
+      { label: "Description", value: item?.description },
+      { label: "Condition", value: item?.condition },
+      { label: "Category", value: item?.category },
+      { label: "Instant Purchase Available", value: item?.allowInstantPurchase ? "Yes" : "No" },
+      { label: "Location", value: item?.location },
+      { label: "Age", value: item?.age },
+      // Add more properties as needed
+    ];
+
+    return (
+      <div className="more">
+        <div className="description-container">
+          <h3 className="subtitle">Additional Information</h3>
+          {auctionProperties.map((property, index) => (
+            <p key={index} className="description">
+              <strong>{property.label}:</strong> {property.value}
+            </p>
+          ))}
+        </div>
       </div>
     );
   };
