@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input, notification } from 'antd';
 import "../design/RegisterPage.css"; // Import the CSS file
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
   const [redirectToHome, setRedirectToHome] = useState(false);
 
 
@@ -88,7 +84,7 @@ const RegisterPage = () => {
             },
           ]}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+          <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
         </Form.Item>
         <Form.Item
           name="password"
