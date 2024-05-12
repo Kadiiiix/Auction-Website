@@ -1,7 +1,7 @@
-
 // App.js
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Routes, Navigate } from "react-router-dom";
+import { notification } from "antd";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import RegisterPage from "./components/RegisterPage";
@@ -11,6 +11,8 @@ import AuctionPage from "./components/AuctionPage";
 import CreateAuction from "./components/CreateAuction";
 import FavoritesPage from "./components/FavoritesPage";
 import CategoriesPage from "./components/CategoriesPage";
+import NotLoggedIn from "./components/NotLoggedIn";
+
 import "../src/design/MainHeader.css";
 
 function App() {
@@ -35,6 +37,12 @@ function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     setLoggedIn(false);
+  
+    // Display logout notification
+    notification.success({
+      message: 'Logout Successful',
+      description: 'You have successfully logged out.',
+    });
   };
 
   useEffect(() => {
@@ -72,7 +80,7 @@ function App() {
                   <Link to="/create">New</Link>
                 </li>
                 <li>
-                  <button onClick={handleLogout}>Logout</button>
+                  <Link onClick={handleLogout}>Logout</Link>
                 </li>
                 <li>
                   <Link to="/favorites">My Favorites</Link>
@@ -92,7 +100,7 @@ function App() {
           <div className="List">
             <ul>
               <li>
-                <Link to="/homepage">Home</Link>
+                <Link to="/">Home</Link>
               </li>
               <li>
                 <Link to="/categories">Categories</Link>
@@ -114,7 +122,7 @@ function App() {
         </div>
         <Routes>
           <Route
-            path="/homepage"
+            path="/"
             element={<HomePage searchQuery={searchQuery} />}
           />
           <Route
@@ -124,25 +132,26 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
-          {loggedIn ? (
-            <Route path="/create" element={<CreateAuction userId={userId}/>} />
-          ) : (
-            <Route
-              path="/login"
-              element={<LoginPage setLoggedIn={setLoggedIn} />}
-            />
-          )}
+          <Route
+            path="/create"
+            element={loggedIn ? <CreateAuction userId={userId}/> : <Navigate to="/notlogged" />}
+          />
+          <Route
+            path="/favorites"
+            element={loggedIn ? <FavoritesPage userId={userId} setLoggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
+          />
+
           <Route
             path="/auction/:id"
             element={<AuctionPage setLoggedIn={loggedIn} />}
           />
           <Route
-            path="/favorites"
-            element={<FavoritesPage userId={userId} setLoggedIn={loggedIn} />}
-          />
-          <Route
             path="/categories"
             element={<CategoriesPage  setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/notlogged"
+            element={<NotLoggedIn />}
           />
         </Routes>
       </div>
