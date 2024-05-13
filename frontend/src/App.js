@@ -100,9 +100,6 @@ function App() {
                 </li>
               </>
             )}
-            <li>
-              <Link to="/items">Items</Link>
-            </li>
           </ul>
         </div>
 
