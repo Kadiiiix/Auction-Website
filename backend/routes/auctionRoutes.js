@@ -4,6 +4,7 @@ const auctionController = require('../controllers/auctionControllers');
 const commentController = require('../controllers/commentController');
 
 // Route for creating a new auction
+router.get('/search', auctionController.searchAuctions);
 router.post('/comments', commentController.postComment);
 router.get('/:auctionId/comments', commentController.getCommentsByAuctionId)
 router.post('/', auctionController.createAuction);

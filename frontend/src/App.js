@@ -12,6 +12,7 @@ import CreateAuction from "./components/CreateAuction";
 import FavoritesPage from "./components/FavoritesPage";
 import CategoriesPage from "./components/CategoriesPage";
 import NotLoggedIn from "./components/NotLoggedIn";
+import SearchAuctions from "./components/SearchAuctions";
 
 import "../src/design/MainHeader.css";
 
@@ -108,7 +109,7 @@ function App() {
             </ul>
           </div>
           <div className="SearchBar">
-            <form onSubmit={handleSearchSubmit}>
+            <form >
               <input
                 type="text"
                 placeholder="Search..."
@@ -116,15 +117,14 @@ function App() {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <button type="submit">Search</button>
+            <Link to={`/search?query=${searchQuery}`}>
+              <button>Search</button>
+            </Link>
             </form>
           </div>
         </div>
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage searchQuery={searchQuery} />}
-          />
+          <Route path="/" element={<HomePage  />} />
           <Route
             path="/login"
             element={<LoginPage setLoggedIn={setLoggedIn} />}
@@ -134,11 +134,24 @@ function App() {
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           <Route
             path="/create"
-            element={loggedIn ? <CreateAuction userId={userId}/> : <Navigate to="/notlogged" />}
+            element={
+              loggedIn ? (
+                <CreateAuction userId={userId} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
           />
+          <Route path="/search" element={<SearchAuctions />} />
           <Route
             path="/favorites"
-            element={loggedIn ? <FavoritesPage userId={userId} setLoggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
+            element={
+              loggedIn ? (
+                <FavoritesPage userId={userId} setLoggedIn={loggedIn} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
           />
 
           <Route
@@ -147,12 +160,9 @@ function App() {
           />
           <Route
             path="/categories"
-            element={<CategoriesPage  setLoggedIn={loggedIn} />}
+            element={<CategoriesPage setLoggedIn={loggedIn} />}
           />
-          <Route
-            path="/notlogged"
-            element={<NotLoggedIn />}
-          />
+          <Route path="/notlogged" element={<NotLoggedIn />} />
         </Routes>
       </div>
     </Router>
