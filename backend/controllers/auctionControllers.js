@@ -160,3 +160,36 @@ exports.searchAuctions = async (req, res) => {
   }
 };
 
+exports.placeBid = async (req, res) => {
+  const { auctionId, userId, amount } = req.params;
+
+  try {
+    // Find the auction by ID
+    const auction = await Auction.findById(auctionId);
+
+    // Check if the auction exists
+    if (!auction) {
+      return res.status(404).json({ message: "Auction not found" });
+    }
+
+    // Check if the auction has already ended
+    if (auction.closingDate <= new Date()) {
+      return res.status(400).json({ message: "Auction has already ended" });
+    }
+
+    // Check if the bid amount is valid
+    if (amount <= auction.highestBid || amount < auction.startingBid) {
+      return res.status(400).json({ message: "Invalid bid amount" });
+    }
+
+    // Place the bid
+    auction.highestBid=amount;
+    auction.highestBidder = userId;
+    await auction.save();
+
+    return res.status(200).json({ message: "Bid placed successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

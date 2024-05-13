@@ -7,7 +7,8 @@ const auctionSchema = new mongoose.Schema({
   category: { type: String, required: true }, // Category of the item
   closingDate: { type: Date, required: true }, // Auction closing date
   createdBy: {
-    type: String},
+    type: String,
+  },
   additionalPhotos: [String], // Array of URLs of additional photos
   startingBid: Number, // Starting bid amount
   allowInstantPurchase: Boolean, // Whether instant purchasing is allowed
@@ -15,6 +16,8 @@ const auctionSchema = new mongoose.Schema({
   location: String, // Location of the item
   age: Number, // Age of the item
   likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  highestBid: { type: Number, default: 0 },
+  highestBidder: { type: String, default: null },
 });
 
 const Auction = mongoose.model("Auction", auctionSchema);
