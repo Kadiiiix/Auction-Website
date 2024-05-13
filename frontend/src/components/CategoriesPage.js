@@ -1,34 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../design/CategoriesPage.css";
-import sedan from "../design/sedan.png";
 const CategoriesPage = () => {
-  const categories = [
-    { id: 1, name: "Vehicles", image: sedan },
-    { id: 2, name: "Real Estate", image: sedan },
-    { id: 3, name: "Electronics", image: sedan },
-    { id: 4, name: "Antiques", image: sedan },
-    { id: 5, name: "Artwork", image: sedan },
-    { id: 6, name: "Home Appliances", image: sedan },
-    { id: 7, name: "Clothing and Footwear", image: sedan },
-    { id: 8, name: "Sports Equipment", image: sedan },
-    { id: 9, name: "Collectibles", image: sedan },
-    { id: 10, name: "Decorative Items", image: sedan },
-    { id: 11, name: "Books and Magazines", image: sedan },
-    { id: 12, name: "Hobbies and Crafts", image: sedan },
-    { id: 13, name: "Health and Beauty", image: sedan },
-    { id: 14, name: "Tools and Equipment", image: sedan },
-    { id: 15, name: "Musical Instruments", image: sedan },
-    { id: 16, name: "Art Supplies", image: sedan },
-    { id: 17, name: "Home Furniture", image: sedan },
-    { id: 18, name: "Technical Equipment", image: sedan },
-    { id: 19, name: "Music & Movies", image: sedan },
-    { id: 20, name: "Tools & DIY", image: sedan },
-    { id: 21, name: "Computer Accessories", image: sedan },
-    { id: 22, name: "Video Games & Consoles", image: sedan },
-    { id: 23, name: "Crafts", image: sedan },
-    { id: 24, name: "Spare Parts and Accessories", image: sedan },
-  ];
+ const categories = [
+   { id: 1, name: "Antiques" },
+   { id: 2, name: "Artwork" },
+   { id: 3, name: "Books & Movies" },
+   { id: 4, name: "Clothes" },
+   { id: 5, name: "Collectibles" },
+   { id: 6, name: "Decorative Items" },
+   { id: 7, name: "Electronics" },
+   { id: 8, name: "Footwear" },
+   { id: 9, name: "Furniture" },
+   { id: 10, name: "Health and Beauty" },
+   { id: 11, name: "Jewelry" },
+   { id: 12, name: "Misceellaneous" },
+   { id: 13, name: "Musical Instruments" },
+   { id: 14, name: "Outdoor Gear" },
+   { id: 15, name: "Pet Supplies" },
+   { id: 16, name: "Tools & Equipment" },
+   { id: 17, name: "Vehicles" },
+   { id: 18, name: "Video Games" },
+ ];
   return (
     <div className="page">
       <h1 className="page-title">Categories</h1>

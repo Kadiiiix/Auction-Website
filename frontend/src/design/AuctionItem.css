@@ -1,7 +1,7 @@
 .ContainerAuctionItem{
     display: flex;
     flex-direction: row;
-    alignItems: flex-start;
+    /*alignItems: flex-start;*/
     border: 1px solid black;
     margin: 10vh;
     padding: 10px;
@@ -20,7 +20,7 @@
 .InfoAndButton{
     display: flex;
     flex-direction: column;
-    alignItems: center;
+    /*alignItems: center;*/
     justify-content: center;
     margin: 1vh;
     width: 100%;

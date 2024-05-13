@@ -22,6 +22,9 @@ import NotLoggedIn from "./components/NotLoggedIn";
 import UserProfile from "./components/UserProfile";
 import SearchAuctions from "./components/SearchAuctions";
 import CategoryPage from "./components/CategoryPage";
+import NavigationMenu from "./components/NavigationMenu";
+
+import { MenuOutlined } from "@ant-design/icons";
 import "../src/design/MainHeader.css";
 
 function App() {
@@ -54,7 +57,15 @@ function App() {
       description: 'You have successfully logged out.',
     });
   };
+ const [showMenu, setShowMenu] = useState(false);
 
+ const toggleMenu = () => {
+   setShowMenu(!showMenu);
+ };
+
+ const closeMenu = () => {
+   setShowMenu(false);
+ };
   useEffect(() => {
     // Check if token exists
     const token = localStorage.getItem("token");
@@ -105,18 +116,16 @@ function App() {
 
         <div className="LowerHeader">
           <div className="Title">
-            <h2>IzložBa</h2>
+            <div style={{ position: "relative" }}>
+              <a href="/" class="no-underline">
+              <h2 style={{ display: "inline-block" }}>IzložBa</h2></a>
+              <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
+                <MenuOutlined />
+                {showMenu && <NavigationMenu />}
+              </div>
+            </div>
           </div>
-          <div className="List">
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/categories">Categories</Link>
-              </li>
-            </ul>
-          </div>
+          <div class="List"></div>
           <div className="SearchBar">
             <form>
               <input
@@ -165,7 +174,13 @@ function App() {
 
           <Route
             path="/yourprofile"
-            element={loggedIn ? <UserProfile userId={userId} loggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
+            element={
+              loggedIn ? (
+                <UserProfile userId={userId} loggedIn={loggedIn} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
           />
 
           <Route
