@@ -29,25 +29,25 @@ const CategoriesPage = () => {
     { id: 23, name: "Crafts", image: sedan },
     { id: 24, name: "Spare Parts and Accessories", image: sedan },
   ];
-return (
-  <div className="page">
-    <h1 className="page-title">Categories</h1>
-    <div className="categories-grid">
-      {categories.map((category) => (
-        
-          <div className="category-item">
-            <img
-              src={category.image}
-              alt={category.name}
-              className="category-image"
-            />
-            <span className="category-name">{category.name}</span>
-          </div>
-        
-      ))}
+  return (
+    <div className="page">
+      <h1 className="page-title">Categories</h1>
+      <div className="categories-grid">
+        {categories.map((category) => (
+          <Link to={`/category/${category.name}`} key={category.id} class="no-underline">
+            <div className="category-item">
+              <img
+                src={category.image}
+                alt={category.name}
+                className="category-image"
+              />
+              <span className="category-name">{category.name}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default CategoriesPage;

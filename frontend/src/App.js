@@ -1,6 +1,13 @@
 // App.js
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Link, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Routes,
+  Navigate,
+  useParams,
+} from "react-router-dom";
 import { notification } from "antd";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
@@ -13,6 +20,7 @@ import FavoritesPage from "./components/FavoritesPage";
 import CategoriesPage from "./components/CategoriesPage";
 import NotLoggedIn from "./components/NotLoggedIn";
 import SearchAuctions from "./components/SearchAuctions";
+import CategoryPage from "./components/CategoryPage";
 
 import "../src/design/MainHeader.css";
 
@@ -20,6 +28,7 @@ function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [userId, setUserId] = useState("");
+  const { query } = useParams();
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -109,7 +118,7 @@ function App() {
             </ul>
           </div>
           <div className="SearchBar">
-            <form >
+            <form>
               <input
                 type="text"
                 placeholder="Search..."
@@ -117,14 +126,14 @@ function App() {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-            <Link to={`/search?query=${searchQuery}`}>
-              <button>Search</button>
-            </Link>
+              <Link to={`/search?query=${searchQuery}`}>
+                <button>Search</button>
+              </Link>
             </form>
           </div>
         </div>
         <Routes>
-          <Route path="/" element={<HomePage  />} />
+          <Route path="/" element={<HomePage />} />
           <Route
             path="/login"
             element={<LoginPage setLoggedIn={setLoggedIn} />}
@@ -161,6 +170,10 @@ function App() {
           <Route
             path="/categories"
             element={<CategoriesPage setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/category/:query"
+            element={<CategoryPage query={query} setLoggedIn={loggedIn} />}
           />
           <Route path="/notlogged" element={<NotLoggedIn />} />
         </Routes>
