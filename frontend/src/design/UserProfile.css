@@ -6,6 +6,17 @@
     padding: 5px;
 }
 
+.container-side{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.item{
+    margin:5px;
+}
+
 .main-card{
     display: flex;
     margin: 5px;
