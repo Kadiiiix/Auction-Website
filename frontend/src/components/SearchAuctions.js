@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import AuctionItem from "./AuctionItem";
+import { Link } from "react-router-dom";
 
 const SearchResultsPage = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -16,7 +18,7 @@ const SearchResultsPage = () => {
     const fetchSearchResults = async () => {
       try {
         // Fetch search results from the API
-        const response = await axios.get(`/api/auctions/search?query=${query}`);
+        const response = await axios.get(`http://localhost:4000/api/auctions/search?query=${query}`);
         setSearchResults(response.data);
         setLoading(false);
       } catch (error) {
@@ -42,18 +44,22 @@ const SearchResultsPage = () => {
   }
 
   return (
-    <div>
-      <h2>Search Results for: {query}</h2>
-      {searchResults.length === 0 ? (
-        <p>No matching auctions found</p>
-      ) : (
-        <ul>
-          {searchResults.map((auction) => (
-            <li key={auction.id}>{auction.name}</li>
-          ))}
-        </ul>
-      )}
+<div className="item-listings-page">
+      <div className="auction-items">
+        {searchResults.map((listing) => (
+          <Link
+            to={`/auction/${listing._id}`}
+            key={listing._id}
+            className="no-underline"
+          >
+            <AuctionItem item={listing} />
+          </Link>
+        ))}
+      </div>
     </div>
+
+
+    
   );
 };
 
