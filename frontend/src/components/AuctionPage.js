@@ -12,7 +12,7 @@ const AuctionPage = ({setLoggedIn}) => {
   const [item, setItem] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
   const [liked, setLiked] = useState(false);
-  const [likeNumber, setLikeNumber] = useState("");
+  const [likeNumber, setLikeNumber] = useState(0);
   const [author, setAuthor] = useState("");
 
   const handleBidChange = (event) => {
@@ -57,6 +57,7 @@ const AuctionPage = ({setLoggedIn}) => {
 
       console.log(responseData);
       setLiked(true);
+      setLikeNumber(likeNumber+1);
       // Handle success or update UI accordingly
     } catch (error) {
       console.error("Error adding auction to favorites:", error);
@@ -71,12 +72,13 @@ const AuctionPage = ({setLoggedIn}) => {
           `http://localhost:4000/api/auctions/${id}`
         );
         setItem(response.data);
+        setLikeNumber(response.data.likedBy.length)
       } catch (error) {
         console.error("Error fetching an auction");
       }
     };
     fetchAuction();
-  },[id] );
+  },[] );
 
   const handleRemoveFromFavorites= async () => {
     try {
@@ -103,6 +105,7 @@ const AuctionPage = ({setLoggedIn}) => {
 
       console.log(responseData);
       setLiked(false);
+      setLikeNumber(likeNumber-1);
     } catch (error) {
       console.error("Error removing auction from favorites:", error);
       
@@ -116,6 +119,7 @@ const AuctionPage = ({setLoggedIn}) => {
           `http://localhost:4000/api/users/${item.createdBy}`
         );
         setAuthor(response.data);
+        console.log(author);
       } catch (error) {
         console.error("Error fetching an auction");
       }
@@ -151,7 +155,7 @@ const AuctionPage = ({setLoggedIn}) => {
       }
     };
     fetchLikes();
-  }, []);
+  });
 
   const renderAuctionInfo = () => {
     return (
@@ -159,8 +163,8 @@ const AuctionPage = ({setLoggedIn}) => {
         <div className="information">
           {renderInfoBlock("Item ID", item._id)}
           {renderInfoBlock("End date", item.closingDate)}
-          {renderInfoBlock("Author", author)}{" "}
-          {renderInfoBlock("Likes", item.likedBy.length)}{" "}
+          {renderInfoBlock("Author", author.username)}{" "}
+          {renderInfoBlock("Likes", item.likedBy.length, )}{" "}
         </div>
         <div className="photo-bidding">
           <img className='auction-photo' src={process.env.PUBLIC_URL + '/dresser.png'} alt="Dresser" />

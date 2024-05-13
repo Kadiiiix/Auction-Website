@@ -21,7 +21,7 @@ const CommentSection = ({ auctionId }) => {
           const response = await axios.get(
             `http://localhost:4000/api/users/${userId}`
           );
-          setAuthor(response.data);
+          setAuthor(response.data.username);
         } catch (error) {
           console.error("Error fetching an auction");
         }

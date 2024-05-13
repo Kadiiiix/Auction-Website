@@ -87,7 +87,7 @@ const CreateAuction = ({userId}) => {
   return (
     <div className='full-container'>
       <div className='form-container'>
-      <h2 className='header'>Hello, {username}! Start your own auction! <br/>Please fill in information:</h2>
+      <h2 className='header'>Hello, {username.username}! Start your own auction! <br/>Please fill in information:</h2>
       {redirectToAuction ? (
           <Navigate to={`/auction/${auctionId}`} />
         ) : (
