@@ -141,3 +141,22 @@ exports.getAuctionsByCategory = async (req, res) => {
   }
 };  
 
+exports.searchAuctions = async (req, res) => {
+  try {
+    const query = req.query.query;
+    const regex = new RegExp(query, 'i'); // Case-insensitive search
+
+    // Search for auctions that match the query
+    const results = await Auction.find({ name: { $regex: regex } });
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "No matching auctions found" });
+    }
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error searching auctions:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+

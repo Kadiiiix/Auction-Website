@@ -12,6 +12,7 @@ import CreateAuction from "./components/CreateAuction";
 import FavoritesPage from "./components/FavoritesPage";
 import CategoriesPage from "./components/CategoriesPage";
 import NotLoggedIn from "./components/NotLoggedIn";
+import SearchAuctions from "./components/SearchAuctions";
 
 import "../src/design/MainHeader.css";
 
@@ -121,6 +122,7 @@ function App() {
           </div>
         </div>
         <Routes>
+        <Route path="/search" component={SearchAuctions} />
           <Route
             path="/"
             element={<HomePage searchQuery={searchQuery} />}
