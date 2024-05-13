@@ -77,7 +77,7 @@ const AuctionPage = ({setLoggedIn}) => {
       }
     };
     fetchAuction();
-  },[] );
+  },);
 
   const handleRemoveFromFavorites= async () => {
     try {
