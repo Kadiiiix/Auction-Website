@@ -14,11 +14,6 @@ const items = [
    
     label: "Art & Decor",
     children: [
-      {
-        key: "1-1",
-        label: "Art",
-        type: "group",
-        children: [
           {
             key: "1",
             label: "Artwork",
@@ -31,13 +26,7 @@ const items = [
             key: "3",
             label: "Antiques",
           },
-        ],
-      },
-      {
-        key: "1-2",
-        label: "Decor",
-        type: "group",
-        children: [
+     
           {
             key: "4",
             label: "Decorative Items",
@@ -46,8 +35,7 @@ const items = [
             key: "5",
             label: "Furniture",
           },
-        ],
-      },
+       
     ],
   },
   {
@@ -74,11 +62,7 @@ const items = [
     label: "Clothing & Footwear",
     
     children: [
-      {
-        key: "3-1",
-        label: "Beauty & Accesories",
-        type: "group",
-        children: [
+    
           {
             key: "9",
             label: "Health & Beauty",
@@ -87,13 +71,8 @@ const items = [
             key: "10",
             label: "Jewelry",
           },
-        ],
-      },
-      {
-        key: "3-1",
-        label: "Clothing & Footwear",
-        type: "group",
-        children: [
+        
+     
           {
             key: "11",
             label: "Clothing",
@@ -102,8 +81,8 @@ const items = [
             key: "12",
             label: "Footwear",
           },
-        ],
-      },
+       
+      
     ],
   },
   {
