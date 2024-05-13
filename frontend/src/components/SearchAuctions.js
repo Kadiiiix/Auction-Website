@@ -1,38 +1,55 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
-const SearchAuctions = () => {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+const SearchResultsPage = () => {
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleSearch = async () => {
-    try {
-      const response = await axios.get(`/api/auctions/search?query=${query}`);
-      setResults(response.data);
-      setError(null);
-    } catch (error) {
-      setError('An error occurred while fetching data');
-      setResults([]);
-    }
-  };
+  // Extracting search query from URL
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const query = searchParams.get("query");
+
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      try {
+        // Fetch search results from the API
+        const response = await axios.get(`/api/auctions/search?query=${query}`);
+        setSearchResults(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError("An error occurred while fetching data");
+        setLoading(false);
+      }
+    };
+
+    fetchSearchResults();
+
+    // Cleanup function
+    return () => {
+      // Cleanup if needed
+    };
+  }, [query]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search auctions"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-      {error && <p>{error}</p>}
-      {results.length === 0 ? (
+      <h2>Search Results for: {query}</h2>
+      {searchResults.length === 0 ? (
         <p>No matching auctions found</p>
       ) : (
         <ul>
-          {results.map((auction) => (
-            <li key={auction._id}>{auction.name}</li>
+          {searchResults.map((auction) => (
+            <li key={auction.id}>{auction.name}</li>
           ))}
         </ul>
       )}
@@ -40,4 +57,4 @@ const SearchAuctions = () => {
   );
 };
 
-export default SearchAuctions;
+export default SearchResultsPage;
