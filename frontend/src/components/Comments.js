@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import "./../design/AuctionPage.css";
 
@@ -82,7 +83,7 @@ const CommentSection = ({ auctionId }) => {
             {comments.map((comment, index) => (
               <div className='single-comment' key={index}>
                 <div className='username-time'>
-                  <p className='username'>{comment.userId.username}:</p>
+                  <Link to={`/profile/${comment.userId._id}`} className="lower-title">{comment.userId.username}</Link>
                   <p className='time'>{formatDate(comment.timePosted)}</p>
                 </div>
                 <p className="comment-text">{comment.comment}</p>

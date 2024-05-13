@@ -97,7 +97,7 @@ function App() {
                   <Link to={`/profile/${userId}`}>Profile</Link>
                 </li>
                 <li>
-                  <Link to="/favorites">My Favorites</Link>
+                  <Link to={`/favorites/${userId}`}>My Favorites</Link>
                 </li>
               </>
             )}
@@ -154,10 +154,10 @@ function App() {
           />
           <Route path="/search" element={<SearchAuctions />} />
           <Route
-            path="/favorites"
+            path="/favorites/:id"
             element={
               loggedIn ? (
-                <FavoritesPage userId={userId} setLoggedIn={loggedIn} />
+                <FavoritesPage setLoggedIn={loggedIn} />
               ) : (
                 <Navigate to="/notlogged" />
               )

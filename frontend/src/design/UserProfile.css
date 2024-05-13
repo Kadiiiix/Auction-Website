@@ -33,6 +33,15 @@
     margin-right: 5px;
 }
 
+.links{
+    display: flex;
+    flex-direction: column;
+}
+
+.single-link{
+    color: black;
+}
+
 .edit-button-container {
     display: flex;
     justify-content: flex-start;

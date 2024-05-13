@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, Button, Space, Avatar } from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, ShoppingOutlined, HeartOutlined, CommentOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 import "../design/UserProfile.css";
 
 const UserProfileSide = ({ id, loggedIn }) => {
@@ -79,22 +80,23 @@ const UserProfileSide = ({ id, loggedIn }) => {
 
     const renderSideInfo = () => {
         const sideInfo = [
-            { label: `${author}'s Auctions`},
-            { label: `${author}'s Favorite Auctions` },
-            { label: `${author}'s Comments`},
+            { label: `${author}'s Auctions`, url: `/auctions/${id}`, icon: <ShoppingOutlined /> },
+            { label: `${author}'s Favorite Auctions`, url: `/favorites/${id}/`, icon: <HeartOutlined /> },
+            { label: `${author}'s Comments`, url: `/comments/${id}`, icon: <CommentOutlined /> },
         ];
-
+    
         return (
             <div className="links">
                 {sideInfo.map((property, index) => (
-                    <p key={index} className="single-link">
-                        {property.label}
-                    </p>
+                    <Link to={property.url} key={index} className="single-link">
+                        <p>{property.icon && property.icon}</p>
+                        <p>{property.label}</p>
+                    </Link>
                 ))}
             </div>
-        )
-    }
-
+        );
+    };
+    
     return (
         <>
         <div className="container-side">
