@@ -9,7 +9,6 @@ function Timer({ closingDate }) {
       const targetDate = new Date(closingDate);
       
       const differenceInTime = new Date(targetDate - currentDate);
-      console.log(differenceInTime);
       if (differenceInTime > 0) {
         const days = Math.floor(differenceInTime / (1000 * 3600 * 24));
         const hours = Math.floor(

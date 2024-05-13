@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Button, Form, Input, Space, notification } from "antd";
+import { Card, Button, Form, Input, Space, notification, Modal } from "antd";
 
-const UserProfileContent = ({ userId, loggedIn }) => {
+const UserProfileContent = ({ id, loggedIn }) => {
   const [author, setAuthor] = useState("");
   const [fullname, setName] = useState("");
   const [phone_number, setPhone] = useState("");
@@ -14,12 +14,16 @@ const UserProfileContent = ({ userId, loggedIn }) => {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [editMode, setEditMode] = useState(false); // State to track edit mode
   const [form] = Form.useForm(); // Ant Design Form instance
+  const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
+  const [changePasswordForm] = Form.useForm(); // Form for changing password
+
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/users/comments/${userId}`
+          `http://localhost:4000/api/users/comments/${id}`
         );
         const comments = response.data;
         const commentsNum = comments.length;
@@ -35,7 +39,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/users/${userId}`
+          `http://localhost:4000/api/users/${id}`
         );
         const userData = response.data;
 
@@ -52,7 +56,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
       }
     };
     fetchUserData();
-  }, [userId]);
+  });
 
   useEffect(() => {
     const fetchAuctions = async () => {
@@ -60,7 +64,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
         const response = await axios.get("http://localhost:4000/api/auctions");
         const auctions = response.data;
         const auctionsCreatedByUser = auctions.filter(
-          (auction) => auction.createdBy === userId
+          (auction) => auction.createdBy === id
         );
         setAuctionsNumber(auctionsCreatedByUser.length);
       } catch (error) {
@@ -68,7 +72,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
       }
     };
     fetchAuctions();
-  }, [userId]);
+  }, [id]);
 
   const handleEditClick = () => {
     // Toggle edit mode and reset form fields
@@ -84,7 +88,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
   const handleFormSubmit = async (values) => {
     try {
       // Send a request to the backend to update user information
-      const response = await axios.put(`http://localhost:4000/api/users/${userId}`, values);
+      const response = await axios.put(`http://localhost:4000/api/users/${id}`, values);
   
       if (response.data) {
         console.log("User information updated successfully:", response.data);
@@ -107,12 +111,37 @@ const UserProfileContent = ({ userId, loggedIn }) => {
       }
     }
   };
-  
 
   const handleCancel = () => {
     // Return to view mode and reset form fields
     setEditMode(false);
     form.resetFields();
+  };
+
+  const handleOpenChangePasswordModal = () => {
+    setChangePasswordModalVisible(true);
+  };
+
+  const handleChangePassword = async (values) => {
+    try {
+      const response = await axios.put(`http://localhost:4000/api/users/${id}`, values);
+      if (response.data) {
+        notification.success({
+          message: 'Success',
+          description: 'Password changed successfully.',
+        });
+        setChangePasswordModalVisible(false);
+        changePasswordForm.resetFields();
+      } else {
+        console.log("Password change failed.");
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        console.error("Error changing password:", error.response.data);
+      } else {
+        console.error("Error changing password:", error.message);
+      }
+    }
   };
 
   return (
@@ -145,7 +174,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 6, span: 14 }}>
               <Space>
-                <Button className="edit-button" type="primary" htmlType="submit" onClick={handleFormSubmit}>
+                <Button className="edit-button" type="primary" htmlType="submit">
                   Save Changes
                 </Button>
                 <Button className="edit-button" onClick={handleCancel}>
@@ -182,11 +211,54 @@ const UserProfileContent = ({ userId, loggedIn }) => {
                 <Button type="primary" className="edit-button" onClick={handleEditClick}>
                   Edit Your Information
                 </Button>
+                <Button type="primary" className="edit-button" onClick={handleOpenChangePasswordModal}>
+                  Change Password
+                </Button>
               </div>
             )}
           </>
         )}
       </Card>
+
+      {/* Modal for changing password */}
+      <Modal
+        title="Change Password"
+        visible={changePasswordModalVisible}
+        onCancel={() => setChangePasswordModalVisible(false)}
+        footer={null}
+      >
+        <Form form={changePasswordForm} onFinish={handleChangePassword}>
+          <Form.Item
+            label="Current Password"
+            name="currentPassword"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your current password!',
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="New Password"
+            name="newPassword"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your new password!',
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit" onClick={handleChangePassword}>
+              Change Password
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };
