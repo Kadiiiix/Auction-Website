@@ -1,0 +1,30 @@
+
+.card{
+    display:flex;
+    justify-content: flex-start;
+    margin: 5px;
+    padding: 5px;
+}
+
+.main-card{
+    display: flex;
+    margin: 5px;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.edit-button{
+    background-color: rgba(244, 206, 20, 1);
+    color: white;
+    margin-left: 0px;
+}
+
+.edit-button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 5px; /* Adjust the margin as needed */
+    margin-top: 10px;
+  }
+  

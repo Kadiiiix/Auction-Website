@@ -12,7 +12,7 @@ import CreateAuction from "./components/CreateAuction";
 import FavoritesPage from "./components/FavoritesPage";
 import CategoriesPage from "./components/CategoriesPage";
 import NotLoggedIn from "./components/NotLoggedIn";
-
+import UserProfile from "./components/UserProfile";
 import "../src/design/MainHeader.css";
 
 function App() {
@@ -83,6 +83,9 @@ function App() {
                   <Link onClick={handleLogout}>Logout</Link>
                 </li>
                 <li>
+                  <Link to="/yourprofile">Profile</Link>
+                </li>
+                <li>
                   <Link to="/favorites">My Favorites</Link>
                 </li>
               </>
@@ -139,6 +142,11 @@ function App() {
           <Route
             path="/favorites"
             element={loggedIn ? <FavoritesPage userId={userId} setLoggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
+          />
+
+          <Route
+            path="/yourprofile"
+            element={loggedIn ? <UserProfile userId={userId} loggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
           />
 
           <Route
