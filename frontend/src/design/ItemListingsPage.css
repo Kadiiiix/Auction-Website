@@ -15,3 +15,11 @@
 .no-underline {
     text-decoration: none;
 }
+.centered-buttons {
+  text-align: center;
+}
+
+.pagination button {
+  margin-left: 50px;
+  margin-right: 50px;
+}
