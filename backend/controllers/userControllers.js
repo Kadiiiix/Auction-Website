@@ -7,6 +7,33 @@ const generateToken = (user) => {
   return jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' }); // Expires in 1 hour
 };
 
+exports.editUserInfo = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { fullname, phone_number, email, city } = req.body;
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user information
+    if (fullname) user.fullname = fullname;
+    if (phone_number) user.phone_number = phone_number;
+    if (email) user.email = email;
+    if (city) user.city = city;
+
+    // Save the updated user information
+    await user.save();
+
+    return res.status(200).json({ message: 'User information updated successfully.' });
+  } catch (error) {
+    console.error('Error editing user information:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 exports.getUsernameFromUserId = async (req, res) => {
   try {
       const userId = req.params.userId;

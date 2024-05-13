@@ -9,5 +9,6 @@ router.post("/login", userController.loginUser);
 router.get("/:userId/favorites",userController.listFavorites); // Apply the middleware here
 router.get("/:userId", userController.getUsernameFromUserId);
 router.get("/comments/:userId", commentController.getCommentsByUserId);
+router.put("/:userId", userController.editUserInfo);
 
 module.exports = router;
