@@ -109,7 +109,7 @@ function App() {
             </ul>
           </div>
           <div className="SearchBar">
-            <form onSubmit={handleSearchSubmit}>
+            <form >
               <input
                 type="text"
                 placeholder="Search..."
@@ -117,12 +117,14 @@ function App() {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <button type="submit">Search</button>
+            <Link to={`/search?query=${searchQuery}`}>
+              <button>Search</button>
+            </Link>
             </form>
           </div>
         </div>
         <Routes>
-          <Route path="/" element={<HomePage searchQuery={searchQuery} />} />
+          <Route path="/" element={<HomePage  />} />
           <Route
             path="/login"
             element={<LoginPage setLoggedIn={setLoggedIn} />}
