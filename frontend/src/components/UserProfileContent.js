@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button, Form, Input, Space, notification } from "antd";
 
-const UserProfileContent = ({ userId, loggedIn }) => {
+const UserProfileContent = ({ id, loggedIn }) => {
   const [author, setAuthor] = useState("");
   const [fullname, setName] = useState("");
   const [phone_number, setPhone] = useState("");
@@ -15,11 +15,13 @@ const UserProfileContent = ({ userId, loggedIn }) => {
   const [editMode, setEditMode] = useState(false); // State to track edit mode
   const [form] = Form.useForm(); // Ant Design Form instance
 
+  const userId = localStorage.getItem("userId");
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/users/comments/${userId}`
+          `http://localhost:4000/api/users/comments/${id}`
         );
         const comments = response.data;
         const commentsNum = comments.length;
@@ -35,7 +37,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/users/${userId}`
+          `http://localhost:4000/api/users/${id}`
         );
         const userData = response.data;
 
@@ -52,7 +54,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
       }
     };
     fetchUserData();
-  }, [userId]);
+  }, [id]);
 
   useEffect(() => {
     const fetchAuctions = async () => {
@@ -60,7 +62,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
         const response = await axios.get("http://localhost:4000/api/auctions");
         const auctions = response.data;
         const auctionsCreatedByUser = auctions.filter(
-          (auction) => auction.createdBy === userId
+          (auction) => auction.createdBy === id
         );
         setAuctionsNumber(auctionsCreatedByUser.length);
       } catch (error) {
@@ -68,7 +70,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
       }
     };
     fetchAuctions();
-  }, [userId]);
+  }, [id]);
 
   const handleEditClick = () => {
     // Toggle edit mode and reset form fields
@@ -84,7 +86,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
   const handleFormSubmit = async (values) => {
     try {
       // Send a request to the backend to update user information
-      const response = await axios.put(`http://localhost:4000/api/users/${userId}`, values);
+      const response = await axios.put(`http://localhost:4000/api/users/${id}`, values);
   
       if (response.data) {
         console.log("User information updated successfully:", response.data);
@@ -177,7 +179,7 @@ const UserProfileContent = ({ userId, loggedIn }) => {
             <Card type="inner" title="Total Auctions Created" className="card">
               <p>{auctionsNumber}</p>
             </Card>
-            {isCurrentUser && (
+            {id===userId && (
               <div className="edit-button-container">
                 <Button type="primary" className="edit-button" onClick={handleEditClick}>
                   Edit Your Information

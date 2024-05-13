@@ -62,8 +62,9 @@ function App() {
     if (token && storedUserId) {
       setLoggedIn(true);
       setUserId(storedUserId);
+      console.log(userId)
       }
-  }, []);
+  });
 
   const items = [
 
@@ -93,7 +94,7 @@ function App() {
                   <Link onClick={handleLogout}>Logout</Link>
                 </li>
                 <li>
-                  <Link to="/yourprofile">Profile</Link>
+                  <Link to={`/profile/${userId}`}>Profile</Link>
                 </li>
                 <li>
                   <Link to="/favorites">My Favorites</Link>
@@ -164,8 +165,8 @@ function App() {
           />
 
           <Route
-            path="/yourprofile"
-            element={loggedIn ? <UserProfile userId={userId} loggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
+            path="/profile/:id"
+            element={loggedIn ? <UserProfile loggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
           />
 
           <Route

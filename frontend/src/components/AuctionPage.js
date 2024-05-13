@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import '../design/AuctionPage.css';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { Button } from 'antd';
@@ -14,6 +14,7 @@ const AuctionPage = ({setLoggedIn}) => {
   const [liked, setLiked] = useState(false);
   const [likeNumber, setLikeNumber] = useState(0);
   const [author, setAuthor] = useState("");
+  const userId = localStorage.getItem("userId");
 
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
@@ -27,8 +28,6 @@ const AuctionPage = ({setLoggedIn}) => {
   const handleAddToFavorites = async () => {
     try {
       // Retrieve the token and userId from local storage
-      const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
 
       // Configure headers with the token
       const headers = {
@@ -82,8 +81,6 @@ const AuctionPage = ({setLoggedIn}) => {
 
   const handleRemoveFromFavorites= async () => {
     try {
-      const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
       const headers = {
         "Content-Type": "application/json", 
       };
@@ -163,7 +160,12 @@ const AuctionPage = ({setLoggedIn}) => {
         <div className="information">
           {renderInfoBlock("Item ID", item._id)}
           {renderInfoBlock("End date", item.closingDate)}
-          {renderInfoBlock("Author", author.username)}{" "}
+          {author && (
+            <div className="one-block">
+              <p className="upper-title">Author</p>
+              <Link to={`/profile/${author._id}`} className="lower-title">{author.username}</Link>
+            </div>
+          )}
           {renderInfoBlock("Likes", item.likedBy.length, )}{" "}
         </div>
         <div className="photo-bidding">

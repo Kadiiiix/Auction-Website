@@ -1,13 +1,17 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { Layout } from 'antd';
 import UserProfileContent from "./UserProfileContent";
 import UserProfileSide from "./UserProfileSide";
 import "../design/UserProfile.css"
 
+const UserProfile = ({loggedIn}) => {
 
-const UserProfile = ({userId, loggedIn}) => {
+    const { id } = useParams();
+    const userId = localStorage.getItem("userId");
 
-    console.log(userId)
+    console.log("userid",userId);
+    console.log("id", id);
 
     const { Sider, Content } = Layout;
 
@@ -37,10 +41,10 @@ const UserProfile = ({userId, loggedIn}) => {
             <Layout style={layoutStyle}>
                 <Layout>
                     <Sider width="25%" style={siderStyle}>
-                      <UserProfileSide userId={userId} loggedIn={loggedIn}/>
+                      <UserProfileSide id={id} loggedIn={loggedIn}/>
                     </Sider>
                     <Content style={contentStyle}>
-                      <UserProfileContent userId={userId} loggedIn={loggedIn}/>
+                      <UserProfileContent id={id} loggedIn={loggedIn}/>
                     </Content>
                 </Layout>
             </Layout>

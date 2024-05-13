@@ -4,7 +4,7 @@ import { Card, Button, Space, Avatar } from "antd";
 import { UserOutlined } from '@ant-design/icons';
 import "../design/UserProfile.css";
 
-const UserProfileSide = ({ userId, loggedIn }) => {
+const UserProfileSide = ({ id, loggedIn }) => {
 
     const [auctions, setAuctions] = useState([]);
     const [auctionsNumber, setAuctionsNumber] = useState(0);
@@ -12,13 +12,12 @@ const UserProfileSide = ({ userId, loggedIn }) => {
     const [favorites, setFavorites] = useState([]);
     const [commentsNumber, setCommentsNumber] = useState(0);
     const [author, setAuthor] = useState("");
+    const userId = localStorage.getItem("userId");
 
     useEffect(() => {
-        const userId = localStorage.getItem("userId");
-
         const fetchFavorites = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/users/${userId}/favorites`)
+                const response = await axios.get(`http://localhost:4000/api/users/${id}/favorites`)
                 const favorites = response.data;
                 const numberOfFavorites = favorites.length;
                 const favoriteAuctions = favorites.data;
@@ -33,13 +32,11 @@ const UserProfileSide = ({ userId, loggedIn }) => {
     }, []);
 
     useEffect(() => {
-        const userId = localStorage.getItem("userId");
-
         const fetchAuctions = async () => {
             try {
                 const response = await axios.get("http://localhost:4000/api/auctions");
                 const auction = response.data;
-                const auctionsCreatedByUser = auction.filter(auction => auction.createdBy === userId);
+                const auctionsCreatedByUser = auction.filter(auction => auction.createdBy === id);
                 setAuctions(auctionsCreatedByUser);
                 const numberOfAuctionsCreatedByUser = auctionsCreatedByUser.length;
                 setAuctionsNumber(numberOfAuctionsCreatedByUser);
@@ -52,11 +49,9 @@ const UserProfileSide = ({ userId, loggedIn }) => {
     }, []);
 
     useEffect(() => {
-        const userId = localStorage.getItem("userId");
-
         const fetchComments = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/users/comments/${userId}`);
+                const response = await axios.get(`http://localhost:4000/api/users/comments/${id}`);
                 const comments = response.data;
                 const commentsNum = comments.length;
                 setCommentsNumber(commentsNum);
@@ -71,7 +66,7 @@ const UserProfileSide = ({ userId, loggedIn }) => {
         const fetchUser = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:4000/api/users/${userId}`
+                    `http://localhost:4000/api/users/${id}`
                 );
                 setAuthor(response.data.username);
             } catch (error) {
@@ -116,7 +111,7 @@ const UserProfileSide = ({ userId, loggedIn }) => {
             </Space>
         </Card>
         <div className="item">
-        {loggedIn ? <Button className="edit-button">Send Message</Button> : <Button disabled className="edit-button">Log In to Message</Button>}
+        {(loggedIn && userId!==id)? <Button className="edit-button">Send Message</Button> : <Button disabled className="edit-button">Send Message</Button>}
         </div>
         </div>
         </>
