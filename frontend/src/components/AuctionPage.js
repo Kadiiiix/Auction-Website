@@ -113,6 +113,7 @@ const AuctionPage = ({setLoggedIn}) => {
           `http://localhost:4000/api/auctions/${id}`
         );
         setItem(response.data);
+        console.log(item);
         setLikeNumber(response.data.likedBy.length)
       } catch (error) {
         console.error("Error fetching an auction");
@@ -341,8 +342,11 @@ const AuctionPage = ({setLoggedIn}) => {
     );
   };
 
-  return <div className="auction-container">{item && renderAuctionInfo()}
-          <Modal
+  return <div className="auction-container">
+              <h2>{item?.name}</h2>
+              {item && renderAuctionInfo()}
+                
+            <Modal
                 title="Close Auction Confirmation"
                 visible={closeModalVisible}
                 onCancel={() => setCloseModalVisible(false)}
