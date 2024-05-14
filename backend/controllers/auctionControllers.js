@@ -105,6 +105,7 @@ exports.deleteAuction = async (req, res) => {
       res.status(500).json({ error: 'Internal server error.' });
     }
   };
+  
 exports.getAuction = async (req, res) => {
   try {
     const itemId = req.params.id;
