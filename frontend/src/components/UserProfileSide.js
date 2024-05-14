@@ -4,6 +4,7 @@ import { Card, Button, Space, Avatar } from "antd";
 import { UserOutlined, ShoppingOutlined, HeartOutlined, CommentOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import "../design/UserProfile.css";
+import Rating from "./Rating";
 
 const UserProfileSide = ({ id, loggedIn }) => {
 
@@ -103,6 +104,10 @@ const UserProfileSide = ({ id, loggedIn }) => {
         <Space wrap className="item">
             <Avatar shape="square" size={200} icon={<UserOutlined />} />
         </Space>
+        <Card title={"User's Rating"}
+        style={{ width: 300 }}>
+            <Rating id={id}/>
+        </Card>
         <Card
             title={"Search Activity"}
             style={{ width: 300 }}
