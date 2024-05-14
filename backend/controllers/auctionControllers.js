@@ -105,7 +105,7 @@ exports.deleteAuction = async (req, res) => {
       res.status(500).json({ error: 'Internal server error.' });
     }
   };
-  
+
 exports.getAuction = async (req, res) => {
   try {
     const itemId = req.params.id;
@@ -192,5 +192,29 @@ exports.placeBid = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.closeAuction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the auction by ID
+    const auction = await Auction.findById(id);
+
+    if (!auction) {
+      return res.status(404).json({ error: "Auction not found" });
+    }
+
+    // Set the closing date to the current moment
+    auction.closingDate = new Date();
+    
+    // Save the changes to the auction
+    await auction.save();
+
+    res.status(200).json({ message: 'Auction closed successfully.', auction });
+  } catch (error) {
+    console.error('Error closing auction:', error);
+    res.status(500).json({ error: 'Internal server error.' });
   }
 };

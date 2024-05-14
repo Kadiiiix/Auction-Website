@@ -35,6 +35,7 @@ function App() {
   const [userId, setUserId] = useState("");
   const { query } = useParams();
 
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -59,15 +60,16 @@ function App() {
       description: 'You have successfully logged out.',
     });
   };
- const [showMenu, setShowMenu] = useState(false);
+
+  const [showMenu, setShowMenu] = useState(false);
 
  const toggleMenu = () => {
-   setShowMenu(!showMenu);
- };
+  setShowMenu(!showMenu);
+};
 
- const closeMenu = () => {
-   setShowMenu(false);
- };
+const closeMenu = () => {
+  setShowMenu(false);
+};
   useEffect(() => {
     // Check if token exists
     const token = localStorage.getItem("token");

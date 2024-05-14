@@ -4,8 +4,9 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import '../design/AuctionPage.css';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, Modal, notification } from 'antd';
 import CommentSection from './Comments';
+import ExtendAuctionModal from './ExtendAuctionModal';
 
 const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
@@ -16,8 +17,41 @@ const AuctionPage = ({setLoggedIn}) => {
   const [author, setAuthor] = useState("");
   //const userId = localStorage.getItem("userId");
  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
+
+ const [extendModalVisible, setExtendModalVisible] = useState(false);
+ const [closeModalVisible, setCloseModalVisible] = useState(false);
+
+ const handleExtendButtonClick = () => {
+   setExtendModalVisible(true);
+ };
+
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
+  };
+
+
+  const handleCloseAuctionButtonClick = () => {
+    setCloseModalVisible(true);
+  };
+
+  const handleConfirmCloseAuction = async () => {
+    try {
+      const response = await axios.put(`http://localhost:4000/api/auctions/${id}/close`);
+      console.log(response.data.message);
+      // Handle success or update UI accordingly
+      setCloseModalVisible(false);
+      notification.success({
+        message: 'Close Successful',
+        description: 'You have successfully closed your auction.',
+      });
+    } catch (error) {
+      console.error("Error closing auction:", error);
+      notification.error({
+        message: 'Extend Failed',
+        description: 'Error extending auction.',
+      });
+      // Handle error or show error message
+    }
   };
 
  const handlePlaceBid = async () => {
@@ -28,7 +62,6 @@ const AuctionPage = ({setLoggedIn}) => {
      const response = await axios.post(
        `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
      );
-     console.log(response.data.message);
    } catch (error) {
      console.error("Error placing bid:", error);
    }
@@ -64,7 +97,6 @@ const AuctionPage = ({setLoggedIn}) => {
       // Parse the response JSON data
       const responseData = await response.json();
 
-      console.log(responseData);
       setLiked(true);
       setLikeNumber(likeNumber+1);
       // Handle success or update UI accordingly
@@ -87,7 +119,7 @@ const AuctionPage = ({setLoggedIn}) => {
       }
     };
     fetchAuction();
-  },);
+  });
 
   const handleRemoveFromFavorites= async () => {
     try {
@@ -110,7 +142,6 @@ const AuctionPage = ({setLoggedIn}) => {
       }
       const responseData = await response.json();
 
-      console.log(responseData);
       setLiked(false);
       setLikeNumber(likeNumber-1);
     } catch (error) {
@@ -126,7 +157,6 @@ const AuctionPage = ({setLoggedIn}) => {
           `http://localhost:4000/api/users/${item.createdBy}`
         );
         setAuthor(response.data);
-        console.log(author);
       } catch (error) {
         console.error("Error fetching an auction");
       }
@@ -178,7 +208,7 @@ const AuctionPage = ({setLoggedIn}) => {
           {renderInfoBlock("End date",formatDate(item.closingDate))}
           {author && (
             <div className="one-block">
-              <p className="upper-title">Author</p>
+              <p className="upper-title">Created By</p>
               <Link to={`/profile/${author._id}`} className="lower-title">
                 {author.username}
               </Link>
@@ -254,6 +284,19 @@ const AuctionPage = ({setLoggedIn}) => {
                 </>
               )}
             </div>
+            {userId===author._id ? (
+              <>
+              <Button onClick={handleExtendButtonClick} className='extend-close'>Extend Auction</Button>
+              <ExtendAuctionModal
+                auctionId={id}
+                visible={extendModalVisible}
+                setVisible={setExtendModalVisible}
+              />
+              <Button danger onClick={handleCloseAuctionButtonClick}>Close Auction</Button>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="additional">{renderAdditionalInfo()}</div>
@@ -298,7 +341,16 @@ const AuctionPage = ({setLoggedIn}) => {
     );
   };
 
-  return <div className="auction-container">{item && renderAuctionInfo()}</div>;
+  return <div className="auction-container">{item && renderAuctionInfo()}
+          <Modal
+                title="Close Auction Confirmation"
+                visible={closeModalVisible}
+                onCancel={() => setCloseModalVisible(false)}
+                onOk={handleConfirmCloseAuction}
+              >
+                <p>Are you sure you want to close this auction?</p>
+              </Modal>
+          </div>;
 };
 
 export default AuctionPage;
