@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const userRoutes = require("./routes/userRoutes");
 const auctionRoutes = require("./routes/auctionRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 const app = express();
 const port = 4000;
 
@@ -19,7 +20,7 @@ app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/api/auctions", auctionRoutes);
 app.use("/api/favorite", favoriteRoutes);
-
+app.use("/api/notification", notificationRoutes);
 // Start the server after establishing the MongoDB connection
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })

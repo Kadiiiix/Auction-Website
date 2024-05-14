@@ -182,6 +182,9 @@ exports.placeBid = async (req, res) => {
     if (amount <= auction.highestBid || amount < auction.startingBid) {
       return res.status(400).json({ message: "Invalid bid amount" });
     }
+    if (!auction.bidderIds.includes(userId)) {
+      auction.bidderIds.push(userId); // Add the user ID to the bidderIds array
+    }
 
     // Place the bid
     auction.highestBid=amount;
