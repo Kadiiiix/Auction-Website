@@ -205,6 +205,7 @@ const AuctionPage = ({setLoggedIn}) => {
     return (
       <>
         <div className="information">
+          {renderInfoBlock("Vendor's Rating", author.vendorRating)}
           {renderInfoBlock("Item ID", item._id)}
           {renderInfoBlock("End date",formatDate(item.closingDate))}
           {author && (
