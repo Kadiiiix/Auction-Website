@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../design/NotificationPage.css";
+import { Link } from "react-router-dom";
 
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
@@ -55,9 +56,19 @@ function NotificationPage() {
         {notifications.map((notification, index) => (
           <div key={index} className="notification-item">
             <div className="notification-message">{notification.message}</div>
+            {notification.type ? (
+              <Link to={`/profile/${notification.bidderId}`}>
+                Bidder Profile
+              </Link>
+            ) : (
+              <Link to={`/profile/${notification.vendorId}`}>
+                Vendor Profile
+              </Link>
+            )}
             <div className="notification-time">
               {formatTime(notification.timestamp)}
             </div>
+
             <button onClick={() => deleteNotification(notification._id)}>
               Delete
             </button>
