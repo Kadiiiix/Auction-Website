@@ -15,6 +15,8 @@ const AuctionPage = ({setLoggedIn}) => {
   const [liked, setLiked] = useState(false);
   const [likeNumber, setLikeNumber] = useState(0);
   const [author, setAuthor] = useState("");
+  const [authorsRate, setAuthorsRate] = useState(0);
+
   //const userId = localStorage.getItem("userId");
  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
 
@@ -115,6 +117,7 @@ const AuctionPage = ({setLoggedIn}) => {
         setItem(response.data);
         console.log(item);
         setLikeNumber(response.data.likedBy.length)
+        setAuthorsRate(response.data.vendorRating)
       } catch (error) {
         console.error("Error fetching an auction");
       }
@@ -200,12 +203,22 @@ const AuctionPage = ({setLoggedIn}) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
   };
+
+  const formatRating = (authorsRate) => {
+    // Check if authorsRate is defined before attempting to call toFixed()
+    if (authorsRate) {
+      return authorsRate.toFixed(2);
+    } else {
+      // Handle the case where authorsRate is undefined or not a number
+      return "N/A"; // or any other appropriate value or message
+    }
+  };
   
   const renderAuctionInfo = () => {
     return (
       <>
         <div className="information">
-          {renderInfoBlock("Vendor's Rating", author.vendorRating)}
+          {renderInfoBlock("Vendor's Rating", formatRating(author.vendorRating))}
           {renderInfoBlock("Item ID", item._id)}
           {renderInfoBlock("End date",formatDate(item.closingDate))}
           {author && (

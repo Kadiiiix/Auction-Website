@@ -76,7 +76,7 @@ const UserProfileSide = ({ id, loggedIn }) => {
             }
         };
         fetchUser();
-    }, []);
+    });
 
 
     const renderSideInfo = () => {
@@ -104,9 +104,9 @@ const UserProfileSide = ({ id, loggedIn }) => {
         <Space wrap className="item">
             <Avatar shape="square" size={200} icon={<UserOutlined />} />
         </Space>
-        <Card title={"User's Rating"}
+        <Card title={`${author}'s Rating`}
         style={{ width: 300 }}>
-            <Rating id={id}/>
+            <Rating id={id} userId={userId}/>
         </Card>
         <Card
             title={"Search Activity"}
