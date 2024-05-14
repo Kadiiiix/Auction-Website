@@ -18,6 +18,7 @@ const auctionSchema = new mongoose.Schema({
   likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   highestBid: { type: Number, default: 0 },
   highestBidder: { type: String, default: null },
+  bidderIds: [String],
 });
 
 const Auction = mongoose.model("Auction", auctionSchema);
