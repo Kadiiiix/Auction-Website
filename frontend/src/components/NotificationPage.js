@@ -57,12 +57,12 @@ function NotificationPage() {
           <div key={index} className="notification-item">
             <div className="notification-message">{notification.message}</div>
             {notification.type ? (
-              <Link to={`/profile/${notification.bidderId}`}>
-                Bidder Profile
-              </Link>
-            ) : (
               <Link to={`/profile/${notification.vendorId}`}>
                 Vendor Profile
+              </Link>
+            ) : (
+              <Link to={`/profile/${notification.bidderId}`}>
+                Bidder Profile
               </Link>
             )}
             <div className="notification-time">

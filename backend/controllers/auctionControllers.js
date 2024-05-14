@@ -1,4 +1,7 @@
 const Auction = require('../models/auctionModel');
+const {
+  sendNotificationsAtAuctionExpiration,
+} = require("../controllers/notificationControllers");
 
 exports.createAuction = async (req, res) => {
   try {
@@ -214,7 +217,7 @@ exports.closeAuction = async (req, res) => {
     
     // Save the changes to the auction
     await auction.save();
-
+    await sendNotificationsAtAuctionExpiration({ params: { auctionId: id } }, res);
     res.status(200).json({ message: 'Auction closed successfully.', auction });
   } catch (error) {
     console.error('Error closing auction:', error);
