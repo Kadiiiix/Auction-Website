@@ -164,12 +164,18 @@ const AuctionPage = ({setLoggedIn}) => {
     fetchLikes();
   });
 
+  const formatDate = (dateString) => {
+    const options = { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+  };
+  
   const renderAuctionInfo = () => {
     return (
       <>
         <div className="information">
           {renderInfoBlock("Item ID", item._id)}
-          {renderInfoBlock("End date", item.closingDate)}
+          {renderInfoBlock("End date",formatDate(item.closingDate))}
           {author && (
             <div className="one-block">
               <p className="upper-title">Author</p>
