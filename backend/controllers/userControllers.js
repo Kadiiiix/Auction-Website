@@ -156,6 +156,7 @@ exports.addVendorRating = async (req, res) => {
     const userId = req.params.userId;
     const rating = req.params.rating;
     const user = await User.findById(userId);
+    
 
     
     if (!user) {

@@ -9,8 +9,20 @@ const userSchema = new mongoose.Schema({
   phone_number: String,
   city: String,
   photo: String,
-  vendorRatings: [{ type: Number, default: 0 }], // Array of vendor ratings
-  vendorRating: { type: Number, default: 0 }, // Average vendor rating
+  vendorRatings: [
+    {
+      type: Number,
+      default: 1,
+      min: 1,
+      max: 5,
+    },
+  ], // Array of vendor ratings
+  vendorRating: {
+    type: Number,
+    default: 1,
+    min: 1,
+    max: 5,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
