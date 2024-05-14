@@ -26,12 +26,15 @@ import NavigationMenu from "./components/NavigationMenu";
 
 import { MenuOutlined } from "@ant-design/icons";
 import "../src/design/MainHeader.css";
+import UsersAuctionsPage from "./components/UsersAuctions";
+import UsersComments from "./components/UsersComments";
 
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [userId, setUserId] = useState("");
   const { query } = useParams();
+
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -57,15 +60,16 @@ function App() {
       description: 'You have successfully logged out.',
     });
   };
- const [showMenu, setShowMenu] = useState(false);
+
+  const [showMenu, setShowMenu] = useState(false);
 
  const toggleMenu = () => {
-   setShowMenu(!showMenu);
- };
+  setShowMenu(!showMenu);
+};
 
- const closeMenu = () => {
-   setShowMenu(false);
- };
+const closeMenu = () => {
+  setShowMenu(false);
+};
   useEffect(() => {
     // Check if token exists
     const token = localStorage.getItem("token");
@@ -167,6 +171,28 @@ function App() {
             element={
               loggedIn ? (
                 <FavoritesPage setLoggedIn={loggedIn} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
+
+          <Route
+            path="/auctions/:id"
+            element={
+              loggedIn ? (
+                <UsersAuctionsPage setLoggedIn={loggedIn} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
+
+          <Route
+            path="/comments/:id"
+            element={
+              loggedIn ? (
+                <UsersComments setLoggedIn={loggedIn} />
               ) : (
                 <Navigate to="/notlogged" />
               )

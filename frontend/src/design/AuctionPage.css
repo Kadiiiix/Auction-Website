@@ -8,6 +8,17 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
   }
 
+  .extend-close{
+    padding:5px;
+    margin-bottom: 5px;
+    background-color: rgba(244, 206, 20, 1);
+    color: white;
+  }
+
+  .full-comment{
+    padding: 5px;
+  }
+
   .additional,.comments{
     margin-right: 0;
     margin-left: 0;
