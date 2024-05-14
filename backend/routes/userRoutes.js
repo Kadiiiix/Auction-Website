@@ -10,6 +10,6 @@ router.get("/:userId/favorites",userController.listFavorites); // Apply the midd
 router.get("/:userId", userController.getUsernameFromUserId);
 router.get("/comments/:userId", commentController.getCommentsByUserId);
 router.put("/:userId", userController.editUserInfo);
-router.post("/:userId/:rating", userController.addVendorRating);
+router.post("/:userId/rate", userController.addVendorRating);
 
 module.exports = router;

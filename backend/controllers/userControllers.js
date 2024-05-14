@@ -152,36 +152,34 @@ exports.listFavorites = async (req, res) => {
 // Function to add a vendor rating to a user's profile and calculate the average
 exports.addVendorRating = async (req, res) => {
   try {
-    
-    const userId = req.params.userId;
-    const rating = req.params.rating;
-    const user = await User.findById(userId);
-    
+    const { userId } = req.params;
+    const { rating, raterId } = req.body; // Assuming raterId is sent in the request body
 
-    
-    if (!user) {
-      throw new Error("User not found");
+    // Find the user to rate
+    const userToRate = await User.findById(userId);
+
+    if (!userToRate) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    user.vendorRatings.push(rating);
+    // Update the vendorRatings
+    userToRate.vendorRatings.push(rating);
 
-    
-    const totalRatings = user.vendorRatings.length;
-    const totalRatingSum = user.vendorRatings.reduce(
-      (sum, rating) => sum + rating,
-      0
-    );
-    const averageRating = totalRatingSum / totalRatings;
+    // Add raterId to ratedBy array
+    userToRate.ratedBy.push(raterId);
 
-    
-    user.vendorRating = averageRating;
+    // Calculate vendorRating
+    const totalRatings = userToRate.vendorRatings.length;
+    const sumRatings = userToRate.vendorRatings.reduce((acc, curr) => acc + curr, 0);
+    userToRate.vendorRating = sumRatings / totalRatings;
 
-    
-    await user.save();
+    // Save the updated user
+    await userToRate.save();
 
-    return { message: "Vendor rating added successfully", averageRating };
+    res.status(200).json({ message: "User rated successfully" });
   } catch (error) {
     console.error(error);
-    throw new Error("Error adding vendor rating");
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
