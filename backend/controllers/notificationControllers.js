@@ -77,11 +77,19 @@ exports.sendNotificationsAtAuctionExpiration = async (req, res) => {
     const notificationToBidder = new Notification({
       userId: highestBidderId,
       message: `Congratulations! You won the auction for ${auction.name}.`,
+      bidderId: highestBidderId,
+      vendorId: vendorId,
+      auctionId: auctionId,
+      notificationType: true,
     });
 
     const notificationToVendor = new Notification({
       userId: vendorId,
       message: `The auction for ${auction.name} has ended. The highest bid was ${auction.highestBid} by ${highestBidder.name}.`,
+      bidderId: highestBidderId,
+      vendorId: vendorId,
+      auctionId: auctionId,
+      notificationType: false,
     });
 
     // Save notifications to the database
