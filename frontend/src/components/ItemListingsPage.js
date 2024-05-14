@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AuctionItem from "./AuctionItem";
+import { Button } from "antd";
 import "../design/ItemListingsPage.css";
+
 
 const ItemListingsPage = ({ searchQuery }) => {
   const [auctionListings, setAuctionListings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const auctionsPerPage = 5;
 
   useEffect(() => {
     const fetchAuctionListings = async () => {
@@ -20,16 +24,32 @@ const ItemListingsPage = ({ searchQuery }) => {
     fetchAuctionListings();
   }, []);
 
-  const filteredAuctionListings = searchQuery
-    ? auctionListings.filter((listing) =>
-        listing.name.toLowerCase().includes(searchQuery.toLowerCase())
+ 
+
+  const indexOfLastAuction = currentPage * auctionsPerPage;
+  const indexOfFirstAuction = indexOfLastAuction - auctionsPerPage;
+  const currentAuctions = auctionListings.slice(
+    indexOfFirstAuction,
+    indexOfLastAuction
+  );
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) =>
+      Math.min(
+        prevPage + 1,
+        Math.ceil(auctionListings.length / auctionsPerPage)
       )
-    : auctionListings;
+    );
+  };
 
   return (
     <div className="item-listings-page">
       <div className="auction-items">
-        {filteredAuctionListings.map((listing) => (
+        {currentAuctions.map((listing) => (
           <Link
             to={`/auction/${listing._id}`}
             key={listing._id}
@@ -38,6 +58,20 @@ const ItemListingsPage = ({ searchQuery }) => {
             <AuctionItem item={listing} />
           </Link>
         ))}
+      </div>
+      <div className="pagination">
+        <div className="centered-buttons">
+          <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+            Previous
+          </Button>
+          <span>{currentPage}</span>
+          <Button
+            onClick={handleNextPage}
+            disabled={indexOfLastAuction >= auctionListings.length}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

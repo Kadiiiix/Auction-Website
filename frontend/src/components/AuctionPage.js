@@ -14,16 +14,26 @@ const AuctionPage = ({setLoggedIn}) => {
   const [liked, setLiked] = useState(false);
   const [likeNumber, setLikeNumber] = useState(0);
   const [author, setAuthor] = useState("");
-  const userId = localStorage.getItem("userId");
-
+  //const userId = localStorage.getItem("userId");
+ const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
   };
 
-  const handlePlaceBid = () => {
-    // Implement the logic to place bid
-    console.log("Placing bid:", bidAmount);
-  };
+ const handlePlaceBid = async () => {
+   try {
+     const auctionId = item._id;
+     const currentUserId = userId; // Use a different variable name here to avoid shadowing
+     const amount = bidAmount; // I noticed you missed declaring 'amount' as a variable
+     const response = await axios.post(
+       `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
+     );
+     console.log(response.data.message);
+   } catch (error) {
+     console.error("Error placing bid:", error);
+   }
+ };
+
 
   const handleAddToFavorites = async () => {
     try {
@@ -163,17 +173,23 @@ const AuctionPage = ({setLoggedIn}) => {
           {author && (
             <div className="one-block">
               <p className="upper-title">Author</p>
-              <Link to={`/profile/${author._id}`} className="lower-title">{author.username}</Link>
+              <Link to={`/profile/${author._id}`} className="lower-title">
+                {author.username}
+              </Link>
             </div>
           )}
-          {renderInfoBlock("Likes", item.likedBy.length, )}{" "}
+          {renderInfoBlock("Likes", item.likedBy.length)}{" "}
         </div>
         <div className="photo-bidding">
-          <img className='auction-photo' src={process.env.PUBLIC_URL + '/dresser.png'} alt="Dresser" />
+          <img
+            className="auction-photo"
+            src={process.env.PUBLIC_URL + "/dresser.png"}
+            alt="Dresser"
+          />
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>
-              <p className="highest-bid">1000 KM</p>
+              <p className="highest-bid">{item.highestBid}</p>
             </div>
             <hr className="separator" />
             <div className="minimal">
@@ -181,7 +197,9 @@ const AuctionPage = ({setLoggedIn}) => {
               <p className="minimal-bid">{item.startingBid} KM</p>
             </div>
             <div className="placing-bids">
-              <Button className="bid">Place Bid</Button>
+              <Button className="bid" onClick={handlePlaceBid}>
+                Place Bid
+              </Button>
               <input
                 className="input"
                 type="number"
@@ -198,7 +216,6 @@ const AuctionPage = ({setLoggedIn}) => {
                     disabled={!setLoggedIn}
                     className="likeButton"
                   >
-
                     {" "}
                     {/* Changed from loggedIn to isLoggedIn */}
                     <HeartFilled />
@@ -233,11 +250,9 @@ const AuctionPage = ({setLoggedIn}) => {
             </div>
           </div>
         </div>
-        <div className='additional'>
-        {renderAdditionalInfo()}
-        </div>
-        <div className='comments'>
-        {item && <CommentSection auctionId={id} />}
+        <div className="additional">{renderAdditionalInfo()}</div>
+        <div className="comments">
+          {item && <CommentSection auctionId={id} />}
         </div>
       </>
     );
