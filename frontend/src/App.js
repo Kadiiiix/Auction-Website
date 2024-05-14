@@ -23,7 +23,7 @@ import UserProfile from "./components/UserProfile";
 import SearchAuctions from "./components/SearchAuctions";
 import CategoryPage from "./components/CategoryPage";
 import NavigationMenu from "./components/NavigationMenu";
-
+import NotificationPage from "./components/NotificationPage";
 import { MenuOutlined } from "@ant-design/icons";
 import "../src/design/MainHeader.css";
 
@@ -110,6 +110,9 @@ function App() {
                 <li>
                   <Link to={`/favorites/${userId}`}>My Favorites</Link>
                 </li>
+                <li>
+                  <Link to={`/notifications/${userId}`}>My Notifications</Link>
+                </li>
               </>
             )}
           </ul>
@@ -119,7 +122,8 @@ function App() {
           <div className="Title">
             <div style={{ position: "relative" }}>
               <a href="/" class="no-underline">
-              <h2 style={{ display: "inline-block" }}>IzložBa</h2></a>
+                <h2 style={{ display: "inline-block" }}>IzložBa</h2>
+              </a>
               <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
                 <MenuOutlined />
                 {showMenu && <NavigationMenu />}
@@ -149,6 +153,16 @@ function App() {
             element={<LoginPage setLoggedIn={setLoggedIn} />}
           />
           <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/notifications/:id"
+            element={
+              loggedIn ? (
+                <NotificationPage setLoggedIn={loggedIn} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           <Route
@@ -175,7 +189,13 @@ function App() {
 
           <Route
             path="/profile/:id"
-            element={loggedIn ? <UserProfile loggedIn={loggedIn}/> : <Navigate to="/notlogged" />}
+            element={
+              loggedIn ? (
+                <UserProfile loggedIn={loggedIn} />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
           />
 
           <Route
