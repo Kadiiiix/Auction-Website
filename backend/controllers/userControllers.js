@@ -147,3 +147,40 @@ exports.listFavorites = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+// Function to add a vendor rating to a user's profile and calculate the average
+exports.addVendorRating = async (req, res) => {
+  try {
+    
+    const userId = req.params.userId;
+    const rating = req.params.rating;
+    const user = await User.findById(userId);
+
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    user.vendorRatings.push(rating);
+
+    
+    const totalRatings = user.vendorRatings.length;
+    const totalRatingSum = user.vendorRatings.reduce(
+      (sum, rating) => sum + rating,
+      0
+    );
+    const averageRating = totalRatingSum / totalRatings;
+
+    
+    user.vendorRating = averageRating;
+
+    
+    await user.save();
+
+    return { message: "Vendor rating added successfully", averageRating };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error adding vendor rating");
+  }
+};
