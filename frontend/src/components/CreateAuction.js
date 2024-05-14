@@ -147,7 +147,7 @@ const CreateAuction = ({userId}) => {
           },
         ]}
       >
-        <DatePicker />
+        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss"/>
       </Form.Item>
 
       <Form.Item
