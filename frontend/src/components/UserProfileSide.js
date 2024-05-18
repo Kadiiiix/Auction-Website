@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useParams } from "react";
 import axios from "axios";
 import { Card, Button, Space, Avatar } from "antd";
 import { UserOutlined, ShoppingOutlined, HeartOutlined, CommentOutlined } from '@ant-design/icons';
@@ -118,7 +118,7 @@ const UserProfileSide = ({ id, loggedIn }) => {
             </Space>
         </Card>
         <div className="item">
-        {(loggedIn && userId!==id)? <Button className="edit-button">Send Message</Button> : <Button disabled className="edit-button">Send Message</Button>}
+        {(loggedIn && userId!==id)? <Button className="edit-button"><Link to={`http://localhost:3000/messages/${id}`}>Send Message</Link></Button> : <Button disabled className="edit-button">Send Message</Button>}
         </div>
         </div>
         </>

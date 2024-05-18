@@ -21,6 +21,7 @@ const SearchResultsPage = () => {
         const response = await axios.get(`http://localhost:4000/api/auctions/search?query=${query}`);
         setSearchResults(response.data);
         setLoading(false);
+        query="";
       } catch (error) {
         setError("An error occurred while fetching data");
         setLoading(false);
@@ -40,11 +41,14 @@ const SearchResultsPage = () => {
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <>
+    <h2>There are no auctions matching your search: {query}</h2>
+    </>;
   }
 
   return (
 <div className="item-listings-page">
+  {query ? (<><h2>Search results for: {query}</h2></>):(<></>)}
       <div className="auction-items">
         {searchResults.map((listing) => (
           <Link
