@@ -28,6 +28,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import "../src/design/MainHeader.css";
 import UsersAuctionsPage from "./components/UsersAuctions";
 import UsersComments from "./components/UsersComments";
+import Messages from "./components/Messages";
 
 function App() {
 
@@ -237,6 +238,7 @@ const closeMenu = () => {
             element={<CategoryPage query={query} setLoggedIn={loggedIn} />}
           />
           <Route path="/notlogged" element={<NotLoggedIn />} />
+          <Route path="/messages/:id" element={<Messages/>}/>
         </Routes>
       </div>
     </Router>
