@@ -1,13 +1,15 @@
 const Message = require("../models/messageModel");
+const User = require("../models/userModel"); // Assuming you have a User model to fetch user details
 
 // Send a new message
 const sendMessage = async (req, res) => {
   try {
     const { sender, receiver, message } = req.body;
     const newMessage = new Message({
-      sender: sender,
-      receiver: receiver,
+      sender,
+      receiver,
       message,
+      timestamp: new Date() // Ensure timestamps are recorded
     });
 
     await newMessage.save();
@@ -36,4 +38,15 @@ const getMessages = async (req, res) => {
   }
 };
 
-module.exports = { sendMessage, getMessages };
+// Get all chats for a user
+const getAllMessages = async (req, res) => {
+  try {
+    const messages = await Message.find();
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get all messages, ", error });
+  }
+};
+
+
+module.exports = { sendMessage, getMessages, getAllMessages };

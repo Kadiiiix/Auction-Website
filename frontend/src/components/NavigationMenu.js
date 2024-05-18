@@ -128,7 +128,7 @@ const items = [
 
 const NavigationMenu = () => (
   <div className="menu-container">
-    <Menu mode="vertical">
+    <Menu mode="vertical" className="menu">
       {items.map((item) => (
         <SubMenu key={item.key} title={item.label}>
           {item.children.map((child) => (

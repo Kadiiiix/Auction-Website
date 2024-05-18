@@ -4,7 +4,12 @@
     min-height: 100vh;
     width: 100%;
 }
-
+.account-button{
+    background-color: #45474b00;
+    color: white;
+    font-size: 14;
+    border: #45474b00;
+}
 .UpperHeader {
     width: 100%;
     margin: 0; /* Remove margin */
@@ -43,9 +48,11 @@
     margin: 0; /* Remove margin */
     padding: 0; /* Remove padding */
     height: 17vh;
-    background-color: black; /* Black background color */
+    background-color:#F5F7F8; /* Black background color */
+    /* Black background color */
     display: flex; /* Use flexbox */
     flex-direction: row; /* Stack elements vertically */
+    justify-content: space-between;
     align-items: flex-end; 
     border-radius: 1px;
     border-bottom: 1px solid black; /* Add border with 1px width and solid black color */
@@ -74,12 +81,12 @@
 
 .List {
     width: 100%;
-    margin: 0; /* Remove margin */
-    padding: 0; /* Remove padding */
+    margin: 0px 50px 0px 0px; /* Remove margin */
+    padding: 0px; /* Remove padding */
     height: 17vh;
     background-color: #F5F7F8; /* Black background color */
     display: flex; /* Use flexbox */
-    justify-content: center; /* Align items to the right */
+    justify-content: space-between; /* Align items to the right */
     align-items: flex-end; /* Align items vertically */
 }
 
@@ -133,6 +140,7 @@
     background-color: #F4CE14;
 }
 
-
-
+.account-menu{
+    width: 140px;
+}
   
