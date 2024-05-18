@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-
 function Messages() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -13,76 +12,64 @@ function Messages() {
   const [receiver, setReceiver] = useState("");
 
   const sendMessage = async () => {
-    try{
+    try {
       const response = await axios.post('http://localhost:4000/api/messages/send', {
         sender: userId,
         receiver: id,
         message: newMessage,
-      })
+      });
       console.log("Message sent", response.data);
+      setMessages([...messages, { sender: userId, message: newMessage }]);
+      setNewMessage('');
     } catch (error) {
       console.error("Error sending message: ", error);
     }
-  }
-
-
-
-useEffect(() => {
-    const getMessages = async () => {
-        try{
-            const response = await axios.get(`http://localhost:4000/api/messages/conversation/${id}?senderId=${userId}`);
-            setOldMessages(response.data);
-            const senderUsername = fetchUser(response.data.sender);
-            setSender(senderUsername.username);
-          } catch (error) {
-            console.error("Error fetching messages.");
-        }
-    };
-    getMessages();
-},)
-
-useEffect(() => {
-  const fetchSender = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:4000/api/users/${userId}`
-      );
-      setSender(response.data);
-    } catch (error) {
-      console.error("Error fetching a user.");
-    }
   };
-  fetchSender();
-}, [userId]);
-
 
   const fetchUser = async (user) => {
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/users/${user}`
-      );
-      setReceiver(response.data);
+      const response = await axios.get(`http://localhost:4000/api/users/${user}`);
+      return response.data;
     } catch (error) {
-      console.error("Error fetching a user");
+      console.error("Error fetching user:", error);
+      return null;
     }
   };
 
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/api/messages/conversation/${id}?senderId=${userId}`);
+        setOldMessages(response.data);
 
+        const senderData = await fetchUser(userId);
+        const receiverData = await fetchUser(id);
+
+        if (senderData) setSender(senderData.username);
+        if (receiverData) setReceiver(receiverData.username);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+    getMessages();
+  }, [id, userId]);
 
   return (
     <div>
-      <h2>Chat with {receiver.username}</h2>
+      <h2>Chat with {receiver}</h2>
       <div>
-        <div>{/* Display old messages */}
-      {oldMessages.map((message, index) => (
-        <div key={index}>
-          <p>{sender.username}: {message.message}</p>
-        </div>
-      ))}</div>
-        {/* Display messages */}
+        {/* Display old messages */}
+        {oldMessages.map((message, index) => (
+          <div key={index}>
+            <p>{message.sender === userId ? sender : receiver}: {message.message}</p>
+          </div>
+        ))}
+      </div>
+      <div>
+        {/* Display new messages */}
         {messages.map((msg, index) => (
           <div key={index}>
-            <p>{msg.userId}: {msg.message}</p>
+            <p>{msg.sender === userId ? sender : receiver}: {msg.message}</p>
           </div>
         ))}
       </div>
