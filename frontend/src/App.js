@@ -30,6 +30,8 @@ import UsersAuctionsPage from "./components/UsersAuctions";
 import UsersComments from "./components/UsersComments";
 import Messages from "./components/Messages";
 import MessageFull from "./components/MessageFull";
+import ResetPassword from "./components/ResetPassword";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
 
@@ -188,6 +190,8 @@ const closeMenu = () => {
             }
           />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           <Route
             path="/create"

@@ -12,6 +12,7 @@ router.get("/:userId", userController.getUsernameFromUserId);
 router.get("/comments/:userId", commentController.getCommentsByUserId);
 router.put("/:userId", userController.editUserInfo);
 router.post("/:userId/rate", userController.addVendorRating);
+router.put('/change-password/:userId', userController.changePassword);
 
 
 module.exports = router;
