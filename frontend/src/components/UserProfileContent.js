@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button, Form, Input, Space, notification, Modal } from "antd";
 
+function validatePassword(password) {
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+  return passwordRegex.test(password);
+}
+
 const UserProfileContent = ({ id, loggedIn }) => {
   const [author, setAuthor] = useState("");
   const [fullname, setName] = useState("");
@@ -91,14 +96,13 @@ const UserProfileContent = ({ id, loggedIn }) => {
       const response = await axios.put(`http://localhost:4000/api/users/${id}`, values);
   
       if (response.data) {
-        console.log("User information updated successfully:", response.data);
+
         // Display success notification
         notification.success({
           message: 'Success',
           description: 'Changes were saved successfully.',
         });
       } else {
-        console.log("User information updated successfully.");
       }
       setEditMode(false);
     } catch (error) {
@@ -124,7 +128,13 @@ const UserProfileContent = ({ id, loggedIn }) => {
 
   const handleChangePassword = async (values) => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/users/${id}`, values);
+      const userId = localStorage.getItem("userId"); // Assuming the userId is stored in localStorage
+  
+      const response = await axios.put(
+        `http://localhost:4000/api/users/change-password/${userId}`,
+        values
+      );
+  
       if (response.data) {
         notification.success({
           message: 'Success',
@@ -132,18 +142,25 @@ const UserProfileContent = ({ id, loggedIn }) => {
         });
         setChangePasswordModalVisible(false);
         changePasswordForm.resetFields();
-      } else {
-        console.log("Password change failed.");
-      }
+      } 
     } catch (error) {
       if (error.response && error.response.data) {
         console.error("Error changing password:", error.response.data);
+        notification.error({
+          message: 'Error',
+          description: 'Password was not changed. Make sure you have entered correct current password.',
+        })
+        
       } else {
         console.error("Error changing password:", error.message);
+        notification.error({
+          message: 'Error',
+          description: 'Password was not changed. Make sure you have entered correct current password.',
+        })
       }
     }
   };
-
+  
   return (
     <>
       <Card title={`${author}'s Information`} className="main-card">
@@ -248,12 +265,20 @@ const UserProfileContent = ({ id, loggedIn }) => {
                 required: true,
                 message: 'Please input your new password!',
               },
+              {
+                validator: (_, value) => {
+                  if (validatePassword(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Password must be at least 8 characters long and include at least one uppercase letter, one number, and one special character.'));
+                },
+              },
             ]}
           >
             <Input.Password />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit" onClick={handleChangePassword}>
+            <Button type="primary" htmlType="submit">
               Change Password
             </Button>
           </Form.Item>
