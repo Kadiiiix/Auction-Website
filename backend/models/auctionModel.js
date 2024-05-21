@@ -19,6 +19,10 @@ const auctionSchema = new mongoose.Schema({
   highestBid: { type: Number, default: 0 },
   highestBidder: { type: String, default: null },
   bidderIds: [String],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Auction = mongoose.model("Auction", auctionSchema);
