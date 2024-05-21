@@ -24,6 +24,7 @@ const LoginPage = ({ setLoggedIn }) => {
         setRedirectToHome(true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
+        localStorage.setItem("role", data.role);
         setLoggedIn(true);
         // Display success notification
         notification.success({

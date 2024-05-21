@@ -237,9 +237,9 @@ const AuctionPage = ({setLoggedIn}) => {
         <div className="photo-bidding">
           {item && (
             <img
-              className="auction-photo"
               src={process.env.PUBLIC_URL + item.picture} // Use item.picture as the image source
               alt="Auction Item"
+              style={{ maxWidth: '700px' }}
             />
           )}
           <div className="bidding">

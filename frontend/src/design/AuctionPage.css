@@ -124,10 +124,11 @@
     margin-top: 20px;
     border: 1px solid rgba(69, 71, 75, 0.283);
     border-radius: 5px;
+    width: auto;
   }
   
   .auction-photo {
-    width: 500px;
+    width: 50%;
     height: auto; /* Adjust width as needed */ /* Maintain aspect ratio */
   }
   

@@ -36,3 +36,13 @@ exports.getCommentsByAuctionId = async (req, res) => {
       res.status(500).json({ error: "Unable to fetch user's comments"});
     }
   };
+
+  exports.getAllComments = async (req, res) => {
+    try {
+      const comments = await Comment.find();
+      res.status(200).json(comments);
+    } catch (error) {
+      console.error('Error getting all users:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
