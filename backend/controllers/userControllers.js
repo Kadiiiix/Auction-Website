@@ -3,8 +3,74 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const { verifyToken } = require("../middleware/middleware");
 
+// Generate JWT token function
 const generateToken = (user) => {
   return jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' }); // Expires in 1 hour
+};
+
+// Password validation function
+function validatePassword(password) {
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+  return passwordRegex.test(password);
+}
+
+// Password hashing function
+async function hashPassword(password) {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+}
+
+exports.changePassword = async (req, res) => {
+  const userId = req.params.userId;
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the current password matches the stored hashed password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Incorrect current password' });
+    }
+
+    // Validate the new password
+    if (!validatePassword(newPassword)) {
+      return res.status(400).json({
+        error: "Invalid new password. Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.",
+      });
+    }
+
+    // Hash the new password
+    const hashedNewPassword = await hashPassword(newPassword);
+
+    // Update the user's password
+    user.password = hashedNewPassword;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password changed successfully.' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Other user controller functions...
+exports.searchUser = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    // Search for users whose username matches the query
+    const users = await User.find({ username: { $regex: query, $options: 'i' } });
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error searching for users:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
 exports.editUserInfo = async (req, res) => {
@@ -119,20 +185,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
-// Password validation function
-function validatePassword(password) {
-  const passwordRegex =
-    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-  return passwordRegex.test(password);
-}
-
-// Password hashing function
-async function hashPassword(password) {
-  const saltRounds = 10;
-  return await bcrypt.hash(password, saltRounds);
-}
-
 exports.listFavorites = async (req, res) => {
   try {
       const userId = req.params.userId;
@@ -148,8 +200,6 @@ exports.listFavorites = async (req, res) => {
   }
 };
 
-
-// Function to add a vendor rating to a user's profile and calculate the average
 exports.addVendorRating = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -182,6 +232,7 @@ exports.addVendorRating = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 exports.getRecommendations = async (req, res) => {
   try {

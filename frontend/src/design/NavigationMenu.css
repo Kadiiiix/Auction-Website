@@ -1,15 +1,16 @@
 /* NavigationMenu.css */
 
 /* Style the menu container */
-.menu-container {
-  position: absolute; /* Absolute position */
-  
+.menu {
+  position:absolute; /* Absolute position */
   width: 256px; /* Adjust the width as needed */
-  /*background-color: hsl(200, 18%, 97%); /* Background color for the menu */
+  background-color: white;
+  border: 1px solid rgba(123, 120, 120, 0.242);
+  border-radius: 4px;
   z-index: 1000; /* Ensure the menu appears above other content */
   overflow-y: auto; /* Enable vertical scrolling if needed */
-  padding-left: 30px; /* Add padding as needed */
-  padding-top:50px;
+  /*padding-left: 30px; /* Add padding as needed */
+  padding: 5px;
   text-align: left;
 }
 
@@ -21,6 +22,6 @@
 
 /* Style the submenus */
 .sub-menu {
-  padding-left: 20px; /* Indent submenus */
+  /*padding-left: 20px; /* Indent submenus */
   
 }
