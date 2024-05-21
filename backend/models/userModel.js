@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
     max: 5,
   },
   ratedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Users who have rated this user
+  bidOn: [{ type: mongoose.Schema.Types.ObjectId, ref: "Auction" }],
 });
 
 module.exports = mongoose.model("User", userSchema);

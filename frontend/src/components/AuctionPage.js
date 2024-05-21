@@ -7,7 +7,7 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { Button, Modal, notification } from 'antd';
 import CommentSection from './Comments';
 import ExtendAuctionModal from './ExtendAuctionModal';
-
+import Caros from './Carousel'
 const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
@@ -218,9 +218,12 @@ const AuctionPage = ({setLoggedIn}) => {
     return (
       <>
         <div className="information">
-          {renderInfoBlock("Vendor's Rating", formatRating(author.vendorRating))}
+          {renderInfoBlock(
+            "Vendor's Rating",
+            formatRating(author.vendorRating)
+          )}
           {renderInfoBlock("Item ID", item._id)}
-          {renderInfoBlock("End date",formatDate(item.closingDate))}
+          {renderInfoBlock("End date", formatDate(item.closingDate))}
           {author && (
             <div className="one-block">
               <p className="upper-title">Created By</p>
@@ -232,13 +235,13 @@ const AuctionPage = ({setLoggedIn}) => {
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
         </div>
         <div className="photo-bidding">
-        {item && (
-          <img
-            className="auction-photo"
-            src={process.env.PUBLIC_URL + item.picture} // Use item.picture as the image source
-            alt="Auction Item"
-          />
-        )}
+          {item && (
+            <img
+              className="auction-photo"
+              src={process.env.PUBLIC_URL + item.picture} // Use item.picture as the image source
+              alt="Auction Item"
+            />
+          )}
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>
@@ -301,15 +304,22 @@ const AuctionPage = ({setLoggedIn}) => {
                 </>
               )}
             </div>
-            {userId===author._id ? (
+            {userId === author._id ? (
               <>
-              <Button onClick={handleExtendButtonClick} className='extend-close'>Extend Auction</Button>
-              <ExtendAuctionModal
-                auctionId={id}
-                visible={extendModalVisible}
-                setVisible={setExtendModalVisible}
-              />
-              <Button danger onClick={handleCloseAuctionButtonClick}>Close Auction</Button>
+                <Button
+                  onClick={handleExtendButtonClick}
+                  className="extend-close"
+                >
+                  Extend Auction
+                </Button>
+                <ExtendAuctionModal
+                  auctionId={id}
+                  visible={extendModalVisible}
+                  setVisible={setExtendModalVisible}
+                />
+                <Button danger onClick={handleCloseAuctionButtonClick}>
+                  Close Auction
+                </Button>
               </>
             ) : (
               <></>
@@ -317,6 +327,11 @@ const AuctionPage = ({setLoggedIn}) => {
           </div>
         </div>
         <div className="additional">{renderAdditionalInfo()}</div>
+        <div className="carousel">
+          <div className="carousel">
+            <Caros auctionId={item._id} />
+          </div>
+        </div>
         <div className="comments">
           {item && <CommentSection auctionId={id} />}
         </div>
