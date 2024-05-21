@@ -1,0 +1,61 @@
+.sider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    width: auto;
+  }
+  
+  .conversations-list {
+    width: 100%;
+    max-width: 800px;
+    max-height: 70vh; /* Adjust as needed */
+    overflow-y: auto;
+    align-items: center;
+  }
+
+  .search {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.164);
+  }
+  
+  .conversation-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 4px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+  
+  .username {
+    font-weight: bold;
+  }
+  
+  .message-date {
+    font-size: 0.8em;
+    color: #888;
+  }
+  
+  .last-message {
+    margin-bottom: 5px;
+  }
+  
+  .conversation-rectangle a {
+    align-self: flex-end;
+    text-decoration: none;
+    color: blue;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+
+  h2{
+    max-height: 10vh;
+  }
+  

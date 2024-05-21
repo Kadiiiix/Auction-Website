@@ -6,10 +6,13 @@ const router = express.Router();
 
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
-router.get("/:userId/favorites",userController.listFavorites); // Apply the middleware here
+router.get("/search", userController.searchUser); // Move the search route up
+router.get("/:userId/favorites", userController.listFavorites); // Apply the middleware here
 router.get("/:userId", userController.getUsernameFromUserId);
 router.get("/comments/:userId", commentController.getCommentsByUserId);
 router.put("/:userId", userController.editUserInfo);
 router.post("/:userId/rate", userController.addVendorRating);
+router.put('/change-password/:userId', userController.changePassword);
+
 
 module.exports = router;

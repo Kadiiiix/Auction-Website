@@ -4,6 +4,8 @@ const userSchema = new mongoose.Schema({
   email: String,
   username: String,
   password: String,
+  resetPasswordToken: String, // New field for storing reset password token
+  resetPasswordExpires: Date, // New field for storing token expiration date
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Auction" }],
   fullname: String,
   phone_number: String,

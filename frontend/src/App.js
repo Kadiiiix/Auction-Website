@@ -8,7 +8,7 @@ import {
   Navigate,
   useParams,
 } from "react-router-dom";
-import { notification } from "antd";
+import { notification, Menu, Dropdown, Button} from "antd";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import RegisterPage from "./components/RegisterPage";
@@ -24,17 +24,20 @@ import SearchAuctions from "./components/SearchAuctions";
 import CategoryPage from "./components/CategoryPage";
 import NavigationMenu from "./components/NavigationMenu";
 import NotificationPage from "./components/NotificationPage";
-import { MenuOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import "../src/design/MainHeader.css";
 import UsersAuctionsPage from "./components/UsersAuctions";
 import UsersComments from "./components/UsersComments";
+import Messages from "./components/Messages";
+import MessageFull from "./components/MessageFull";
+import ResetPassword from "./components/ResetPassword";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [userId, setUserId] = useState("");
   const { query } = useParams();
-
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -85,6 +88,24 @@ const closeMenu = () => {
 
   ];
 
+  const menu = (
+    <Menu className="account-menu">
+      <Menu.Item>
+        <Link to={`/profile/${userId}`}>Profile</Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Link to={`/notifications/${userId}`}>Notifications</Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Link to={`/messages/user`}>Messages</Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Link to={`/favorites/${userId}`}>Favorites</Link>
+      </Menu.Item>
+      <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
+    </Menu>
+  );
+
   return (
     <Router>
       <div className="App">
@@ -103,20 +124,13 @@ const closeMenu = () => {
             {loggedIn && (
               <>
                 <li>
-                  <Link to="/create">New</Link>
+                  <Link to="/create">Create Auction</Link>
                 </li>
-                <li>
-                  <Link onClick={handleLogout}>Logout</Link>
-                </li>
-                <li>
-                  <Link to={`/profile/${userId}`}>Profile</Link>
-                </li>
-                <li>
-                  <Link to={`/favorites/${userId}`}>My Favorites</Link>
-                </li>
-                <li>
-                  <Link to={`/notifications/${userId}`}>My Notifications</Link>
-                </li>
+                <Dropdown overlay={menu} trigger={['hover']}>
+                  <li>
+                  <Link icon={<UserOutlined />} onClick={e => e.preventDefault()}>Account</Link>
+                  </li>
+                </Dropdown>
               </>
             )}
           </ul>
@@ -128,13 +142,20 @@ const closeMenu = () => {
               <a href="/" class="no-underline">
                 <h2 style={{ display: "inline-block" }}>IzložBa</h2>
               </a>
-              <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
-                <MenuOutlined />
-                {showMenu && <NavigationMenu />}
-              </div>
             </div>
           </div>
-          <div class="List"></div>
+          <div class="List">
+          <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
+                <h2>Categories</h2>
+                {showMenu && <NavigationMenu />}
+              </div>
+            <div>
+              <h2>New Auctions</h2>
+              </div>
+            <div>
+              <h2>Popular Auctions</h2>
+              </div>
+          </div>
           <div className="SearchBar">
             <form>
               <input
@@ -143,6 +164,7 @@ const closeMenu = () => {
                 name="search"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                
               />
               <Link to={`/search?query=${searchQuery}`}>
                 <button>Search</button>
@@ -168,6 +190,8 @@ const closeMenu = () => {
             }
           />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           <Route
             path="/create"
@@ -237,6 +261,10 @@ const closeMenu = () => {
             element={<CategoryPage query={query} setLoggedIn={loggedIn} />}
           />
           <Route path="/notlogged" element={<NotLoggedIn />} />
+          <Route
+            path="/messages/:id"
+            element={<MessageFull setLoggedIn={loggedIn}/>}
+          />
         </Routes>
       </div>
     </Router>

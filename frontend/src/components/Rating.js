@@ -20,7 +20,6 @@ const Rating = ({ id, userId }) => {
 
   // Function to send the rating to the backend
   const sendRatingToBackend = async (rating) => {
-    console.log("id:", id);
     try {
       const response = await axios.post(
         `http://localhost:4000/api/users/${id}/rate`,
@@ -33,7 +32,6 @@ const Rating = ({ id, userId }) => {
       );
       // Handle the response if needed
 
-      console.log(response.data);
       notification.success({
         message: 'Rating Success',
         description: 'Vendor rated successfully.',
@@ -57,7 +55,6 @@ const Rating = ({ id, userId }) => {
         const response = await axios.get(
           `http://localhost:4000/api/users/${id}`
         );
-        console.log(response);
         setAutor(response.data.username);
         setRating(response.data.vendorRating);
         setRaters(response.data.ratedBy);
@@ -70,7 +67,6 @@ const Rating = ({ id, userId }) => {
 
   // Check if userId is in the ratedBy array
   const alreadyRated = raters.includes(userId);
-  console.log(rating);
 
   return (
     <>
