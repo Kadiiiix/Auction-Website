@@ -38,6 +38,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [userId, setUserId] = useState("");
   const { query } = useParams();
+  const role = localStorage.getItem("role");
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -123,6 +124,13 @@ const closeMenu = () => {
             )}
             {loggedIn && (
               <>
+                {role==="admin" ? (<>
+                <li><Link to="/" >Manage Auctions</Link></li>
+                <li><Link >Manage Users</Link></li>
+                <li><Link >Manage Comments</Link></li>
+                </>
+                  ):(<>
+                  </>)}
                 <li>
                   <Link to="/create">Create Auction</Link>
                 </li>
