@@ -20,7 +20,11 @@ function AuctionItem({ item }) {
   return (
     <div className = "ContainerAuctionItem">
       <div className="ImageAuctionItem">
-      <img src={picture} alt={name}  />
+      <img
+            className="auction-photo"
+            src={process.env.PUBLIC_URL + item.picture} // Use item.picture as the image source
+            alt="Auction Item"
+          />
       </div>
 
       <div className="InfoAndButton">

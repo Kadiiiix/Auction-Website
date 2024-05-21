@@ -6,7 +6,7 @@ const {
 exports.createAuction = async (req, res) => {
   try {
     const {
-      picture,
+      imageUrl,
       name,
       condition,
       category,
@@ -22,7 +22,7 @@ exports.createAuction = async (req, res) => {
 
     // Create a new auction
     const auction = new Auction({
-      picture,
+      picture: imageUrl,
       name,
       condition,
       category,

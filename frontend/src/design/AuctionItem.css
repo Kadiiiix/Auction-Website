@@ -10,9 +10,18 @@
 
 }
 
-.ImageAuctionItem{
+.ImageAuctionItem {
 
-    width:30%;
+    width:72vh;
+    height: 30vh;
+    //border: 1px solid black;
+
+}
+
+.ImageAuctionItem img{
+
+    width:50vh;
+    height: 30vh;
     border: 1px solid black;
 
 }
