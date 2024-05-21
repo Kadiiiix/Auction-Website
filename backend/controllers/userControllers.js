@@ -178,7 +178,7 @@ exports.loginUser = async (req, res) => {
     const token = generateToken(user);
 
     // Return success message along with the token
-    return res.status(200).json({ message: "Login successful.", token, userId: user._id });
+    return res.status(200).json({ message: "Login successful.", token, userId: user._id, role: user.role });
   } catch (error) {
     console.error("Error logging in:", error);
     return res.status(500).json({ error: "Internal server error." });
@@ -255,5 +255,15 @@ exports.getRecommendations = async (req, res) => {
   } catch (error) {
     console.error("Error getting recommendations:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error getting all users:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };

@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema({
   },
   ratedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Users who have rated this user
   bidOn: [{ type: mongoose.Schema.Types.ObjectId, ref: "Auction" }],
+  role: {
+    type: String,
+    default: "user", // Default role is "user"
+    enum: ["user", "admin"] // Enumerate the possible roles
+  }
 });
 
 module.exports = mongoose.model("User", userSchema);

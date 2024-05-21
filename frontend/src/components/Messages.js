@@ -60,6 +60,7 @@ function Messages() {
       }
     };
     getMessages();
+    scrollToBottom();
   }, [id, userId]);
 
   const getMessages = async () => {
@@ -72,7 +73,6 @@ function Messages() {
 
       if (senderData) setSender(senderData.username);
       if (receiverData) setReceiver(receiverData.username);
-      scrollToBottom();
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
