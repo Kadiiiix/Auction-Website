@@ -15,4 +15,5 @@ router.get('/:id', auctionController.getAuction);
 router.get('/category/:category', auctionController.getAuctionsByCategory);
 router.post('/:auctionId/placeBid/:userId/:amount' , auctionController.placeBid);
 router.put('/:id/close', auctionController.closeAuction);
+router.get("/similar/:auctionId", auctionController.getSimilar);
 module.exports = router;

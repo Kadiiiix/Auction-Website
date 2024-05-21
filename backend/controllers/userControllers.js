@@ -183,3 +183,26 @@ exports.addVendorRating = async (req, res) => {
   }
 };
 
+exports.getRecommendations = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId).populate("favorites");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const likedAuctions = user.favorites;
+    const categories = likedAuctions.map((auction) => auction.category);
+
+    const recommendedAuctions = await Auction.find({
+      category: { $in: categories },
+      _id: { $nin: likedAuctions.map((auction) => auction._id) }, // Exclude liked auctions
+    });
+
+    res.json(recommendedAuctions);
+  } catch (error) {
+    console.error("Error getting recommendations:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

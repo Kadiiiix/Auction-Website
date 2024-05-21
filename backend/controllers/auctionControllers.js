@@ -224,3 +224,24 @@ exports.closeAuction = async (req, res) => {
     res.status(500).json({ error: 'Internal server error.' });
   }
 };
+exports.getSimilar = async (req, res) => {
+  try {
+    const { auctionId } = req.params;
+    const auction = await Auction.findById(auctionId);
+
+    if (!auction) {
+      return res.status(404).json({ message: "Auction not found" });
+    }
+
+    // Find products in the same category
+    const similarProducts = await Auction.find({
+      category: auction.category,
+      _id: { $ne: auctionId },
+    }).limit(5); // Limit to 10 similar products
+
+    res.status(200).json(similarProducts);
+  } catch (error) {
+    console.error("Error getting similar auctions:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
