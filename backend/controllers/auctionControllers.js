@@ -148,7 +148,7 @@ exports.getAuctionsByCategory = async (req, res) => {
 exports.searchAuctions = async (req, res) => {
   try {
     const query = req.query.query;
-    const regex = new RegExp(query, 'i'); // Case-insensitive search
+    const regex = new RegExp(query, "i"); // Case-insensitive search
 
     // Search for auctions that match the query
     const results = await Auction.find({ name: { $regex: regex } });
@@ -163,6 +163,7 @@ exports.searchAuctions = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 exports.placeBid = async (req, res) => {
   const { auctionId, userId, amount } = req.params;
