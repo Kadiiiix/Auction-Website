@@ -32,7 +32,8 @@ import Messages from "./components/Messages";
 import MessageFull from "./components/MessageFull";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
-
+import PopularItems from "./components/PopularItems";
+import NewAuctions from "./components/NewAuctions";
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,9 +127,14 @@ const closeMenu = () => {
                 <li>
                   <Link to="/create">Create Auction</Link>
                 </li>
-                <Dropdown overlay={menu} trigger={['hover']}>
+                <Dropdown overlay={menu} trigger={["hover"]}>
                   <li>
-                  <Link icon={<UserOutlined />} onClick={e => e.preventDefault()}>Account</Link>
+                    <Link
+                      icon={<UserOutlined />}
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      Account
+                    </Link>
                   </li>
                 </Dropdown>
               </>
@@ -145,16 +151,20 @@ const closeMenu = () => {
             </div>
           </div>
           <div class="List">
-          <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
-                <h2>Categories</h2>
-                {showMenu && <NavigationMenu />}
-              </div>
+            <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
+              <h2>Categories</h2>
+              {showMenu && <NavigationMenu />}
+            </div>
             <div>
-              <h2>New Auctions</h2>
-              </div>
+              <Link to={"/recent"}>
+                <h2>New Auctions</h2>
+              </Link>
+            </div>
             <div>
-              <h2>Popular Auctions</h2>
-              </div>
+              <Link to={"/popular"}>
+                <h2>Popular Auctions</h2>
+              </Link>
+            </div>
           </div>
           <div className="SearchBar">
             <form>
@@ -164,7 +174,6 @@ const closeMenu = () => {
                 name="search"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                
               />
               <Link to={`/search?query=${searchQuery}`}>
                 <button>Search</button>
@@ -191,7 +200,7 @@ const closeMenu = () => {
           />
           <Route path="/items" element={<ItemListingsPage items={items} />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/forgot-password" element={<ForgotPassword/>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/items/:id" element={<AuctionItem items={items} />} />
           <Route
             path="/create"
@@ -263,7 +272,15 @@ const closeMenu = () => {
           <Route path="/notlogged" element={<NotLoggedIn />} />
           <Route
             path="/messages/:id"
-            element={<MessageFull setLoggedIn={loggedIn}/>}
+            element={<MessageFull setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/popular"
+            element={<PopularItems setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/recent"
+            element={<NewAuctions setLoggedIn={loggedIn} />}
           />
         </Routes>
       </div>

@@ -246,3 +246,36 @@ exports.getSimilar = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+exports.getAuctionsSortedByLiked = async (req, res) => {
+  try {
+    const auctions = await Auction.aggregate([
+      { $addFields: { likedByCount: { $size: "$likedBy" } } },
+      { $sort: { likedByCount: -1 } },
+    ]);
+
+    res.status(200).json(auctions);
+  } catch (error) {
+    console.error("Error fetching and sorting auctions by liked:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.getAuctionsSortedByDate = async (req, res) => {
+  try {
+    const auctions = await Auction.aggregate([
+      {
+        $match: {
+          createdAt: { $exists: true }, 
+        },
+      },
+      { $sort: { createdAt: -1 } },
+    ]);
+
+    res.status(200).json(auctions);
+  } catch (error) {
+    console.error("Error fetching and sorting auctions by date:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

@@ -13,15 +13,12 @@
   padding: 5px;
   text-align: left;
 }
-
+a {
+  text-decoration: none;
+  color:black;
+}
 /* Style the menu items */
 .menu-item {
   margin-bottom: 10px; /* Add spacing between menu items */
  
-}
-
-/* Style the submenus */
-.sub-menu {
-  /*padding-left: 20px; /* Indent submenus */
-  
 }
