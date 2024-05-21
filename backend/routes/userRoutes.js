@@ -1,6 +1,6 @@
 const express = require("express");
 const userController = require("../controllers/userControllers");
-const commentController = require('../controllers/commentController');
+const commentController = require("../controllers/commentController");
 
 const router = express.Router();
 
@@ -15,8 +15,6 @@ router.post("/:userId/rate", userController.addVendorRating);
 
 router.get("/recommendations/:userId", userController.getRecommendations);
 
-router.put('/change-password/:userId', userController.changePassword);
-
-
+router.put("/change-password/:userId", userController.changePassword);
 
 module.exports = router;
