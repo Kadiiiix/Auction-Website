@@ -10,6 +10,7 @@
     font-size: 14;
     border: #45474b00;
 }
+/* SidebarForm.css */
 .UpperHeader {
     width: 100%;
     margin: 0; /* Remove margin */
@@ -20,7 +21,29 @@
     justify-content: flex-end; /* Align items to the right */
     align-items: flex-end; /* Align items vertically */
     margin-bottom:0;
+    top:0;
+    z-index:1;
 }
+
+.LowerHeader {
+    width: 100%;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    height: 17vh;
+    background-color:#F5F7F8; /* Black background color */
+    /* Black background color */
+    display: flex; /* Use flexbox */
+    flex-direction: row; /* Stack elements vertically */
+    justify-content: space-between;
+    align-items: flex-end; 
+    border-radius: 1px;
+    border-bottom: 1px solid black; /* Add border with 1px width and solid black color */
+    border-radius: 1px;
+    position: sticky; /* Set position to sticky */
+    top: 0; /* Stick it to the top of the viewport */
+    z-index:10;
+}
+
 
 .UpperHeader ul {
     list-style-type: none; /* Remove default list styles */
@@ -43,21 +66,7 @@
     margin-left: 0;
 }
 
-.LowerHeader {
-    width: 100%;
-    margin: 0; /* Remove margin */
-    padding: 0; /* Remove padding */
-    height: 17vh;
-    background-color:#F5F7F8; /* Black background color */
-    /* Black background color */
-    display: flex; /* Use flexbox */
-    flex-direction: row; /* Stack elements vertically */
-    justify-content: space-between;
-    align-items: flex-end; 
-    border-radius: 1px;
-    border-bottom: 1px solid black; /* Add border with 1px width and solid black color */
-    border-radius: 1px;
-}
+
 
 .Title {
     width: 100%;

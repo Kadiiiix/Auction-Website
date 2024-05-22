@@ -21,6 +21,8 @@ const UserProfileContent = ({ id, loggedIn }) => {
   const [form] = Form.useForm(); // Ant Design Form instance
   const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
   const [changePasswordForm] = Form.useForm(); // Form for changing password
+  const [imageUrl, setImageUrl] = useState(""); // State to hold image URL
+  const [uploading, setUploading] = useState(false); // State to track image upload status
 
   const userId = localStorage.getItem("userId");
 

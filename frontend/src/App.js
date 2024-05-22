@@ -9,6 +9,8 @@ import {
   useParams,
 } from "react-router-dom";
 import { notification, Menu, Dropdown, Button} from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import RegisterPage from "./components/RegisterPage";
@@ -24,8 +26,6 @@ import SearchAuctions from "./components/SearchAuctions";
 import CategoryPage from "./components/CategoryPage";
 import NavigationMenu from "./components/NavigationMenu";
 import NotificationPage from "./components/NotificationPage";
-import { UserOutlined } from "@ant-design/icons";
-import "../src/design/MainHeader.css";
 import UsersAuctionsPage from "./components/UsersAuctions";
 import UsersComments from "./components/UsersComments";
 import MessageFull from "./components/MessageFull";
@@ -36,6 +36,9 @@ import NewAuctions from "./components/NewAuctions";
 import UsersTable from "./components/UsersTable";
 import AuctionsTable from "./components/AuctionsTable";
 import CommentsTable from "./components/CommentsTable";
+import FilterForm from "./components/FilterForm";
+import "../src/design/MainHeader.css";
+
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,7 +57,7 @@ function App() {
   };
 
   const [loggedIn, setLoggedIn] = useState(false);
-
+  
   const handleLogout = () => {
     // Clear token and log out
     localStorage.removeItem("token");
@@ -134,6 +137,7 @@ const closeMenu = () => {
                 </>
                   ):(<>
                   </>)}
+
                 <li>
                   <Link to="/create">Create Auction</Link>
                 </li>
@@ -323,6 +327,11 @@ const closeMenu = () => {
               )
             }
           />
+          
+          <Route 
+            path = "/filter"
+            element={<FilterForm setLoggedIn={loggedIn} />}
+            />
         </Routes>
       </div>
     </Router>

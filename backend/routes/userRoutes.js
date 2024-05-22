@@ -18,6 +18,7 @@ router.post("/:userId/rate", userController.addVendorRating);
 router.get("/recommendations/:userId", userController.getRecommendations);
 
 router.put("/change-password/:userId", userController.changePassword);
+router.put("/:userId/image", userController.editUserImage);
 
 router.delete("/delete/:userId", userController.deleteUser);
 
