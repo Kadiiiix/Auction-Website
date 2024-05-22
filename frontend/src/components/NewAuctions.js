@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AuctionItem from "./AuctionItem";
-import { Button } from "antd";
-import "../design/PopularItems.css";
+import { Pagination } from "antd";
+import FilterForm from "./FilterForm";
+import "../design/NewAndPopularAuctions.css";
 
 const NewAuctions = ({ searchQuery }) => {
   const [auctionListings, setAuctionListings] = useState([]);
@@ -31,22 +32,20 @@ const NewAuctions = ({ searchQuery }) => {
     indexOfFirstAuction,
     indexOfLastAuction
   );
+   const handleFilteredAuctions = (filteredAuctions) => {
+     setAuctionListings(filteredAuctions);
+   };
 
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) =>
-      Math.min(
-        prevPage + 1,
-        Math.ceil(auctionListings.length / auctionsPerPage)
-      )
-    );
+  const onPageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
-    <div className="item-listings-page">
+    <div>
+      <div className="filter-form-container">
+        <FilterForm onFilter={handleFilteredAuctions} />
+      </div>
+    <div className="cont">
       <div className="auction-items">
         {currentAuctions.map((listing) => (
           <Link
@@ -59,19 +58,14 @@ const NewAuctions = ({ searchQuery }) => {
         ))}
       </div>
       <div className="pagination">
-        <div className="centered-buttons">
-          <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-            Previous
-          </Button>
-          <span>{currentPage}</span>
-          <Button
-            onClick={handleNextPage}
-            disabled={indexOfLastAuction >= auctionListings.length}
-          >
-            Next
-          </Button>
-        </div>
+        <Pagination
+          current={currentPage}
+          onChange={onPageChange}
+          total={auctionListings.length}
+          pageSize={auctionsPerPage}
+        />
       </div>
+    </div>
     </div>
   );
 };

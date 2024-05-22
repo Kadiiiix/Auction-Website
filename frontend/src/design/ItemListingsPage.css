@@ -1,11 +1,9 @@
 .item-listings-page{
     margin: 5vh;
-    width: 100%;
-
+    width:100%;
 }
-
 .auction-items{
-    width: 100%;
+    
     /*height: 100%;*/
     flex: 1;
 
@@ -18,7 +16,25 @@
   text-align: center;
 }
 
-.pagination button {
-  margin-left: 50px;
-  margin-right: 50px;
+:root {
+  --ant-pagination-item-active-bg: #f0f0f0; /* Lighter background color for active item */
+  --ant-pagination-item-bg: #ffffff; /* Background color for pagination item */
+  --ant-pagination-item-link-bg: #ffffff; /* Background color for pagination item link */
 }
+
+.pagination-container {
+  justify-content: center;
+
+}
+
+.pagination {
+  
+  display: flex;
+  justify-content:center;
+  
+}
+
+.ant-pagination-item {
+  margin: 16px 8px; /* Add margin to the pagination numbers */
+}
+
