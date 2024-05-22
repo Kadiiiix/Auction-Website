@@ -34,6 +34,7 @@ import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import PopularItems from "./components/PopularItems";
 import NewAuctions from "./components/NewAuctions";
+import UsersTable from "./components/UsersTable";
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,9 +127,9 @@ const closeMenu = () => {
             {loggedIn && (
               <>
                 {role==="admin" ? (<>
-                <li><Link to="/" >Manage Auctions</Link></li>
-                <li><Link >Manage Users</Link></li>
-                <li><Link >Manage Comments</Link></li>
+                <li><Link to="/manage/users" >Manage Auctions</Link></li>
+                <li><Link to="/manage/users">Manage Users</Link></li>
+                <li><Link to="/manage/users">Manage Comments</Link></li>
                 </>
                   ):(<>
                   </>)}
@@ -289,6 +290,16 @@ const closeMenu = () => {
           <Route
             path="/recent"
             element={<NewAuctions setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/manage/users"
+            element={
+              role==="admin" ? (
+                <UsersTable />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
           />
         </Routes>
       </div>

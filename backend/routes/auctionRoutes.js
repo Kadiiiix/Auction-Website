@@ -10,6 +10,7 @@ router.get("/popular", auctionController.getAuctionsSortedByLiked);
 router.get("/recent", auctionController.getAuctionsSortedByDate);
 router.get("/", auctionController.getAllAuctions);
 router.get("/:id", auctionController.getAuction);
+router.get('/user/:userId', auctionController.getAuctionsByUser);
 router.get("/category/:category", auctionController.getAuctionsByCategory);
 router.get("/:auctionId/comments", commentController.getCommentsByAuctionId);
 
