@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AuctionItem from "./AuctionItem";
-import { Button } from "antd";
-import "../design/PopularItems.css";
+import { Pagination } from "antd";
+import FilterForm from "./FilterForm";
+import "../design/NewAndPopularAuctions.css";
+
 
 const PopularItems = ({ searchQuery }) => {
   const [auctionListings, setAuctionListings] = useState([]);
@@ -13,7 +15,9 @@ const PopularItems = ({ searchQuery }) => {
   useEffect(() => {
     const fetchAuctionListings = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/auctions/popular");
+        const response = await axios.get(
+          "http://localhost:4000/api/auctions/popular"
+        );
         setAuctionListings(response.data);
       } catch (error) {
         console.error("Error fetching auction listings:", error);
@@ -30,44 +34,38 @@ const PopularItems = ({ searchQuery }) => {
     indexOfLastAuction
   );
 
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  const onPageChange = (page) => {
+    setCurrentPage(page);
   };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) =>
-      Math.min(
-        prevPage + 1,
-        Math.ceil(auctionListings.length / auctionsPerPage)
-      )
-    );
-  };
+   const handleFilteredAuctions = (filteredAuctions) => {
+     setAuctionListings(filteredAuctions);
+   };
 
   return (
-    <div className="item-listings-page">
-      <div className="auction-items">
-        {currentAuctions.map((listing) => (
-          <Link
-            to={`/auction/${listing._id}`}
-            key={listing._id}
-            className="no-underline"
-          >
-            <AuctionItem item={listing} />
-          </Link>
-        ))}
+    <div>
+      <div className="filter-form-container">
+        <FilterForm onFilter={handleFilteredAuctions} />
       </div>
-      <div className="pagination">
-        <div className="centered-buttons">
-          <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-            Previous
-          </Button>
-          <span>{currentPage}</span>
-          <Button
-            onClick={handleNextPage}
-            disabled={indexOfLastAuction >= auctionListings.length}
-          >
-            Next
-          </Button>
+      <div className="cont">
+        <div className="auction-items">
+          {currentAuctions.map((listing) => (
+            <Link
+              to={`/auction/${listing._id}`}
+              key={listing._id}
+              className="no-underline"
+            >
+              <AuctionItem item={listing} />
+            </Link>
+          ))}
+        </div>
+        <div className="pagination">
+          <Pagination
+            current={currentPage}
+            onChange={onPageChange}
+            total={auctionListings.length}
+            pageSize={auctionsPerPage}
+            showSizeChanger={false} // Hide the page size changer if not needed
+          />
         </div>
       </div>
     </div>

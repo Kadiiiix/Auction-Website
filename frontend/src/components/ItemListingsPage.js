@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AuctionItem from "./AuctionItem";
-import { Button } from "antd";
 import FilterForm from "./FilterForm";
 import { Link } from "react-router-dom";
+import { Pagination } from "antd";
+import "../design/ItemListingsPage.css"; // Ensure you import the CSS file
 
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
@@ -30,18 +31,9 @@ const ItemListingsPage = () => {
     setAuctionListings(filteredAuctions);
   };
 
-  // Pagination handlers
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) =>
-      Math.min(
-        prevPage + 1,
-        Math.ceil(auctionListings.length / auctionsPerPage)
-      )
-    );
+  // Pagination handler
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   // Calculate current auctions based on pagination
@@ -69,18 +61,14 @@ const ItemListingsPage = () => {
             </Link>
           ))}
         </div>
-        <div className="pagination">
-          <div className="centered-buttons">
-            <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-              Previous
-            </Button>
-            <span>{currentPage}</span>
-            <Button
-              onClick={handleNextPage}
-              disabled={indexOfLastAuction >= auctionListings.length}
-            >
-              Next
-            </Button>
+        <div className="pagination-container">
+          <div className="pagination">
+            <Pagination
+              current={currentPage}
+              onChange={handlePageChange}
+              total={auctionListings.length}
+              pageSize={auctionsPerPage}
+            />
           </div>
         </div>
       </div>
