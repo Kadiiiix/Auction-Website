@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Carousel } from "antd";
 import "../design/Carousel.css";
 import { Link, useNavigate } from "react-router-dom";
+import AuctionItem from "./AuctionItem";
 const Caros = ({ auctionId }) => {
   const [similarProducts, setSimilarProducts] = useState([]);
   const navigate = useNavigate();
@@ -27,32 +28,24 @@ const Caros = ({ auctionId }) => {
   const handleItemClick = (event, productId) => {
     event.preventDefault();
     navigate(`/auction/${productId}`);
-    window.location.reload(); // To force re-render the page
+    window.location.reload(); 
   };
   return (
+    <>
     <Carousel arrows className="arrows">
       {similarProducts.map((product) => (
-        <div key={product._id}>
+        <div class="contents" key={product._id}>
           <a
             href={`/auction/${product._id}`}
             onClick={(event) => handleItemClick(event, product._id)}
             className="no-underline"
           >
-            {product.picture ? (
-              <img
-                className="auction-photo"
-                src={process.env.PUBLIC_URL + product.picture}
-                alt={product.name}
-              />
-            ) : (
-              <div className="no-image-placeholder">
-                <h3 className="contentStyle">{product.name}</h3>
-              </div>
-            )}
+            <AuctionItem margin="0" item={product} />
           </a>
         </div>
       ))}
     </Carousel>
+    </>
   );
 };
 

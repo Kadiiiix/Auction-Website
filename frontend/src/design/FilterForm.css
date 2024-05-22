@@ -1,19 +1,22 @@
 /* SidebarForm.css */
+
 .sidebar {
   background-color: #ffffff; /* Set the background color of the entire sidebar to white */
   color: white; /* Set text color to white */
   position: relative; /* Set the position to fixed */
-  top:24%;
-  left: 0; 
-  padding-left:1%;
+  top: 20%;
+  left: 1%;
+  padding-left: 1%;
   height: 100vh; /* Set its height to 100% of the viewport height */
   width: 20%; /* Set width of the sidebar */
-  border-right: 1px solid #010000; /* Add border to the right side */
   z-index: 1; /* Ensure the sidebar appears above other content */
+
+  border-right-color:#F5F7F8 ;
 }
 
 .sidebar-content {
-  width:15%;
-  position:fixed;
+  height: 20%;
+  width: 15%;
+  position: fixed;
   z-index: 1; /* Ensure the content appears above the sidebar background */
 }

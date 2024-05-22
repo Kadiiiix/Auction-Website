@@ -41,6 +41,7 @@
     border-radius: 1px;
     position: sticky; /* Set position to sticky */
     top: 0; /* Stick it to the top of the viewport */
+    z-index:10;
 }
 
 

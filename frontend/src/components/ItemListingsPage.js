@@ -3,6 +3,7 @@ import axios from "axios";
 import AuctionItem from "./AuctionItem";
 import { Button } from "antd";
 import FilterForm from "./FilterForm";
+import { Link } from "react-router-dom";
 
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
@@ -24,17 +25,9 @@ const ItemListingsPage = () => {
     }
   };
 
-  // Function to handle filtering logic and fetch filtered auctions
-  const handleFilter = async (filterCriteria) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/api/auctions/filter",
-        filterCriteria
-      );
-      setAuctionListings(response.data);
-    } catch (error) {
-      console.error("Error filtering auctions:", error);
-    }
+  // Function to handle received filtered auction items
+  const handleFilteredAuctions = (filteredAuctions) => {
+    setAuctionListings(filteredAuctions);
   };
 
   // Pagination handlers
@@ -62,13 +55,18 @@ const ItemListingsPage = () => {
   return (
     <div>
       <div className="filter-form-container">
-        {/* Pass the handleFilter function as filterHandler prop */}
-        <FilterForm filterHandler={handleFilter} />
+        <FilterForm onFilter={handleFilteredAuctions} />
       </div>
       <div className="item-listings-page">
         <div className="auction-items">
           {currentAuctions.map((listing) => (
-            <AuctionItem key={listing._id} item={listing} />
+            <Link
+              to={`/auction/${listing._id}`}
+              key={listing._id}
+              className="no-underline"
+            >
+              <AuctionItem item={listing} />
+            </Link>
           ))}
         </div>
         <div className="pagination">
