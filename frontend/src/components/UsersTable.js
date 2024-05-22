@@ -3,6 +3,7 @@ import { Table, Input, Button, Space, Modal, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
+import "../design/LoginPage.css"
 
 const UsersTable = () => {
     const [dataSource, setDataSource] = useState([]);
@@ -211,10 +212,10 @@ const UsersTable = () => {
             width: '200px',
         },
         {
-            title: 'Actions',
+            title: 'Details and Delete',
             key: 'actions',
             render: (text, record) => (
-                <Button type="primary" onClick={() => showModal(record)}>
+                <Button type="primary" onClick={() => showModal(record)} className='button'>
                     View Details
                 </Button>
             ),
