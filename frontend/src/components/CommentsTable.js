@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Button, Modal, message } from 'antd';
+import { Table, Button, Input, Space, Modal, message } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 import axios from 'axios';
 
 const CommentsTable = () => {
     const [dataSource, setDataSource] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
     const [open, setOpen] = useState(false);
     const [selectedComment, setSelectedComment] = useState(null);
+    const searchInput = useRef(null);
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -13,20 +18,17 @@ const CommentsTable = () => {
                 const commentsResponse = await axios.get("http://localhost:4000/api/users/all-comments");
                 const comments = commentsResponse.data;
 
-                // Fetch additional data for each comment
                 const transformedData = await Promise.all(comments.map(async comment => {
-                    // Fetch user data for the user who posted the comment
                     const userResponse = await axios.get(`http://localhost:4000/api/users/${comment.userId}`);
                     const userData = userResponse.data;
 
-                    // Fetch auction data for the auction associated with the comment
                     const auctionResponse = await axios.get(`http://localhost:4000/api/auctions/${comment.auctionId}`);
                     const auctionData = auctionResponse.data;
 
                     return {
                         key: comment._id,
                         commentId: comment._id,
-                        timePosted: new Date(comment.timePosted).toLocaleString(), // Convert UTC to local time
+                        timePosted: new Date(comment.timePosted).toLocaleString(),
                         username: userData.username,
                         auctionName: auctionData.name,
                         comment: comment.comment,
@@ -59,32 +61,26 @@ const CommentsTable = () => {
 
     const handleDelete = async () => {
         try {
-            // Delete the comment
             await axios.delete(`http://localhost:4000/api/auctions/comments/${selectedComment.commentId}`);
             message.success('Comment deleted successfully.');
 
-            // Close the modal and clear selected comment
             setOpen(false);
             setSelectedComment(null);
 
-            // Fetch updated comment data
             const commentsResponse = await axios.get("http://localhost:4000/api/users/all-comments");
             const comments = commentsResponse.data;
 
-            // Fetch additional data for each comment
             const transformedData = await Promise.all(comments.map(async comment => {
-                // Fetch user data for the user who posted the comment
                 const userResponse = await axios.get(`http://localhost:4000/api/users/${comment.userId}`);
                 const userData = userResponse.data;
 
-                // Fetch auction data for the auction associated with the comment
                 const auctionResponse = await axios.get(`http://localhost:4000/api/auctions/${comment.auctionId}`);
                 const auctionData = auctionResponse.data;
 
                 return {
                     key: comment._id,
                     commentId: comment._id,
-                    timePosted: new Date(comment.timePosted).toLocaleString(), // Convert UTC to local time
+                    timePosted: new Date(comment.timePosted).toLocaleString(),
                     username: userData.username,
                     auctionName: auctionData.name,
                     comment: comment.comment,
@@ -98,6 +94,84 @@ const CommentsTable = () => {
         }
     };
 
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText('');
+    };
+
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText(selectedKeys[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                : '',
+        onFilterDropdownVisibleChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
+
     const columns = [
         {
             title: 'Comment ID',
@@ -108,11 +182,13 @@ const CommentsTable = () => {
             title: 'Username',
             dataIndex: 'username',
             key: 'username',
+            ...getColumnSearchProps('username'),
         },
         {
             title: 'On Auction',
             dataIndex: 'auctionName',
             key: 'auctionName',
+            ...getColumnSearchProps('auctionName'),
         },
         {
             title: 'Comment',
@@ -125,7 +201,6 @@ const CommentsTable = () => {
             dataIndex: 'timePosted',
             key: 'timePosted',
         },
-
         {
             title: 'Actions',
             key: 'actions',
@@ -162,8 +237,6 @@ const CommentsTable = () => {
                     <p><strong>Auction Name:</strong> {selectedComment.auctionName}</p>
                     <p><strong>Comment:</strong> {selectedComment.comment}</p>
                     <p><strong>Time Posted:</strong> {selectedComment.timePosted}</p>
-                    
-                    {/* Add other fields as needed */}
                 </Modal>
             )}
         </>
