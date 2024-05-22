@@ -20,7 +20,7 @@ exports.getCommentsByAuctionId = async (req, res) => {
     try {
       const { auctionId } = req.params;
       // Find all comments for the specified auctionId
-      const comments = await Comment.find({ auctionId }).populate('userId', 'username');
+      const comments = await Comment.find({ auctionId }).populate('userId', 'username photo');
       res.status(200).json(comments);
     } catch (error) {
       res.status(500).json({ error: 'Unable to fetch comments' });

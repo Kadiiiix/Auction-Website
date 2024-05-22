@@ -100,6 +100,32 @@ exports.editUserInfo = async (req, res) => {
   }
 };
 
+exports.editUserImage = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log(`Edit image request for user: ${userId}`); // Log userId
+    const { imageUrl } = req.body;
+    console.log(`Image URL: ${imageUrl}`);
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user information
+    if (imageUrl) user.photo = imageUrl;
+
+    // Save the updated user information
+    await user.save();
+
+    return res.status(200).json({ message: 'User information updated successfully.' });
+  } catch (error) {
+    console.error('Error editing user information:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 exports.getUsernameFromUserId = async (req, res) => {
   try {
       const userId = req.params.userId;

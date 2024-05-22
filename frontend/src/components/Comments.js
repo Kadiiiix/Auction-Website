@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import "./../design/AuctionPage.css";
 
 const CommentSection = ({ auctionId }) => {
@@ -9,6 +10,7 @@ const CommentSection = ({ auctionId }) => {
     const [comments, setComments] = useState([]);
     const [form] = Form.useForm();
     const [author, setAuthor] = useState("");
+    const [photo, setPhoto] = useState("");
 
     const handleChange = (e) => {
       setNewComment(e.target.value);
@@ -23,6 +25,7 @@ const CommentSection = ({ auctionId }) => {
             `http://localhost:4000/api/users/${userId}`
           );
           setAuthor(response.data.username);
+          setPhoto(response.data.photo);
         } catch (error) {
           console.error("Error fetching an auction");
         }
@@ -82,6 +85,7 @@ const CommentSection = ({ auctionId }) => {
             <h2>Comments ({comments.length})</h2>
             {comments.map((comment, index) => (
               <div className='single-comment' key={index}>
+                <Avatar shape="square" size={100} src={comment.userId.photo} icon={<UserOutlined />} />
                 <div className='username-time'>
                   <Link to={`/profile/${comment.userId._id}`} className="lower-title">{comment.userId.username}</Link>
                   <p className='time'>{formatDate(comment.timePosted)}</p>
