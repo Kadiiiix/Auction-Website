@@ -28,13 +28,14 @@ import { UserOutlined } from "@ant-design/icons";
 import "../src/design/MainHeader.css";
 import UsersAuctionsPage from "./components/UsersAuctions";
 import UsersComments from "./components/UsersComments";
-import Messages from "./components/Messages";
 import MessageFull from "./components/MessageFull";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import PopularItems from "./components/PopularItems";
 import NewAuctions from "./components/NewAuctions";
 import UsersTable from "./components/UsersTable";
+import AuctionsTable from "./components/AuctionsTable";
+import CommentsTable from "./components/CommentsTable";
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -127,9 +128,9 @@ const closeMenu = () => {
             {loggedIn && (
               <>
                 {role==="admin" ? (<>
-                <li><Link to="/manage/users" >Manage Auctions</Link></li>
+                <li><Link to="/manage/auctions" >Manage Auctions</Link></li>
                 <li><Link to="/manage/users">Manage Users</Link></li>
-                <li><Link to="/manage/users">Manage Comments</Link></li>
+                <li><Link to="/manage/comments">Manage Comments</Link></li>
                 </>
                   ):(<>
                   </>)}
@@ -296,6 +297,27 @@ const closeMenu = () => {
             element={
               role==="admin" ? (
                 <UsersTable />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
+          <Route
+            path="/manage/auctions"
+            element={
+              role==="admin" ? (
+                <AuctionsTable />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
+          
+          <Route
+            path="/manage/comments"
+            element={
+              role==="admin" ? (
+                <CommentsTable />
               ) : (
                 <Navigate to="/notlogged" />
               )

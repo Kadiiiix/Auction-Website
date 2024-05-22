@@ -19,6 +19,7 @@ router.post('/', auctionController.createAuction);
 router.post('/:auctionId/placeBid/:userId/:amount' , auctionController.placeBid);
 
 router.delete('/:id', auctionController.deleteAuction);
+router.delete('/comments/:id', commentController.deleteComment);
 
 router.put('/:id/extend', auctionController.extendAuction);
 router.put('/:id/close', auctionController.closeAuction);
