@@ -13,9 +13,11 @@ router.get("/:id", auctionController.getAuction);
 router.get("/category/:category", auctionController.getAuctionsByCategory);
 router.get("/:auctionId/comments", commentController.getCommentsByAuctionId);
 
+router.post("/filter", auctionController.filterAuctions);
 router.post('/comments', commentController.postComment);
 router.post('/', auctionController.createAuction);
-router.post('/:auctionId/placeBid/:userId/:amount' , auctionController.placeBid);
+router.post('/:auctionId/placeBid/:userId/:amount' ,auctionController.placeBid);
+
 
 router.delete('/:id', auctionController.deleteAuction);
 

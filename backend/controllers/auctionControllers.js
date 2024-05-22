@@ -125,6 +125,7 @@ exports.getAuction = async (req, res) => {
   }
 };
 
+
 exports.getAuctionsByCategory = async (req, res) => {
   const { category } = req.params; 
   console.log(category); 
@@ -277,5 +278,44 @@ exports.getAuctionsSortedByDate = async (req, res) => {
   } catch (error) {
     console.error("Error fetching and sorting auctions by date:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.filterAuctions = async (req, res) => {
+  try {
+    // Extracting filtering criteria from request body
+    const {
+      condition, 
+      category,
+      startDate,
+      endDate,
+      instantPurchase,
+      location,
+      maxPrice,
+     
+    } = req.body;
+
+    // Building query based on criteria
+    const query = {};
+    if (condition) query.condition = condition;
+    if (category) query.category = category;
+    if (startDate && endDate)
+      query.closingDate = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      }; 
+    if (instantPurchase !== undefined)
+      query.allowInstantPurchase = instantPurchase;
+    if (location) query.location = location;
+    if (maxPrice) query.startingBid = { $lte: maxPrice };
+   
+    
+
+    // Fetching auctions based on query and sorting by createdAt in descending order
+    const auctions = await Auction.find(query);
+
+    res.status(200).json(auctions);
+  } catch (error) {
+    console.error("Error filtering auctions:", error);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 };
