@@ -126,6 +126,25 @@ exports.getAuction = async (req, res) => {
 };
 
 
+exports.getAuctionsByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find all auctions created by the specified user
+    const auctions = await Auction.find({ createdBy: userId });
+
+    if (auctions.length === 0) {
+      return res.status(404).json({ message: "No auctions found for this user." });
+    }
+
+    res.status(200).json(auctions);
+  } catch (error) {
+    console.error('Error fetching auctions by user:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+};
+
+
 exports.getAuctionsByCategory = async (req, res) => {
   const { category } = req.params; 
   console.log(category); 

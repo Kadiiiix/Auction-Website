@@ -10,6 +10,7 @@ router.get("/popular", auctionController.getAuctionsSortedByLiked);
 router.get("/recent", auctionController.getAuctionsSortedByDate);
 router.get("/", auctionController.getAllAuctions);
 router.get("/:id", auctionController.getAuction);
+router.get('/user/:userId', auctionController.getAuctionsByUser);
 router.get("/category/:category", auctionController.getAuctionsByCategory);
 router.get("/:auctionId/comments", commentController.getCommentsByAuctionId);
 
@@ -20,6 +21,7 @@ router.post('/:auctionId/placeBid/:userId/:amount' ,auctionController.placeBid);
 
 
 router.delete('/:id', auctionController.deleteAuction);
+router.delete('/comments/:id', commentController.deleteComment);
 
 router.put('/:id/extend', auctionController.extendAuction);
 router.put('/:id/close', auctionController.closeAuction);

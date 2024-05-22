@@ -9,6 +9,8 @@ import {
   useParams,
 } from "react-router-dom";
 import { notification, Menu, Dropdown, Button} from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import RegisterPage from "./components/RegisterPage";
@@ -24,17 +26,19 @@ import SearchAuctions from "./components/SearchAuctions";
 import CategoryPage from "./components/CategoryPage";
 import NavigationMenu from "./components/NavigationMenu";
 import NotificationPage from "./components/NotificationPage";
-import { UserOutlined } from "@ant-design/icons";
-import "../src/design/MainHeader.css";
 import UsersAuctionsPage from "./components/UsersAuctions";
 import UsersComments from "./components/UsersComments";
-import Messages from "./components/Messages";
 import MessageFull from "./components/MessageFull";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import PopularItems from "./components/PopularItems";
 import NewAuctions from "./components/NewAuctions";
+import UsersTable from "./components/UsersTable";
+import AuctionsTable from "./components/AuctionsTable";
+import CommentsTable from "./components/CommentsTable";
 import FilterForm from "./components/FilterForm";
+import "../src/design/MainHeader.css";
+
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -126,21 +130,14 @@ const closeMenu = () => {
             )}
             {loggedIn && (
               <>
-                {role === "admin" ? (
-                  <>
-                    <li>
-                      <Link to="/">Manage Auctions</Link>
-                    </li>
-                    <li>
-                      <Link>Manage Users</Link>
-                    </li>
-                    <li>
-                      <Link>Manage Comments</Link>
-                    </li>
-                  </>
-                ) : (
-                  <></>
-                )}
+                {role==="admin" ? (<>
+                <li><Link to="/manage/auctions" >Manage Auctions</Link></li>
+                <li><Link to="/manage/users">Manage Users</Link></li>
+                <li><Link to="/manage/comments">Manage Comments</Link></li>
+                </>
+                  ):(<>
+                  </>)}
+
                 <li>
                   <Link to="/create">Create Auction</Link>
                 </li>
@@ -300,9 +297,41 @@ const closeMenu = () => {
             element={<NewAuctions setLoggedIn={loggedIn} />}
           />
           <Route
-            path="/filter"
-            element={<FilterForm setLoggedIn={loggedIn} />}
+            path="/manage/users"
+            element={
+              role==="admin" ? (
+                <UsersTable />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
           />
+          <Route
+            path="/manage/auctions"
+            element={
+              role==="admin" ? (
+                <AuctionsTable />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
+          
+          <Route
+            path="/manage/comments"
+            element={
+              role==="admin" ? (
+                <CommentsTable />
+              ) : (
+                <Navigate to="/notlogged" />
+              )
+            }
+          />
+          
+          <Route 
+            path = "/filter"
+            element={<FilterForm setLoggedIn={loggedIn} />}
+            />
         </Routes>
       </div>
     </Router>
