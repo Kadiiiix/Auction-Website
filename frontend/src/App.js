@@ -34,6 +34,7 @@ import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import PopularItems from "./components/PopularItems";
 import NewAuctions from "./components/NewAuctions";
+import FilterForm from "./components/FilterForm";
 function App() {
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,7 +53,7 @@ function App() {
   };
 
   const [loggedIn, setLoggedIn] = useState(false);
-
+  
   const handleLogout = () => {
     // Clear token and log out
     localStorage.removeItem("token");
@@ -125,13 +126,21 @@ const closeMenu = () => {
             )}
             {loggedIn && (
               <>
-                {role==="admin" ? (<>
-                <li><Link to="/" >Manage Auctions</Link></li>
-                <li><Link >Manage Users</Link></li>
-                <li><Link >Manage Comments</Link></li>
-                </>
-                  ):(<>
-                  </>)}
+                {role === "admin" ? (
+                  <>
+                    <li>
+                      <Link to="/">Manage Auctions</Link>
+                    </li>
+                    <li>
+                      <Link>Manage Users</Link>
+                    </li>
+                    <li>
+                      <Link>Manage Comments</Link>
+                    </li>
+                  </>
+                ) : (
+                  <></>
+                )}
                 <li>
                   <Link to="/create">Create Auction</Link>
                 </li>
@@ -289,6 +298,10 @@ const closeMenu = () => {
           <Route
             path="/recent"
             element={<NewAuctions setLoggedIn={loggedIn} />}
+          />
+          <Route
+            path="/filter"
+            element={<FilterForm setLoggedIn={loggedIn} />}
           />
         </Routes>
       </div>

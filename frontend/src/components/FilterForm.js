@@ -1,71 +1,163 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  theme,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Radio,
+  Slider,
+  Checkbox,
+  Button,
+  InputNumber,
+} from "antd";
+import "../design/FilterForm.css";
 import axios from "axios";
-import { Button, Checkbox, DatePicker, Form, Input, Select } from "antd";
-import "antd/dist/antd.css"; // Import Ant Design styles
-
+const { Sider } = Layout;
 const { RangePicker } = DatePicker;
+const { Option } = Select;
+
+const AuctionFilterForm = ({ filterHandler }) => {
+  const [filterCriteria, setFilterCriteria] = useState({
+    condition: "",
+    category: "",
+    startDate: "",
+    endDate: "",
+    instantPurchase: undefined,
+    location: "",
+    maxPrice: "",
+  });
+
+  const handleFilter = () => {
+    filterHandler(filterCriteria);
+  };
+
+  const updateFilterCriteria = (name, value) => {
+    setFilterCriteria((prevCriteria) => ({
+      ...prevCriteria,
+      [name]: value,
+    }));
+  };
+ 
+ 
+
+  return (
+    <div className="sidebar-content" style={{ margin: "32px 16px 16px 16px" }}>
+      <Form layout="vertical">
+        <Form.Item label="Condition">
+          <Radio.Group
+            onChange={(e) => updateFilterCriteria("condition", e.target.value)}
+          >
+            <Radio value="new"> New </Radio>
+            <Radio value="used"> Used </Radio>
+          </Radio.Group>
+        </Form.Item>
+
+        <Form.Item label="Category">
+          <Select
+            placeholder="Category"
+            onChange={(value) => updateFilterCriteria("category", value)}
+          >
+            <Select.Option value="category1">Category 1</Select.Option>
+            <Select.Option value="category2">Category 2</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Date Range">
+          <RangePicker
+            placeholder={["Start Date", "End Date"]}
+            onChange={(dates) =>
+              updateFilterCriteria("startDate", dates[0]) &&
+              updateFilterCriteria("endDate", dates[1])
+            }
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Instant Purchase"
+          name="instantPurchase"
+          valuePropName="checked"
+        >
+          <Checkbox
+            onChange={(e) =>
+              updateFilterCriteria("instantPurchase", e.target.checked)
+            }
+          >
+            Instant Purchase
+          </Checkbox>
+        </Form.Item>
+
+        <Form.Item label="Location">
+          <Input
+            placeholder="Enter location"
+            onChange={(e) => updateFilterCriteria("location", e.target.value)}
+          />
+        </Form.Item>
+
+        <Form.Item label="Maximum price">
+          <InputNumber
+            defaultValue={0} // Set a default value if needed
+            onChange={(value) => updateFilterCriteria("maxPrice", value)}
+          />
+        </Form.Item>
+        <Button onClick={handleFilter}>Apply Filters</Button>
+      </Form>
+    </div>
+  );
+};
 
 const FilterForm = () => {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+  const [scrollToTop, setScrollToTop] = useState(false);
+  const handleScroll = () => {
+    const upperHeaderHeight =
+      document.querySelector(".UpperHeader").offsetHeight;
+    const sidebar = document.querySelector(".sidebar");
+    const scrollY = window.scrollY || window.pageYOffset;
 
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      const values = await form.validateFields();
-      const response = await axios.post("/api/auctions/filter", values);
-      console.log("Filtered auctions:", response.data);
-      // Update UI to display filtered auctions
-    } catch (error) {
-      console.error("Error filtering auctions:", error);
-      // Handle error: display error message to user
-    } finally {
-      setLoading(false);
+    if (scrollY > upperHeaderHeight) {
+      sidebar.style.top = "17.5%";
+      setScrollToTop(false);
+    } else {
+      sidebar.style.top = "initial";
+      setScrollToTop(true);
     }
   };
 
+  window.addEventListener("scroll", handleScroll);
+
+  // Add event listener for scroll events
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <Form
-      form={form}
-      labelCol={{ span: 4 }}
-      wrapperCol={{ span: 14 }}
-      layout="horizontal"
-      onFinish={handleSubmit}
-      initialValues={{
-        instantPurchase: false,
+    <Layout
+      class="sidebar"
+      style={{
+        position: "fixed",
       }}
     >
-      <Form.Item label="Location" name="location">
-        <Input />
-      </Form.Item>
-      <Form.Item label="Start Date - End Date" name="dateRange">
-        <RangePicker />
-      </Form.Item>
-      <Form.Item label="Max Price" name="maxPrice">
-        <Input type="number" />
-      </Form.Item>
-      <Form.Item
-        label="Instant Purchase"
-        name="instantPurchase"
-        valuePropName="checked"
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+        width="20%"
+        style={{
+          background: colorBgContainer,
+        }}
       >
-        <Checkbox />
-      </Form.Item>
-      <Form.Item label="Condition" name="condition">
-        <Select>
-          <Select.Option value="new">New</Select.Option>
-          <Select.Option value="used">Used</Select.Option>
-        </Select>
-      </Form.Item>
-      <Form.Item label="Category" name="category">
-        <Select>{/* Add options for categories */}</Select>
-      </Form.Item>
-      <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Filter
-        </Button>
-      </Form.Item>
-    </Form>
+        {!collapsed && <AuctionFilterForm />}
+      </Sider>
+    </Layout>
   );
 };
 

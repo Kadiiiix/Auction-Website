@@ -1,18 +1,14 @@
 .containerHome {
     width: 100%;
-    margin-top: 5vh; /* Remove margin */
     margin-right: 2vh;
     margin-left: 2vh;
-    padding: 0; /* Remove padding */
+    padding-left: 15%; /* Remove padding */
     height: 100%;
     background-color: white; /* Black background color */
-    display: flex; /* Use flexbox */
-    flex-direction: column;
+    /*display: flex; /* Use flexbox */
+     /* flex-direction: column;
     justify-content: flex-start; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    align-items: right; /* Center vertically */
     min-height: 100vh; /* Take up the whole viewport height */
-    border-top: 1px solid black; /* Add border with 1px width and solid black color */
-    border-radius: 1px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     
 }
