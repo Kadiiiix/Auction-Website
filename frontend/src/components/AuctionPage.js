@@ -326,11 +326,11 @@ const AuctionPage = ({setLoggedIn}) => {
           </div>
         </div>
         <div className="additional">{renderAdditionalInfo()}</div>
-        <div className="carousel">
+        
           <div className="carousel">
             <Caros auctionId={item._id} />
           </div>
-        </div>
+       
         <div className="comments">
           {item && <CommentSection auctionId={id} />}
         </div>
