@@ -21,6 +21,7 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AuctionFilterForm = ({ onFilter }) => {
+
   const categories = [
     { id: 1, name: "Antiques" },
     { id: 2, name: "Artwork" },
@@ -46,10 +47,11 @@ const AuctionFilterForm = ({ onFilter }) => {
     category: "",
     startDate: "",
     endDate: "",
-    instantPurchase: false,
     location: "",
     maxPrice: "",
   });
+  
+ const PageLocation = useLocation();
 
   const handleFilter = async () => {
     try {
@@ -70,13 +72,13 @@ const AuctionFilterForm = ({ onFilter }) => {
     }));
   };
 
+
   const resetFilters = async () => {
     const emptyCriteria = {
       condition: "",
       category: "",
       startDate: "",
       endDate: "",
-      instantPurchase: undefined,
       location: "",
       maxPrice: "",
     };
@@ -101,7 +103,7 @@ const AuctionFilterForm = ({ onFilter }) => {
           </Radio.Group>
         </Form.Item>
 
-        {useLocation().pathname !== "/category" && (
+        {PageLocation.pathname.includes("category") || (
           <Form.Item label="Category">
             <Select
               placeholder="Category"
@@ -126,20 +128,6 @@ const AuctionFilterForm = ({ onFilter }) => {
           />
         </Form.Item>
 
-        <Form.Item
-          label="Instant Purchase"
-          name="instantPurchase"
-          valuePropName="checked"
-        >
-          <Checkbox
-            onChange={(e) =>
-              updateFilterCriteria("instantPurchase", e.target.checked)
-            }
-          >
-            Instant Purchase
-          </Checkbox>
-        </Form.Item>
-
         <Form.Item label="Location">
           <Input
             placeholder="Enter location"
@@ -153,20 +141,47 @@ const AuctionFilterForm = ({ onFilter }) => {
             onChange={(value) => updateFilterCriteria("maxPrice", value)}
           />
         </Form.Item>
-        <Button onClick={handleFilter}>Apply Filters</Button>
-        <Button onClick={resetFilters}>Reset Filters</Button>
+        <Button
+          type="primary"
+          className="default-button"
+          onClick={handleFilter}
+        >
+          Apply Filters
+        </Button>
+        <div>
+          <br></br>
+        </div>
+        <Button danger onClick={resetFilters}>
+          Reset Filters
+        </Button>
       </Form>
     </div>
   );
 };
 
 const FilterForm = ({ onFilter }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
- 
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentPosition = window.pageYOffset;
+      if (currentPosition >= window.innerHeight * 0.05) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <Layout
       className="sidebar"
@@ -178,6 +193,8 @@ const FilterForm = ({ onFilter }) => {
         width="20%"
         style={{
           background: colorBgContainer,
+          top: isScrolled ? "calc(7% - 100px)" : "0%" , // Adjust the top value accordingly
+          transition: "top 0.0s ease",
         }}
       >
         {!collapsed && <AuctionFilterForm onFilter={onFilter} />}

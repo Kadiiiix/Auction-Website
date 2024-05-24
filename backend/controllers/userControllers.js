@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const { verifyToken } = require("../middleware/middleware");
+const Auction = require("../models/auctionModel");
+const mongoose = require("mongoose");
 
 // Generate JWT token function
 const generateToken = (user) => {
@@ -263,19 +265,38 @@ exports.addVendorRating = async (req, res) => {
 exports.getRecommendations = async (req, res) => {
   try {
     const { userId } = req.params;
+
+
+    // Find user by userId
     const user = await User.findById(userId).populate("favorites");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const likedAuctions = user.favorites;
+    // Extract liked auction categories
+    const likedAuctions = user.favorites || [];
     const categories = likedAuctions.map((auction) => auction.category);
 
-    const recommendedAuctions = await Auction.find({
-      category: { $in: categories },
-      _id: { $nin: likedAuctions.map((auction) => auction._id) }, // Exclude liked auctions
-    });
+    // Find recommended auctions
+    let recommendedAuctions = [];
+
+    // Iterate over each liked category and find recommended auctions
+    for (const category of categories) {
+      // Find up to 5 recommended auctions for each category
+      const categoryRecommendations = await Auction.find({
+        category,
+        _id: { $nin: likedAuctions.map((auction) => auction._id) }, // Exclude liked auctions
+      }).limit(5 - recommendedAuctions.length);
+
+      // Append category recommendations to the overall recommendedAuctions array
+      recommendedAuctions.push(...categoryRecommendations);
+
+      // Break the loop if the maximum number of recommended auctions (5) is reached
+      if (recommendedAuctions.length >= 5) {
+        break;
+      }
+    }
 
     res.json(recommendedAuctions);
   } catch (error) {
@@ -283,6 +304,7 @@ exports.getRecommendations = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 exports.getAllUsers = async (req, res) => {
   try {

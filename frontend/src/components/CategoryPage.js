@@ -14,6 +14,7 @@ const CategoryPage = () => {
   const itemsPerPage = 5;
   const { query } = useParams();
   const location = useLocation();
+  const currentTime = new Date().getTime();
 
   const renderFilterForm = () => {
     if (location.pathname !== `/category/${query}`) {
@@ -29,8 +30,13 @@ const CategoryPage = () => {
         const response = await axios.get(
           `http://localhost:4000/api/auctions/category/${query}`
         );
-        setCategory(response.data);
-        setTotalItems(response.data.length);
+        const Auctions = response.data.filter((auction) => {
+        const closingTime = new Date(auction.closingDate).getTime();
+        return closingTime > currentTime;
+      });
+
+      setCategory(Auctions);
+      setTotalItems(response.data.length);
       } catch (error) {
         console.error("Error fetching auction listings:", error);
       }

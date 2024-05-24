@@ -3,6 +3,7 @@ import { Carousel } from "antd";
 import "../design/Carousel.css";
 import { Link, useNavigate } from "react-router-dom";
 import AuctionItem from "./AuctionItem";
+
 const Caros = ({ auctionId }) => {
   const [similarProducts, setSimilarProducts] = useState([]);
   const navigate = useNavigate();

@@ -4,10 +4,11 @@ import ItemListingsPage from "../components/ItemListingsPage";
 import FilterForm from "../components/FilterForm";
 import Chatbot from "./ChatBot";
 
+
 const HomePage = ({ searchQuery }) => {
   return (
     <div className="containerHome">
-    
+      
       <ItemListingsPage searchQuery={searchQuery} />
       <Chatbot></Chatbot>
     </div>
