@@ -8,6 +8,7 @@ import { Button, Modal, notification } from 'antd';
 import CommentSection from './Comments';
 import ExtendAuctionModal from './ExtendAuctionModal';
 import Caros from './Carousel'
+import Chatbot from './ChatBot';
 const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
@@ -16,6 +17,7 @@ const AuctionPage = ({setLoggedIn}) => {
   const [likeNumber, setLikeNumber] = useState(0);
   const [author, setAuthor] = useState("");
   const [authorsRate, setAuthorsRate] = useState(0);
+  const role = localStorage.getItem("role");
 
   //const userId = localStorage.getItem("userId");
  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
@@ -57,6 +59,7 @@ const AuctionPage = ({setLoggedIn}) => {
   };
 
  const handlePlaceBid = async () => {
+  const amount = bidAmount;
    try {
      const auctionId = item._id;
      const currentUserId = userId; // Use a different variable name here to avoid shadowing
@@ -64,9 +67,26 @@ const AuctionPage = ({setLoggedIn}) => {
      const response = await axios.post(
        `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
      );
+      notification.success({
+        message: 'Success',
+        description: 'You have placed your bid.',
+      });
    } catch (error) {
+    if(amount<=item.highestBid){
+      notification.error({
+        message: 'Error',
+        description: 'Your bid must be higher than the currently highest bid.',
+      });
+    }
+    if(amount<=item.minimalBid){
+      notification.error({
+        message: 'Error',
+        description: 'Your bid must be higher than the minimal bid.',
+      });
+    }
      console.error("Error placing bid:", error);
-   }
+     }
+   
  };
 
 
@@ -244,7 +264,7 @@ const AuctionPage = ({setLoggedIn}) => {
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>
-              <p className="highest-bid">{item.highestBid}</p>
+              <p className="highest-bid">{item.highestBid} KM</p>
             </div>
             <hr className="separator" />
             <div className="minimal">
@@ -252,7 +272,7 @@ const AuctionPage = ({setLoggedIn}) => {
               <p className="minimal-bid">{item.startingBid} KM</p>
             </div>
             <div className="placing-bids">
-              <Button className="bid" onClick={handlePlaceBid}>
+              <Button className="bid" onClick={handlePlaceBid} disabled={role==="admin" || userId===item.createdBy}>
                 Place Bid
               </Button>
               <input
@@ -272,7 +292,6 @@ const AuctionPage = ({setLoggedIn}) => {
                     className="likeButton"
                   >
                     {" "}
-                    {/* Changed from loggedIn to isLoggedIn */}
                     <HeartFilled />
                   </Button>
                   <p className="text">You have liked this auction!</p>
@@ -283,7 +302,7 @@ const AuctionPage = ({setLoggedIn}) => {
                   <Button
                     onClick={handleAddToFavorites}
                     className="likeButton"
-                    disabled={!setLoggedIn}
+                    disabled={!setLoggedIn || role==="admin"}
                   >
                     {" "}
                     {/* Changed from loggedIn to isLoggedIn */}
