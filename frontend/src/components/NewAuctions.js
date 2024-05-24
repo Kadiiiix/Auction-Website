@@ -32,12 +32,14 @@ const NewAuctions = ({ searchQuery }) => {
     indexOfFirstAuction,
     indexOfLastAuction
   );
-   const handleFilteredAuctions = (filteredAuctions) => {
-     setAuctionListings(filteredAuctions);
-   };
 
   const onPageChange = (page) => {
     setCurrentPage(page);
+    window.scrollTo(0, 0); // Scroll back to top
+  };
+
+  const handleFilteredAuctions = (filteredAuctions) => {
+    setAuctionListings(filteredAuctions);
   };
 
   return (
@@ -45,27 +47,27 @@ const NewAuctions = ({ searchQuery }) => {
       <div className="filter-form-container">
         <FilterForm onFilter={handleFilteredAuctions} />
       </div>
-    <div className="cont">
-      <div className="auction-items">
-        {currentAuctions.map((listing) => (
-          <Link
-            to={`/auction/${listing._id}`}
-            key={listing._id}
-            className="no-underline"
-          >
-            <AuctionItem item={listing} />
-          </Link>
-        ))}
+      <div className="cont">
+        <div className="auction-items">
+          {currentAuctions.map((listing) => (
+            <Link
+              to={`/auction/${listing._id}`}
+              key={listing._id}
+              className="no-underline"
+            >
+              <AuctionItem item={listing} />
+            </Link>
+          ))}
+        </div>
+        <div className="pagination">
+          <Pagination
+            current={currentPage}
+            onChange={onPageChange}
+            total={auctionListings.length}
+            pageSize={auctionsPerPage}
+          />
+        </div>
       </div>
-      <div className="pagination">
-        <Pagination
-          current={currentPage}
-          onChange={onPageChange}
-          total={auctionListings.length}
-          pageSize={auctionsPerPage}
-        />
-      </div>
-    </div>
     </div>
   );
 };

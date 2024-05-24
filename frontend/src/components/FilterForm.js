@@ -14,6 +14,7 @@ import {
 } from "antd";
 import "../design/FilterForm.css";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const { Sider } = Layout;
 const { RangePicker } = DatePicker;
@@ -100,18 +101,20 @@ const AuctionFilterForm = ({ onFilter }) => {
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Category">
-          <Select
-            placeholder="Category"
-            onChange={(value) => updateFilterCriteria("category", value)}
-          >
-            {categories.map((category) => (
-              <Option key={category.id} value={category.name}>
-                {category.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        {useLocation().pathname !== "/category" && (
+          <Form.Item label="Category">
+            <Select
+              placeholder="Category"
+              onChange={(value) => updateFilterCriteria("category", value)}
+            >
+              {categories.map((category) => (
+                <Option key={category.id} value={category.name}>
+                  {category.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
 
         <Form.Item label="Date Range">
           <RangePicker
@@ -150,12 +153,8 @@ const AuctionFilterForm = ({ onFilter }) => {
             onChange={(value) => updateFilterCriteria("maxPrice", value)}
           />
         </Form.Item>
-        <Button onClick={handleFilter}>
-          Apply Filters
-        </Button>
-        <Button onClick={resetFilters}>
-          Reset Filters
-        </Button>
+        <Button onClick={handleFilter}>Apply Filters</Button>
+        <Button onClick={resetFilters}>Reset Filters</Button>
       </Form>
     </div>
   );

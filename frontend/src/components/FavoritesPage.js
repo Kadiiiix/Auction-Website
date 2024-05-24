@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AuctionItem from "./AuctionItem";
 import { Link, useParams } from "react-router-dom";
-import { Pagination, Button } from "antd";
+import { Pagination } from "antd";
 import "../design/FavoritesPage.css";
 
 const FavoritesPage = () => {
@@ -44,6 +44,7 @@ const FavoritesPage = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    window.scrollTo(0, 0); // Scroll back to top
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -51,13 +52,14 @@ const FavoritesPage = () => {
   const currentFavorites = favorites.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div>
+    <div className="favorite-list">
       {userId === id ? (
         <h1 className="page-title">My Favorite Auctions</h1>
       ) : (
         <h1 className="page-title">{author}'s Favorite Auctions</h1>
       )}
-      <ul className="favorite-list">
+      
+      <ul className="list-elements">
         {currentFavorites.map((favorite) => (
           <li key={favorite._id}>
             <Link
