@@ -1,12 +1,21 @@
 /* FavoritesPage.css */
+.space{
+  align-items: center;
+  display:flex;
+}
 
 .favorite-list {
-  list-style-type: none; /* Remove bullets */
-  padding: 0; /* Remove padding */
+  align-items: center;
+  display: inline;
+  padding: 0; 
+}
+.list-elements{
+  list-style-type: none; 
+  padding-left:15%;
 }
 .no-underline {
-    text-decoration: none;
-  }
+  text-decoration: none;
+}
 
 .page-title {
   text-align: center; /* Center the text horizontally */

@@ -4,7 +4,7 @@ import AuctionItem from "./AuctionItem";
 import FilterForm from "./FilterForm";
 import { Link } from "react-router-dom";
 import { Pagination } from "antd";
-import "../design/ItemListingsPage.css"; // Ensure you import the CSS file
+import "../design/NewAndPopularAuctions.css"; // Ensure you import the CSS file
 
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
@@ -34,6 +34,7 @@ const ItemListingsPage = () => {
   // Pagination handler
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    window.scrollTo(0, 0); // Scroll back to top
   };
 
   // Calculate current auctions based on pagination
@@ -49,7 +50,7 @@ const ItemListingsPage = () => {
       <div className="filter-form-container">
         <FilterForm onFilter={handleFilteredAuctions} />
       </div>
-      <div className="item-listings-page">
+      <div className="cont">
         <div className="auction-items">
           {currentAuctions.map((listing) => (
             <Link
@@ -61,15 +62,14 @@ const ItemListingsPage = () => {
             </Link>
           ))}
         </div>
-        <div className="pagination-container">
-          <div className="pagination">
-            <Pagination
-              current={currentPage}
-              onChange={handlePageChange}
-              total={auctionListings.length}
-              pageSize={auctionsPerPage}
-            />
-          </div>
+        <div className="pagination">
+          <Pagination
+            current={currentPage}
+            onChange={handlePageChange}
+            total={auctionListings.length}
+            pageSize={auctionsPerPage}
+            showSizeChanger={false} // Hide the page size changer if not needed
+          />
         </div>
       </div>
     </div>

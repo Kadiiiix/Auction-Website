@@ -6,7 +6,6 @@ import { Pagination } from "antd";
 import FilterForm from "./FilterForm";
 import "../design/NewAndPopularAuctions.css";
 
-
 const PopularItems = ({ searchQuery }) => {
   const [auctionListings, setAuctionListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,10 +35,12 @@ const PopularItems = ({ searchQuery }) => {
 
   const onPageChange = (page) => {
     setCurrentPage(page);
+    window.scrollTo(0, 0); // Scroll back to top
   };
-   const handleFilteredAuctions = (filteredAuctions) => {
-     setAuctionListings(filteredAuctions);
-   };
+
+  const handleFilteredAuctions = (filteredAuctions) => {
+    setAuctionListings(filteredAuctions);
+  };
 
   return (
     <div>

@@ -1,6 +1,7 @@
 .item-listings-page{
-    margin: 5vh;
-    width:100%;
+    margin-left: 20%;
+    align-items: right;
+    width:70%;
 }
 .auction-items{
     flex: 1;
