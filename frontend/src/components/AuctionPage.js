@@ -8,6 +8,7 @@ import { Button, Modal, notification } from 'antd';
 import CommentSection from './Comments';
 import ExtendAuctionModal from './ExtendAuctionModal';
 import Caros from './Carousel'
+import Chatbot from './ChatBot';
 const AuctionPage = ({setLoggedIn}) => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
