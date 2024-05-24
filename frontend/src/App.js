@@ -138,9 +138,11 @@ const closeMenu = () => {
                   ):(<>
                   </>)}
 
+              {role==='admin' ? (<></>) : (
                 <li>
-                  <Link to="/create">Create Auction</Link>
-                </li>
+                <Link to="/create">Create Auction</Link>
+              </li>
+              )}
                 <Dropdown overlay={menu} trigger={["hover"]}>
                   <li>
                     <Link
@@ -219,7 +221,7 @@ const closeMenu = () => {
           <Route
             path="/create"
             element={
-              loggedIn ? (
+              (loggedIn && role!=='admin') ? (
                 <CreateAuction userId={userId} />
               ) : (
                 <Navigate to="/notlogged" />

@@ -6,7 +6,7 @@ return(
     <>
     <div className='full-container'>
         <Empty description={""} />
-        <p>You must be Logged In to see this page.</p>
+        <p>Your access to this page is denied. You must be logged in.</p>
         <p>Please <a href="http://localhost:3000/login">Log in!</a></p>
     </div>
     </>
