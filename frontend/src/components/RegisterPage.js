@@ -76,13 +76,14 @@ const RegisterPage = () => {
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
         </Form.Item>
         <Form.Item
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your email!',
-            },
-          ]}
+         name="email"
+         rules={[
+           {
+             type: 'email',
+             message: 'The input is not valid e-mail!',
+             required: true,
+           },
+         ]}
         >
           <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
         </Form.Item>
