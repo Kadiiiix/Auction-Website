@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import AuctionItem from "./AuctionItem";
 import { Pagination } from "antd";
 import FilterForm from "./FilterForm";
+
 import "../design/NewAndPopularAuctions.css";
 
 const NewAuctions = ({ searchQuery }) => {
   const [auctionListings, setAuctionListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const auctionsPerPage = 5;
+  const currentTime = new Date().getTime();
 
   useEffect(() => {
     const fetchAuctionListings = async () => {
@@ -17,7 +19,11 @@ const NewAuctions = ({ searchQuery }) => {
         const response = await axios.get(
           "http://localhost:4000/api/auctions/recent"
         );
-        setAuctionListings(response.data);
+      const Auctions = response.data.filter((auction) => {
+        const closingTime = new Date(auction.closingDate).getTime();
+        return closingTime > currentTime;
+      });
+        setAuctionListings(Auctions);
       } catch (error) {
         console.error("Error fetching auction listings:", error);
       }

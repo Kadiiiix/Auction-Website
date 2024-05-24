@@ -4,12 +4,16 @@ import AuctionItem from "./AuctionItem";
 import FilterForm from "./FilterForm";
 import { Link } from "react-router-dom";
 import { Pagination } from "antd";
-import "../design/NewAndPopularAuctions.css"; // Ensure you import the CSS file
+import Caros from "./SuggestionsCarousel";
+
+import "../design/NewAndPopularAuctions.css";
 
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const auctionsPerPage = 5;
+  const userId = localStorage.getItem("userId");
+  const isLoggedIn = userId ? true : false;
 
   // Fetch all auction listings initially
   useEffect(() => {
@@ -17,10 +21,19 @@ const ItemListingsPage = () => {
   }, []);
 
   // Function to fetch auction listings
+  // Function to fetch auction listings
   const fetchAuctionListings = async () => {
     try {
       const response = await axios.get("http://localhost:4000/api/auctions");
-      setAuctionListings(response.data);
+      const currentTime = new Date().getTime(); // Get current time in milliseconds
+
+      // Filter auctions whose closing date is in the future
+      const Auctions = response.data.filter((auction) => {
+        const closingTime = new Date(auction.closingDate).getTime();
+        return closingTime > currentTime;
+      });
+
+      setAuctionListings(Auctions);
     } catch (error) {
       console.error("Error fetching auction listings:", error);
     }
@@ -50,8 +63,19 @@ const ItemListingsPage = () => {
       <div className="filter-form-container">
         <FilterForm onFilter={handleFilteredAuctions} />
       </div>
-      <div className="cont">
-        <div className="auction-items">
+
+      <div className="conj">
+        {isLoggedIn ? ( 
+          <div>
+         <h2 className="paragraph">Recommended for You!</h2>
+          <div className="recommendations-carousel">
+           
+            <Caros userId={userId} />
+          </div>
+          </div>
+        ) : null}
+
+        <div className="auctions">
           {currentAuctions.map((listing) => (
             <Link
               to={`/auction/${listing._id}`}

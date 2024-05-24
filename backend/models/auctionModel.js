@@ -11,7 +11,6 @@ const auctionSchema = new mongoose.Schema({
   },
   additionalPhotos: [String], // Array of URLs of additional photos
   startingBid: Number, // Starting bid amount
-  allowInstantPurchase: Boolean, // Whether instant purchasing is allowed
   description: String, // Long description of the product
   location: String, // Location of the item
   age: Number, // Age of the item

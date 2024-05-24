@@ -13,7 +13,6 @@ exports.createAuction = async (req, res) => {
       closingDate,
       additionalPhotos,
       startingBid,
-      allowInstantPurchase,
       description,
       location,
       age,
@@ -29,7 +28,6 @@ exports.createAuction = async (req, res) => {
       closingDate,
       additionalPhotos,
       startingBid,
-      allowInstantPurchase,
       description,
       location,
       age,
@@ -307,7 +305,6 @@ exports.filterAuctions = async (req, res) => {
       category,
       startDate,
       endDate,
-      instantPurchase,
       location,
       maxPrice,
      
@@ -322,8 +319,6 @@ exports.filterAuctions = async (req, res) => {
         $gte: new Date(startDate),
         $lte: new Date(endDate),
       }; 
-    if (instantPurchase !== undefined)
-      query.allowInstantPurchase = instantPurchase;
     if (location) query.location = location;
     if (maxPrice) query.startingBid = { $lte: maxPrice };
    

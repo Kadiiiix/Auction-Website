@@ -152,4 +152,15 @@
 .account-menu{
     width: 140px;
 }
-  
+
+.active {
+  text-decoration: underline;
+}
+
+.inactive {
+  text-decoration: none;
+}
+.List-elements{
+    margin-right: 5%;
+    margin-left:5%;
+}

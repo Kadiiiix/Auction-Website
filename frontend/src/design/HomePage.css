@@ -1,15 +1,7 @@
 .containerHome {
-  
-    margin-right: 2vh;
-    margin-left: 2vh;
-    padding-left: 5%; /* Remove padding */
+    padding-left: 2%;
     height: 100%;
     background-color: white; /* Black background color */
-    /*display: flex; /* Use flexbox */
-     /* flex-direction: column;
-    justify-content: flex-start; /* Center horizontally */
-    align-items: right; /* Center vertically */
-    min-height: 100vh; /* Take up the whole viewport height */
     
 }
 

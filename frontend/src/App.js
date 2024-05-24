@@ -7,6 +7,7 @@ import {
   Routes,
   Navigate,
   useParams,
+  NavLink,
 } from "react-router-dom";
 import { notification, Menu, Dropdown, Button} from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -37,6 +38,7 @@ import UsersTable from "./components/UsersTable";
 import AuctionsTable from "./components/AuctionsTable";
 import CommentsTable from "./components/CommentsTable";
 import FilterForm from "./components/FilterForm";
+import RecommendationsCarousel from "./components/SuggestionsCarousel";
 import "../src/design/MainHeader.css";
 
 function App() {
@@ -130,19 +132,29 @@ const closeMenu = () => {
             )}
             {loggedIn && (
               <>
-                {role==="admin" ? (<>
-                <li><Link to="/manage/auctions" >Manage Auctions</Link></li>
-                <li><Link to="/manage/users">Manage Users</Link></li>
-                <li><Link to="/manage/comments">Manage Comments</Link></li>
-                </>
-                  ):(<>
-                  </>)}
+                {role === "admin" ? (
+                  <>
+                    <li>
+                      <Link to="/manage/auctions">Manage Auctions</Link>
+                    </li>
+                    <li>
+                      <Link to="/manage/users">Manage Users</Link>
+                    </li>
+                    <li>
+                      <Link to="/manage/comments">Manage Comments</Link>
+                    </li>
+                  </>
+                ) : (
+                  <></>
+                )}
 
-              {role==='admin' ? (<></>) : (
-                <li>
-                <Link to="/create">Create Auction</Link>
-              </li>
-              )}
+                {role === "admin" ? (
+                  <></>
+                ) : (
+                  <li>
+                    <Link to="/create">Create Auction</Link>
+                  </li>
+                )}
                 <Dropdown overlay={menu} trigger={["hover"]}>
                   <li>
                     <Link
@@ -168,18 +180,32 @@ const closeMenu = () => {
           </div>
           <div class="List">
             <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
-              <h2>Categories</h2>
+              <h2> Categories </h2>
               {showMenu && <NavigationMenu />}
             </div>
-            <div>
-              <Link to={"/recent"}>
-                <h2>New Auctions</h2>
-              </Link>
+            <div className="List-elements">
+              <NavLink
+                to="/"
+                className={({ isActive }) => (isActive ? "active" : "inactive")}
+              >
+                <h2> Home </h2>
+              </NavLink>
             </div>
             <div>
-              <Link to={"/popular"}>
-                <h2>Popular Auctions</h2>
-              </Link>
+              <NavLink
+                to="/recent"
+                className={({ isActive }) => (isActive ? "active" : "inactive")}
+              >
+                <h2> New Auctions </h2>
+              </NavLink>
+            </div>
+            <div>
+              <NavLink
+                to="/popular"
+                className={({ isActive }) => (isActive ? "active" : "inactive")}
+              >
+                <h2> Popular Auctions </h2>
+              </NavLink>
             </div>
           </div>
           <div className="SearchBar">
@@ -221,7 +247,7 @@ const closeMenu = () => {
           <Route
             path="/create"
             element={
-              (loggedIn && role!=='admin') ? (
+              loggedIn && role !== "admin" ? (
                 <CreateAuction userId={userId} />
               ) : (
                 <Navigate to="/notlogged" />
@@ -301,39 +327,35 @@ const closeMenu = () => {
           <Route
             path="/manage/users"
             element={
-              role==="admin" ? (
-                <UsersTable />
-              ) : (
-                <Navigate to="/notlogged" />
-              )
+              role === "admin" ? <UsersTable /> : <Navigate to="/notlogged" />
             }
           />
           <Route
             path="/manage/auctions"
             element={
-              role==="admin" ? (
+              role === "admin" ? (
                 <AuctionsTable />
               ) : (
                 <Navigate to="/notlogged" />
               )
             }
           />
-          
+
           <Route
             path="/manage/comments"
             element={
-              role==="admin" ? (
+              role === "admin" ? (
                 <CommentsTable />
               ) : (
                 <Navigate to="/notlogged" />
               )
             }
           />
-          
-          <Route 
-            path = "/filter"
+
+          <Route
+            path="/filter"
             element={<FilterForm setLoggedIn={loggedIn} />}
-            />
+          />
         </Routes>
       </div>
     </Router>

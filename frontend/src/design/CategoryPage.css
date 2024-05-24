@@ -1,7 +1,16 @@
 .item-listings-page{
-    margin-left: 20%;
-    align-items: right;
-    width:70%;
+    width: 85%;
+    margin-right: 3%;
+    margin-left: 3%;
+    padding-left: 15%; /* Remove padding */
+    height: 100%;
+    background-color: white; /* Black background color */
+    /*display: flex; /* Use flexbox */
+     /* flex-direction: column;
+    justify-content: flex-start; /* Center horizontally */
+    align-items: right; /* Center vertically */
+    min-height: 100vh; /* Take up the whole viewport height */
+    
 }
 .auction-items{
     flex: 1;

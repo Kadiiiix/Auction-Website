@@ -1,8 +1,7 @@
-
-.cont {
+.conj{
     width: 85%;
-    margin-right: 2vh;
-    margin-left: 2vh;
+    margin-right: 0%;
+    margin-left: 1.5%;
     padding-left: 15%; /* Remove padding */
     height: 100%;
     background-color: white; /* Black background color */
@@ -13,11 +12,12 @@
     min-height: 100vh; /* Take up the whole viewport height */
     
 }
-.containerHome {
+
+.cont {
     width: 85%;
-    margin-right: 2vh;
-    margin-left: 2vh;
-    padding-left: 5%; /* Remove padding */
+    margin-right: 3%;
+    margin-left: 3%;
+    padding-left: 15%; /* Remove padding */
     height: 100%;
     background-color: white; /* Black background color */
     /*display: flex; /* Use flexbox */
@@ -26,4 +26,15 @@
     align-items: right; /* Center vertically */
     min-height: 100vh; /* Take up the whole viewport height */
     
+}
+
+.recommendations-carousel {
+    width:85%;
+    padding-left:2%;
+    padding-right:2%;
+    margin-left:5.5%;
+    background-color: #f5f5f5;
+    }
+.paragraph{
+    padding-left:35%;
 }
