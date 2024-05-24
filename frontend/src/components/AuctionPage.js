@@ -16,6 +16,7 @@ const AuctionPage = ({setLoggedIn}) => {
   const [likeNumber, setLikeNumber] = useState(0);
   const [author, setAuthor] = useState("");
   const [authorsRate, setAuthorsRate] = useState(0);
+  const role = localStorage.getItem("role");
 
   //const userId = localStorage.getItem("userId");
  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
@@ -244,7 +245,7 @@ const AuctionPage = ({setLoggedIn}) => {
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>
-              <p className="highest-bid">{item.highestBid}</p>
+              <p className="highest-bid">{item.highestBid} KM</p>
             </div>
             <hr className="separator" />
             <div className="minimal">
@@ -252,7 +253,7 @@ const AuctionPage = ({setLoggedIn}) => {
               <p className="minimal-bid">{item.startingBid} KM</p>
             </div>
             <div className="placing-bids">
-              <Button className="bid" onClick={handlePlaceBid}>
+              <Button className="bid" onClick={handlePlaceBid} disabled={role==="admin" || userId===item.createdBy}>
                 Place Bid
               </Button>
               <input
@@ -272,7 +273,6 @@ const AuctionPage = ({setLoggedIn}) => {
                     className="likeButton"
                   >
                     {" "}
-                    {/* Changed from loggedIn to isLoggedIn */}
                     <HeartFilled />
                   </Button>
                   <p className="text">You have liked this auction!</p>
@@ -283,7 +283,7 @@ const AuctionPage = ({setLoggedIn}) => {
                   <Button
                     onClick={handleAddToFavorites}
                     className="likeButton"
-                    disabled={!setLoggedIn}
+                    disabled={!setLoggedIn || role==="admin"}
                   >
                     {" "}
                     {/* Changed from loggedIn to isLoggedIn */}

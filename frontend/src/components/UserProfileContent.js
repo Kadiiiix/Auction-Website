@@ -25,6 +25,7 @@ const UserProfileContent = ({ id, loggedIn }) => {
   const [uploading, setUploading] = useState(false); // State to track image upload status
 
   const userId = localStorage.getItem("userId");
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -227,7 +228,7 @@ const UserProfileContent = ({ id, loggedIn }) => {
             </Card>
             {isCurrentUser && (
               <div className="edit-button-container">
-                <Button type="primary" className="edit-button" onClick={handleEditClick}>
+                <Button type="primary" disabled={role==='admin'} className="edit-button" onClick={handleEditClick}>
                   Edit Your Information
                 </Button>
                 <Button type="primary" className="edit-button" onClick={handleOpenChangePasswordModal}>

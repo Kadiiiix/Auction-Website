@@ -50,7 +50,7 @@ const RegisterPage = () => {
 
   // Redirect to home page if redirectToHome is true
   if (redirectToHome) {
-    return <Navigate to="/items" />;
+    return <Navigate to="/" />;
   }
 
   return (
