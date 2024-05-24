@@ -58,6 +58,7 @@ const AuctionPage = ({setLoggedIn}) => {
   };
 
  const handlePlaceBid = async () => {
+  const amount = bidAmount;
    try {
      const auctionId = item._id;
      const currentUserId = userId; // Use a different variable name here to avoid shadowing
@@ -65,9 +66,26 @@ const AuctionPage = ({setLoggedIn}) => {
      const response = await axios.post(
        `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
      );
+      notification.success({
+        message: 'Success',
+        description: 'You have placed your bid.',
+      });
    } catch (error) {
+    if(amount<=item.highestBid){
+      notification.error({
+        message: 'Error',
+        description: 'Your bid must be higher than the currently highest bid.',
+      });
+    }
+    if(amount<=item.minimalBid){
+      notification.error({
+        message: 'Error',
+        description: 'Your bid must be higher than the minimal bid.',
+      });
+    }
      console.error("Error placing bid:", error);
-   }
+     }
+   
  };
 
 
