@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Avatar, Modal, Select, notification } from 'antd';
+import { UserOutlined, WarningOutlined } from '@ant-design/icons';
 import "./../design/AuctionPage.css";
+
+const { TextArea } = Input;
+const { Option } = Select;
 
 const CommentSection = ({ auctionId }) => {
     const [newComment, setNewComment] = useState('');
@@ -11,12 +14,18 @@ const CommentSection = ({ auctionId }) => {
     const [form] = Form.useForm();
     const [author, setAuthor] = useState("");
     const [photo, setPhoto] = useState("");
+    const [reportModalVisible, setReportModalVisible] = useState(false);
+    const [reportReason, setReportReason] = useState('');
+    const [reportDescription, setReportDescription] = useState('');
+    const [commentToReport, setCommentToReport] = useState(null);
+    const [commentId, setCommentId] = useState("");
 
     const handleChange = (e) => {
       setNewComment(e.target.value);
     };
 
     const userId = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
 
     useEffect(() => {
       const fetchUser = async () => {
@@ -78,6 +87,36 @@ const CommentSection = ({ auctionId }) => {
           console.error("Error posting comment:", error);
       }
   };
+
+    const handleReportButtonClick = (comment) => {
+      setCommentToReport(comment);
+      setCommentId(comment._id);
+      setReportModalVisible(true);
+    };
+
+    const handleReportSubmit = async () => {
+      try {
+        const response = await axios.post(`http://localhost:4000/api/report/report`, {
+        reporter: userId,
+        comment: commentId,
+        reason: reportReason,
+        description: reportDescription,
+        });
+        notification.success({
+          message: 'Report Submitted',
+          description: 'Your report has been submitted successfully.',
+        });
+        setReportModalVisible(false);
+        setReportReason('');
+        setReportDescription('');
+      } catch (error) {
+        console.error("Error reporting comment:", error);
+        notification.error({
+          message: 'Report Failed',
+          description: 'There was an error submitting your report.',
+        });
+      }
+    };
   
     return (
       <>
@@ -91,6 +130,17 @@ const CommentSection = ({ auctionId }) => {
                   <p className='time'>{formatDate(comment.timePosted)}</p>
                 </div>
                 <p className="comment-text">{comment.comment}</p>
+                <div className='reporting'>
+                {(userId && userId !== comment.userId._id && role !== 'admin') ? (
+                  <Button onClick={() => handleReportButtonClick(comment)} className="reportButton">
+                    <WarningOutlined /> Report Comment
+                  </Button>
+                ) : (
+                  <Button className="reportButton" disabled>
+                    <WarningOutlined /> Report Comment
+                  </Button>
+                )}
+                </div>
               </div>
             ))}
         </div>
@@ -124,6 +174,41 @@ const CommentSection = ({ auctionId }) => {
         ) : (
           <h2><a href="http://localhost:3000/login">Log In</a> or <a href="http://localhost:3000/register">Register</a> to post a comment!</h2>
         )}
+        
+        <Modal
+          title="Report Comment"
+          visible={reportModalVisible}
+          onCancel={() => setReportModalVisible(false)}
+          onOk={handleReportSubmit}
+        >
+          <Form>
+            <Form.Item
+              label="Reason"
+              rules={[{ required: true, message: 'Please select a reason' }]}
+            >
+              <Select
+                value={reportReason}
+                onChange={(value) => setReportReason(value)}
+              >
+                <Option value="hate_speech">Hate Speech</Option>
+                <Option value="spam">Spam</Option>
+                <Option value="false_information">False Information</Option>
+                <Option value="inappropriate_content">Inappropriate Content</Option>
+                <Option value="other">Other</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Description"
+              rules={[{ required: true, message: 'Please enter a description' }]}
+            >
+              <TextArea
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                rows={4}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
       </>
     );
 };

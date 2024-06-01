@@ -9,6 +9,7 @@ const favoriteRoutes = require("./routes/favoriteRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const passwordRecoveryRoutes = require("./routes/passwordRecoveryRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 const multer = require("multer");
 const admin = require("firebase-admin");
@@ -54,6 +55,7 @@ app.use("/api/favorite", favoriteRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/pass", passwordRecoveryRoutes);
+app.use("/api/report", reportRoutes);
 // Start the server after establishing the MongoDB connection
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })

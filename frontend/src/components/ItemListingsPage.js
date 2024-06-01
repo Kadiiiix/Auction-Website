@@ -8,6 +8,8 @@ import Caros from "./SuggestionsCarousel";
 
 import "../design/NewAndPopularAuctions.css";
 
+const role = localStorage.getItem("role");
+
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +67,7 @@ const ItemListingsPage = () => {
       </div>
 
       <div className="conj">
-        {isLoggedIn ? ( 
+        {isLoggedIn && role!=="admin" ? ( 
           <div>
          <h2 className="paragraph">Recommended for You!</h2>
           <div className="recommendations-carousel">
