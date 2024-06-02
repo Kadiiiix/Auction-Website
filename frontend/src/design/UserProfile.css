@@ -49,3 +49,11 @@
     margin-top: 10px;
   }
   
+.report-button {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

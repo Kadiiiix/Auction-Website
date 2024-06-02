@@ -65,6 +65,7 @@ function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     setLoggedIn(false);
+    window.location.reload()
   
     // Display logout notification
     notification.success({

@@ -3,7 +3,7 @@ import { Table, Input, Button, Space, Modal, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
-import "../design/LoginPage.css"
+import "../design/LoginPage.css";
 
 const UsersTable = () => {
     const [dataSource, setDataSource] = useState([]);
@@ -11,6 +11,7 @@ const UsersTable = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [open, setOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [reportDetails, setReportDetails] = useState(null);
     const searchInput = useRef(null);
 
     useEffect(() => {
@@ -128,48 +129,54 @@ const UsersTable = () => {
             ),
     });
 
-    const showModal = (user) => {
+    const showModal = async (user) => {
         setSelectedUser(user);
-        setOpen(true);
+        try {
+            const response = await axios.get(`http://localhost:4000/api/report/reports/aggregated/${user.userId}`);
+            setReportDetails(response.data);
+            setOpen(true);
+        } catch (error) {
+            console.error('Error fetching user reports:', error);
+            message.error('Failed to fetch user reports.');
+        }
     };
 
     const handleOk = () => {
         setOpen(false);
         setSelectedUser(null);
+        setReportDetails(null);
     };
 
     const handleCancel = () => {
         setOpen(false);
         setSelectedUser(null);
+        setReportDetails(null);
     };
 
     const handleDelete = async () => {
         try {
-            // Delete the user
             await axios.delete(`http://localhost:4000/api/users/delete/${selectedUser.userId}`);
             message.success('User deleted successfully.');
-            
-            // Close the modal and clear selected user
             setOpen(false);
             setSelectedUser(null);
-    
+
             const usersResponse = await axios.get("http://localhost:4000/api/users/all-users");
-                const users = usersResponse.data;
+            const users = usersResponse.data;
 
-                const auctionsResponse = await axios.get("http://localhost:4000/api/auctions");
-                const auctions = auctionsResponse.data;
+            const auctionsResponse = await axios.get("http://localhost:4000/api/auctions");
+            const auctions = auctionsResponse.data;
 
-                const transformedData = users.map(user => {
-                    const userAuctions = auctions.filter(auction => auction.createdBy === user._id);
-                    return {
-                        key: user._id,
-                        userId: user._id,
-                        username: user.username,
-                        fullname: user.fullname,
-                        email: user.email,
-                        auctions: userAuctions.map(auction => auction.name).join(', ')
-                    };
-                });
+            const transformedData = users.map(user => {
+                const userAuctions = auctions.filter(auction => auction.createdBy === user._id);
+                return {
+                    key: user._id,
+                    userId: user._id,
+                    username: user.username,
+                    fullname: user.fullname,
+                    email: user.email,
+                    auctions: userAuctions.map(auction => auction.name).join(', ')
+                };
+            });
 
             setDataSource(transformedData);
         } catch (error) {
@@ -177,7 +184,6 @@ const UsersTable = () => {
             message.error('Failed to delete user.');
         }
     };
-    
 
     const columns = [
         {
@@ -212,6 +218,16 @@ const UsersTable = () => {
             width: '200px',
         },
         {
+            title: 'Total Reports',
+            key: 'totalReports',
+            render: (text, record) => (
+                <Button type="link" onClick={() => showModal(record)}>
+                    View Reports
+                </Button>
+            ),
+            align: 'center',
+        },
+        {
             title: 'Details and Delete',
             key: 'actions',
             render: (text, record) => (
@@ -227,10 +243,10 @@ const UsersTable = () => {
         <>
             <Table dataSource={dataSource} columns={columns} />
 
-            {selectedUser && (
+            {selectedUser && reportDetails && (
                 <Modal
                     open={open}
-                    title="User Details"
+                    title="User Reports"
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[
@@ -242,12 +258,14 @@ const UsersTable = () => {
                         </Button>,
                     ]}
                 >
-                    <p><strong>Username:</strong> {selectedUser.username}</p>
-                    <p><strong>Email:</strong> {selectedUser.email}</p>
-                    <p><strong>Full name:</strong>{selectedUser.fullname}</p>
-                    <p><strong>Phone number:</strong> {selectedUser.phone_number}</p>
-                    <p><strong>City:</strong> {selectedUser.city}</p>
-                    <p><strong>Auctions:</strong> {selectedUser.auctions}</p>
+                    <p><strong>Profile Reports:</strong> {reportDetails.profileReports.length}</p>
+                    <p><strong>Auction Reports:</strong> {reportDetails.auctionReports.length}</p>
+                    <p><strong>Comment Reports:</strong> {reportDetails.commentReports.length}</p>
+                    <p><strong>Total Reports:</strong> {reportDetails.totalReports}</p>
+                    <h3>Detailed Reports</h3>
+                    <p><strong>Profile Reports:</strong> {JSON.stringify(reportDetails.profileReports, null, 2)}</p>
+                    <p><strong>Auction Reports:</strong> {JSON.stringify(reportDetails.auctionReports, null, 2)}</p>
+                    <p><strong>Comment Reports:</strong> {JSON.stringify(reportDetails.commentReports, null, 2)}</p>
                 </Modal>
             )}
         </>

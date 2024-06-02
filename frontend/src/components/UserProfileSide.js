@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, Button, Space, Avatar, notification } from "antd";
-import { UserOutlined, ShoppingOutlined, HeartOutlined, CommentOutlined } from '@ant-design/icons';
+import { Card, Button, Space, Avatar, notification, Modal, Select, Input } from "antd";
+import { UserOutlined, ShoppingOutlined, HeartOutlined, CommentOutlined, WarningOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import "../design/UserProfile.css";
 import Rating from "./Rating";
+
+const { Option } = Select;
+const { TextArea } = Input;
 
 const UserProfileSide = ({ id, loggedIn }) => {
     const [auctions, setAuctions] = useState([]);
@@ -13,10 +16,13 @@ const UserProfileSide = ({ id, loggedIn }) => {
     const [favorites, setFavorites] = useState([]);
     const [commentsNumber, setCommentsNumber] = useState(0);
     const [author, setAuthor] = useState("");
-    const [photo, setPhoto] = useState(""); // State for user's photo
+    const [photo, setPhoto] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [uploading, setUploading] = useState(false);
-    const [showUpload, setShowUpload] = useState(false); // State to manage visibility of upload input
+    const [showUpload, setShowUpload] = useState(false);
+    const [reportModalVisible, setReportModalVisible] = useState(false);
+    const [reportReason, setReportReason] = useState('');
+    const [reportDescription, setReportDescription] = useState('');
     const userId = localStorage.getItem("userId");
 
     useEffect(() => {
@@ -71,7 +77,7 @@ const UserProfileSide = ({ id, loggedIn }) => {
                 const response = await axios.get(`http://localhost:4000/api/users/${id}`);
                 const user = response.data;
                 setAuthor(user.username);
-                setPhoto(user.photo); // Set the user's photo
+                setPhoto(user.photo);
             } catch (error) {
                 console.error("Error fetching user data", error);
             }
@@ -107,14 +113,42 @@ const UserProfileSide = ({ id, loggedIn }) => {
                     message: 'Success',
                     description: 'Image updated successfully.',
                 });
-                setPhoto(imageUrl); // Update the photo state
-                setShowUpload(false); // Hide the upload input after updating
+                setPhoto(imageUrl);
+                setShowUpload(false);
             }
         } catch (error) {
             console.error('Error updating image:', error);
             notification.error({
                 message: 'Error',
                 description: 'There was an error updating the image.',
+            });
+        }
+    };
+
+    const handleReportButtonClick = () => {
+        setReportModalVisible(true);
+    };
+
+    const handleReportSubmit = async () => {
+        try {
+            await axios.post(`http://localhost:4000/api/report/report`, {
+                reason: reportReason,
+                description: reportDescription,
+                reportedUser: id,
+                reporter: userId
+            });
+            notification.success({
+                message: 'Report Submitted',
+                description: 'Your report has been submitted successfully.',
+            });
+            setReportModalVisible(false);
+            setReportReason('');
+            setReportDescription('');
+        } catch (error) {
+            console.error("Error reporting user:", error);
+            notification.error({
+                message: 'Report Failed',
+                description: 'There was an error submitting your report.',
             });
         }
     };
@@ -144,23 +178,23 @@ const UserProfileSide = ({ id, loggedIn }) => {
                 <Space wrap className="item">
                     <Avatar shape="square" size={200} src={photo} icon={<UserOutlined />} />
                 </Space>
-                    {loggedIn && userId === id && (
-                        <>
-                            {!showUpload && (
-                                <Button onClick={() => setShowUpload(true)} style={{ marginTop: 10 }}>
-                                    Update Image
+                {loggedIn && userId === id && (
+                    <>
+                        {!showUpload && (
+                            <Button onClick={() => setShowUpload(true)} style={{ marginTop: 10 }}>
+                                Update Image
+                            </Button>
+                        )}
+                        {showUpload && (
+                            <>
+                                <input type="file" onChange={handleImageUpload} style={{ marginTop: 10 }} />
+                                <Button onClick={handleImageUpdate} disabled={uploading || !imageUrl}>
+                                    {uploading ? 'Uploading Image...' : 'Save Image'}
                                 </Button>
-                            )}
-                            {showUpload && (
-                                <>
-                                    <input type="file" onChange={handleImageUpload} style={{ marginTop: 10 }} />
-                                    <Button onClick={handleImageUpdate} disabled={uploading || !imageUrl}>
-                                        {uploading ? 'Uploading Image...' : 'Save Image'}
-                                    </Button>
-                                </>
-                            )}
-                        </>
-                    )}
+                            </>
+                        )}
+                    </>
+                )}
 
                 <Card title={`${author}'s Rating`} style={{ width: 300 }}>
                     <Rating id={id} userId={userId} />
@@ -175,9 +209,51 @@ const UserProfileSide = ({ id, loggedIn }) => {
                     </Space>
                 </Card>
                 <div className="item">
-                    {(loggedIn && userId !== id) ? <Button className="edit-button"><Link to={`http://localhost:3000/messages/${id}`}>Send Message</Link></Button> : <Button disabled className="edit-button">Send Message</Button>}
+                    {(loggedIn && userId !== id) ? (
+                        <Button className="edit-button">
+                            <Link to={`http://localhost:3000/messages/${id}`}>Send Message</Link>
+                        </Button>
+                    ) : (
+                        <Button disabled className="edit-button">Send Message</Button>
+                    )}
+                </div>
+                <div className="item">
+                    {(loggedIn && userId !== id) ? (
+                        <Button onClick={handleReportButtonClick} className="report-button">
+                            <WarningOutlined /> Report User
+                        </Button>
+                    ) : (
+                        <Button disabled className="report-button">
+                            <WarningOutlined /> Report User
+                        </Button>
+                    )}
                 </div>
             </div>
+
+            <Modal
+                title="Report User"
+                visible={reportModalVisible}
+                onCancel={() => setReportModalVisible(false)}
+                onOk={handleReportSubmit}
+            >
+                <Select
+                    placeholder="Select a reason"
+                    onChange={(value) => setReportReason(value)}
+                    style={{ width: '100%', marginBottom: 10 }}
+                >
+                    <Option value="spam">Spam</Option>
+                    <Option value="hate_speech">Hate Speech</Option>
+                    <Option value="false_information">False Information</Option>
+                    <Option value="inappropriate_content">Inappropriate Content</Option>
+                    <Option value="other">Other</Option>
+                </Select>
+                <TextArea
+                    placeholder="Additional details (optional)"
+                    rows={4}
+                    value={reportDescription}
+                    onChange={(e) => setReportDescription(e.target.value)}
+                />
+            </Modal>
         </>
     );
 };
