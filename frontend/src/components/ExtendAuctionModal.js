@@ -11,6 +11,7 @@ const ExtendAuctionModal = ({ auctionId, visible, setVisible }) => {
         days: parseInt(values.days)
       });
 
+
       setVisible(false);
         notification.success({
           message: 'Extend Successful',
