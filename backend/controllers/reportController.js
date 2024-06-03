@@ -63,36 +63,40 @@ exports.getCommentReportCount = async (req, res) => {
 };
 
 exports.getAggregatedUserReports = async (req, res) => {
-    try {
-        const { userId } = req.params;
+  try {
+      const { userId } = req.params;
 
-        // Fetch profile reports
-        const profileReports = await Report.find({ reportedUser: userId });
+      // Fetch profile reports
+      const profileReports = await Report.find({ reportedUser: userId }).populate('reporter', 'username');
 
-        // Fetch auctions created by user
-        const auctions = await Auction.find({ createdBy: userId });
-        const auctionIds = auctions.map(auction => auction._id);
+      // Fetch auctions created by user
+      const auctions = await Auction.find({ createdBy: userId });
+      const auctionIds = auctions.map(auction => auction._id);
 
-        // Fetch auction reports
-        const auctionReports = await Report.find({ auction: { $in: auctionIds } });
+      // Fetch auction reports
+      const auctionReports = await Report.find({ auction: { $in: auctionIds } })
+          .populate('reporter', 'username')
+          .populate('auction', 'name');
 
-        // Fetch comments made by user
-        const comments = await Comment.find({ userId: userId });
-        const commentIds = comments.map(comment => comment._id);
+      // Fetch comments made by user
+      const comments = await Comment.find({ userId: userId });
+      const commentIds = comments.map(comment => comment._id);
 
-        // Fetch comment reports
-        const commentReports = await Report.find({ comment: { $in: commentIds } });
+      // Fetch comment reports
+      const commentReports = await Report.find({ comment: { $in: commentIds } })
+          .populate('reporter', 'username')
+          .populate('comment', 'comment');
 
-        // Aggregate all reports
-        const allReports = [...profileReports, ...auctionReports, ...commentReports];
+      // Aggregate all reports
+      const allReports = [...profileReports, ...auctionReports, ...commentReports];
 
-        res.json({
-            profileReports,
-            auctionReports,
-            commentReports,
-            totalReports: allReports.length,
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching aggregated reports' });
-    }
+      res.json({
+          profileReports,
+          auctionReports,
+          commentReports,
+          totalReports: allReports.length,
+      });
+  } catch (error) {
+      res.status(500).json({ error: 'Error fetching aggregated reports' });
+  }
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Space, Modal, message } from 'antd';
+import { Table, Input, Button, Space, Modal, message, Pagination } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
@@ -10,40 +10,61 @@ const UsersTable = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [open, setOpen] = useState(false);
+    const [openDetails, setOpenDetails] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [reportDetails, setReportDetails] = useState(null);
     const searchInput = useRef(null);
+    const [top, setTop] = useState('topLeft');
+    const [bottom, setBottom] = useState('bottomRight');
 
     useEffect(() => {
         const fetchUsersAndAuctions = async () => {
             try {
                 const usersResponse = await axios.get("http://localhost:4000/api/users/all-users");
                 const users = usersResponse.data;
-
+    
                 const auctionsResponse = await axios.get("http://localhost:4000/api/auctions");
                 const auctions = auctionsResponse.data;
-
-                const transformedData = users.map(user => {
+    
+                const transformedData = await Promise.all(users.map(async (user) => {
                     const userAuctions = auctions.filter(auction => auction.createdBy === user._id);
-                    return {
-                        key: user._id,
-                        userId: user._id,
-                        username: user.username,
-                        fullname: user.fullname,
-                        email: user.email,
-                        auctions: userAuctions.map(auction => auction.name).join(', ')
-                    };
-                });
-
+    
+                    try {
+                        const reportsResponse = await axios.get(`http://localhost:4000/api/report/reports/aggregated/${user._id}`);
+                        const totalReports = reportsResponse.data.totalReports || 0;
+                        
+                        return {
+                            key: user._id,
+                            userId: user._id,
+                            username: user.username,
+                            fullname: user.fullname,
+                            email: user.email,
+                            auctions: userAuctions.map(auction => auction.name).join(', '),
+                            totalReports: totalReports,
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching reports for user ${user._id}:`, error);
+                        return {
+                            key: user._id,
+                            userId: user._id,
+                            username: user.username,
+                            fullname: user.fullname,
+                            email: user.email,
+                            auctions: userAuctions.map(auction => auction.name).join(', '),
+                            totalReports: 0,
+                        };
+                    }
+                }));
+    
                 setDataSource(transformedData);
             } catch (error) {
                 console.error('Error fetching user or auction data:', error);
             }
         };
-
+    
         fetchUsersAndAuctions();
     }, []);
-
+    
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -141,16 +162,31 @@ const UsersTable = () => {
         }
     };
 
+    const showDetailsModal = (user) => {
+        setSelectedUser(user);
+        setOpenDetails(true);
+    };
+
     const handleOk = () => {
         setOpen(false);
         setSelectedUser(null);
         setReportDetails(null);
     };
 
+    const handleDetailsOk = () => {
+        setOpenDetails(false);
+        setSelectedUser(null);
+    };
+
     const handleCancel = () => {
         setOpen(false);
         setSelectedUser(null);
         setReportDetails(null);
+    };
+
+    const handleDetailsCancel = () => {
+        setOpenDetails(false);
+        setSelectedUser(null);
     };
 
     const handleDelete = async () => {
@@ -219,10 +255,11 @@ const UsersTable = () => {
         },
         {
             title: 'Total Reports',
+            dataIndex: 'totalReports',
             key: 'totalReports',
             render: (text, record) => (
                 <Button type="link" onClick={() => showModal(record)}>
-                    View Reports
+                    <p>({record.totalReports ? <>{record.totalReports}</> : <>0</>}) View Reports</p> 
                 </Button>
             ),
             align: 'center',
@@ -231,9 +268,11 @@ const UsersTable = () => {
             title: 'Details and Delete',
             key: 'actions',
             render: (text, record) => (
-                <Button type="primary" onClick={() => showModal(record)} className='button'>
-                    View Details
-                </Button>
+                <>
+                    <Button type="primary" onClick={() => showDetailsModal(record)} className='button'>
+                        View Details
+                    </Button>
+                </>
             ),
             align: 'center',
         },
@@ -241,31 +280,56 @@ const UsersTable = () => {
 
     return (
         <>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={dataSource} columns={columns}/> 
 
-            {selectedUser && reportDetails && (
+            {selectedUser && (
+                <Modal
+                    open={openDetails}
+                    title="User Details"
+                    onOk={handleDetailsOk}
+                    onCancel={handleDetailsCancel}
+                    footer={[
+                        <Button key="delete" type="primary" danger onClick={handleDelete}>
+                            Delete User
+                        </Button>,
+                        <Button key="close" onClick={handleDetailsCancel}>
+                            Close
+                        </Button>,
+                    ]}
+                >
+                    <p><strong>Username:</strong> {selectedUser.username}</p>
+                    <p><strong>Full name:</strong> {selectedUser.fullname}</p>
+                    <p><strong>Email:</strong> {selectedUser.email}</p>
+                    <p><strong>Auctions:</strong> {selectedUser.auctions}</p>
+                </Modal>
+            )}
+
+            {selectedUser && (
                 <Modal
                     open={open}
                     title="User Reports"
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[
-                        <Button key="delete" type="primary" danger onClick={handleDelete}>
-                            Delete User
-                        </Button>,
-                        <Button key="cancel" onClick={handleCancel}>
-                            Cancel
+                        <Button key="ok" onClick={handleOk}>
+                            OK
                         </Button>,
                     ]}
                 >
-                    <p><strong>Profile Reports:</strong> {reportDetails.profileReports.length}</p>
-                    <p><strong>Auction Reports:</strong> {reportDetails.auctionReports.length}</p>
-                    <p><strong>Comment Reports:</strong> {reportDetails.commentReports.length}</p>
-                    <p><strong>Total Reports:</strong> {reportDetails.totalReports}</p>
-                    <h3>Detailed Reports</h3>
-                    <p><strong>Profile Reports:</strong> {JSON.stringify(reportDetails.profileReports, null, 2)}</p>
-                    <p><strong>Auction Reports:</strong> {JSON.stringify(reportDetails.auctionReports, null, 2)}</p>
-                    <p><strong>Comment Reports:</strong> {JSON.stringify(reportDetails.commentReports, null, 2)}</p>
+                    {reportDetails ? (
+                        <div>
+                            <p><strong>Total Reports:</strong> {reportDetails.totalReports}</p>
+                            {reportDetails.reports.map((report) => (
+                                <div key={report.id}>
+                                    <p><strong>Report ID:</strong> {report.id}</p>
+                                    <p><strong>Description:</strong> {report.description}</p>
+                                    <p><strong>Created At:</strong> {report.createdAt}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No report details available.</p>
+                    )}
                 </Modal>
             )}
         </>

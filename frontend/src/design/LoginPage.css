@@ -61,3 +61,19 @@
   background-color: #0056b3;
 }
 
+/* Centering the pagination */
+.ant-pagination-item,
+.ant-pagination-jump-prev,
+.ant-pagination-jump-next,
+.ant-pagination-prev,
+.ant-pagination-next,
+.ant-pagination-options {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Adjusting the margin to align the arrows with the box */
+.ant-pagination-prev,
+.ant-pagination-next {
+    margin-top: 0;
+}
