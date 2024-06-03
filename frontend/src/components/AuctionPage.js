@@ -26,6 +26,9 @@ const AuctionPage = ({setLoggedIn}) => {
  const [closeModalVisible, setCloseModalVisible] = useState(false);
 
  const handleExtendButtonClick = () => {
+    axios.post(
+        `http://localhost:4000/api/notification/extension/${id}`
+    );
    setExtendModalVisible(true);
  };
 
@@ -40,7 +43,9 @@ const AuctionPage = ({setLoggedIn}) => {
 
   const handleConfirmCloseAuction = async () => {
     try {
+      axios.post(`http://localhost:4000/api/notification/closing/${id}`);
       const response = await axios.put(`http://localhost:4000/api/auctions/${id}/close`);
+
       console.log(response.data.message);
       // Handle success or update UI accordingly
       setCloseModalVisible(false);
@@ -62,8 +67,11 @@ const AuctionPage = ({setLoggedIn}) => {
   const amount = bidAmount;
    try {
      const auctionId = item._id;
-     const currentUserId = userId; // Use a different variable name here to avoid shadowing
-     const amount = bidAmount; // I noticed you missed declaring 'amount' as a variable
+     const currentUserId = userId; 
+     const amount = bidAmount; 
+     await axios.post(
+       `http://localhost:4000/api/notification/outbid/${auctionId}`
+     );
      const response = await axios.post(
        `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
      );
