@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import '../design/AuctionPage.css';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { Button, Modal, notification } from 'antd';
+import { Button, Modal, notification, Carousel } from 'antd';
 import CommentSection from './Comments';
 import ExtendAuctionModal from './ExtendAuctionModal';
 import Caros from './SimilarItemsCarousel'
@@ -235,6 +235,9 @@ const AuctionPage = ({setLoggedIn}) => {
   };
   
   const renderAuctionInfo = () => {
+    const imagesDisp = [item.picture, ...(item.additionalPhotos || [])];
+    console.log("Images to display:", imagesDisp);
+
     return (
       <>
         <div className="information">
@@ -253,14 +256,22 @@ const AuctionPage = ({setLoggedIn}) => {
           )}
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
         </div>
+      
         <div className="photo-bidding">
-          {item && (
-            <img
-              src={process.env.PUBLIC_URL + item.picture} // Use item.picture as the image source
-              alt="Auction Item"
-              style={{ maxWidth: '700px' }}
-            />
-          )}
+          <div className="carousel-container" >
+              <Carousel arrows infinite={false} style={{ width: '100%',  maxHeight: '100%', display: 'flex', alignContent: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                {imagesDisp.map((src, index) => (
+                  <div key={index}  style={{ maxWidth: '100%' }}>
+                  <img
+                    src={process.env.PUBLIC_URL + src}
+                    alt={`Auction Item ${index}`}
+                    style={{  maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+               ))}
+              </Carousel>
+          </div>
+
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>

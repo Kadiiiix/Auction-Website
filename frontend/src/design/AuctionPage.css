@@ -96,6 +96,13 @@
     justify-content: space-between;
     width: 50%;
   }
+
+  .carousel-container {
+    width: 40%; /* Adjust the width as needed */
+    margin: 0 ; /* Center the carousel horizontally */
+    /*background-color: gray;*/
+
+  }
   
   .one-block {
     flex: 1;
@@ -125,11 +132,12 @@
     margin-top: 20px;
     border: 1px solid rgba(69, 71, 75, 0.283);
     border-radius: 5px;
-    width: auto;
+    /*width: auto;*/
+    
   }
   
   .auction-photo {
-    width: 50%;
+    width: 10%;
     height: auto; /* Adjust width as needed */ /* Maintain aspect ratio */
   }
   

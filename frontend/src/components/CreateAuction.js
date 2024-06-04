@@ -11,6 +11,7 @@ const CreateAuction = ({ userId }) => {
   const [redirectToAuction, setRedirectToAuction] = useState(false);
   const [auctionId, setAuctionId] = useState("");
   const [imageUrl, setImageUrl] = useState(""); // State to hold image URL
+  const [additionalImageUrls, setAdditionalImageUrls] = useState([]);
   const [uploading, setUploading] = useState(false); // State to track image upload status
 
   const categories = [
@@ -51,8 +52,9 @@ const CreateAuction = ({ userId }) => {
   const handleSubmit = async (formData) => {
     try {
       formData.imageUrl = imageUrl;
+      formData.additionalImageUrls = additionalImageUrls;
       // Include imageUrl in the form data
-      const response = await axios.post("http://localhost:4000/api/auctions", { ...formData, createdBy: userId, imageUrl });
+      const response = await axios.post("http://localhost:4000/api/auctions", { ...formData, createdBy: userId, });
       console.log("Auction created:", response.data);
 
       // Display success notification
@@ -85,7 +87,7 @@ const CreateAuction = ({ userId }) => {
     setUploading(true);
 
     try {
-      const response = await axios.post('http://localhost:4000/api/upload', formData, {
+      const response = await axios.post('http://localhost:4000/api/upload/single-image', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -95,6 +97,28 @@ const CreateAuction = ({ userId }) => {
       setUploading(false);
     } catch (error) {
       console.error('Error uploading image:', error);
+    }
+  };
+
+  const handleAdditionalImagesUpload = async (event) => {
+    const files = Array.from(event.target.files);
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('additionalImages', file);
+    });
+    setUploading(true);
+
+    try {
+      const response = await axios.post('http://localhost:4000/api/upload/additional-images', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setAdditionalImageUrls(response.data.imageUrls);
+      setUploading(false);
+    } catch (error) {
+      console.error('Error uploading additional images:', error);
+      setUploading(false);
     }
   };
 
@@ -242,6 +266,19 @@ const CreateAuction = ({ userId }) => {
               ]}
             >
               <input type="file" onChange={handleImageUpload} />
+            </Form.Item>
+
+            <Form.Item
+              label="Additional Images"
+              name="additionalImages"
+              rules={[
+                {
+                  required: false,
+                  message: 'Please upload additional images.',
+                },
+              ]}
+            >
+              <input type="file" multiple onChange={handleAdditionalImagesUpload} />
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 4, span: 14 }}>
