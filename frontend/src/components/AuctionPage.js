@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import '../design/AuctionPage.css';
 import { HeartOutlined, HeartFilled, WarningOutlined } from '@ant-design/icons';
-import { Button, Modal, notification, Form, Input, Select } from 'antd';
+import { Button, Modal, notification, Form, Input, Select, Carousel } from 'antd';
 import CommentSection from './Comments';
 import ExtendAuctionModal from './ExtendAuctionModal';
 import Caros from './SimilarItemsCarousel'
@@ -31,9 +31,13 @@ const AuctionPage = ({ setLoggedIn }) => {
   const [reportReason, setReportReason] = useState("");
   const [reportDescription, setReportDescription] = useState("");
 
-  const handleExtendButtonClick = () => {
-    setExtendModalVisible(true);
-  };
+
+ const handleExtendButtonClick = () => {
+    axios.post(
+        `http://localhost:4000/api/notification/extension/${id}`
+    );
+   setExtendModalVisible(true);
+ };
 
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
@@ -45,7 +49,9 @@ const AuctionPage = ({ setLoggedIn }) => {
 
   const handleConfirmCloseAuction = async () => {
     try {
+      axios.post(`http://localhost:4000/api/notification/closing/${id}`);
       const response = await axios.put(`http://localhost:4000/api/auctions/${id}/close`);
+
       console.log(response.data.message);
       setCloseModalVisible(false);
       notification.success({
@@ -61,14 +67,18 @@ const AuctionPage = ({ setLoggedIn }) => {
     }
   };
 
-  const handlePlaceBid = async () => {
-    const amount = bidAmount;
-    try {
-      const auctionId = item._id;
-      const currentUserId = userId;
-      const response = await axios.post(
-        `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
-      );
+ const handlePlaceBid = async () => {
+  const amount = bidAmount;
+   try {
+     const auctionId = item._id;
+     const currentUserId = userId; 
+     const amount = bidAmount; 
+     await axios.post(
+       `http://localhost:4000/api/notification/outbid/${auctionId}`
+     );
+     const response = await axios.post(
+       `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
+     );
       notification.success({
         message: 'Success',
         description: 'You have placed your bid.',
@@ -243,6 +253,9 @@ const AuctionPage = ({ setLoggedIn }) => {
   };
 
   const renderAuctionInfo = () => {
+    const imagesDisp = [item.picture, ...(item.additionalPhotos || [])];
+    console.log("Images to display:", imagesDisp);
+
     return (
       <>
         <div className="information">
@@ -261,14 +274,21 @@ const AuctionPage = ({ setLoggedIn }) => {
           )}
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
         </div>
+      
         <div className="photo-bidding">
-          {item && (
-            <img
-              src={process.env.PUBLIC_URL + item.picture}
-              alt="Auction Item"
-              style={{ maxWidth: '700px' }}
-            />
-          )}
+          <div className="carousel-container" >
+              <Carousel arrows infinite={false} style={{ width: '100%',  maxHeight: '100%', display: 'flex', alignContent: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                {imagesDisp.map((src, index) => (
+                  <div key={index}  style={{ maxWidth: '100%' }}>
+                  <img
+                    src={process.env.PUBLIC_URL + src}
+                    alt={`Auction Item ${index}`}
+                    style={{  maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+               ))}
+              </Carousel>
+          </div>
           <div className="bidding">
             <div className="highest">
               <p className="bid-title">Highest Bid</p>

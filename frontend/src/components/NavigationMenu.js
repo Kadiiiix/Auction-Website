@@ -11,36 +11,35 @@ const { SubMenu } = Menu;
 const items = [
   {
     key: "sub1",
-   
+
     label: "Art & Decor",
     children: [
-          {
-            key: "1",
-            label: "Artwork",
-          },
-          {
-            key: "2",
-            label: "Collectibles",
-          },
-          {
-            key: "3",
-            label: "Antiques",
-          },
-     
-          {
-            key: "4",
-            label: "Decorative Items",
-          },
-          {
-            key: "5",
-            label: "Furniture",
-          },
-       
+      {
+        key: "1",
+        label: "Artwork",
+      },
+      {
+        key: "2",
+        label: "Collectibles",
+      },
+      {
+        key: "3",
+        label: "Antiques",
+      },
+
+      {
+        key: "4",
+        label: "Decorative Items",
+      },
+      {
+        key: "5",
+        label: "Furniture",
+      },
     ],
   },
   {
     key: "sub2",
-  
+
     label: "Entertainment",
     children: [
       {
@@ -60,35 +59,31 @@ const items = [
   {
     key: "sub3",
     label: "Clothing & Footwear",
-    
+
     children: [
-    
-          {
-            key: "9",
-            label: "Health & Beauty",
-          },
-          {
-            key: "10",
-            label: "Jewelry",
-          },
-        
-     
-          {
-            key: "11",
-            label: "Clothing",
-          },
-          {
-            key: "12",
-            label: "Footwear",
-          },
-       
-      
+      {
+        key: "9",
+        label: "Health & Beauty",
+      },
+      {
+        key: "10",
+        label: "Jewelry",
+      },
+
+      {
+        key: "11",
+        label: "Clothing",
+      },
+      {
+        key: "12",
+        label: "Footwear",
+      },
     ],
   },
   {
     key: "sub4",
     label: "Gadgets & Vehicles",
-  
+
     children: [
       {
         key: "13",
@@ -111,7 +106,7 @@ const items = [
   {
     key: "sub5",
     label: "Others",
-    
+
     children: [
       {
         key: "17",
@@ -121,7 +116,6 @@ const items = [
         key: "18",
         label: "Miscellaneous",
       },
-      
     ],
   },
 ];
@@ -143,6 +137,5 @@ const NavigationMenu = () => (
     </Menu>
   </div>
 );
-
 
 export default NavigationMenu;

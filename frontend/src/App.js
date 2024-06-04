@@ -20,7 +20,6 @@ import AuctionItem from "./components/AuctionItem";
 import AuctionPage from "./components/AuctionPage";
 import CreateAuction from "./components/CreateAuction";
 import FavoritesPage from "./components/FavoritesPage";
-import CategoriesPage from "./components/CategoriesPage";
 import NotLoggedIn from "./components/NotLoggedIn";
 import UserProfile from "./components/UserProfile";
 import SearchAuctions from "./components/SearchAuctions";
@@ -303,10 +302,6 @@ const closeMenu = () => {
           <Route
             path="/auction/:id"
             element={<AuctionPage setLoggedIn={loggedIn} />}
-          />
-          <Route
-            path="/categories"
-            element={<CategoriesPage setLoggedIn={loggedIn} />}
           />
           <Route
             path="/category/:query"
