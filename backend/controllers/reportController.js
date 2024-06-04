@@ -123,7 +123,8 @@ exports.getAllAuctionReports = async (req, res) => {
 // Get all comment reports with details
 exports.getAllCommentReports = async (req, res) => {
   try {
-    const reports = await Report.find({ comment: { $exists: true } })
+    const { commentId } = req.params;
+    const reports = await Report.find({ comment: commentId })
         .populate({
             path: 'reporter',
             select: 'username'
