@@ -58,7 +58,6 @@ exports.deleteNotification = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 exports.sendNotificationsAtClosing = async (req, res) => {
   try {
     // Find the auction by ID
@@ -87,37 +86,39 @@ exports.sendNotificationsAtClosing = async (req, res) => {
       userId: vendorId,
       message: `The auction for ${auction.name} has ended. The highest bid was ${auction.highestBid} by ${highestBidder.name}.`,
     });
-    const filteredBidders = bidderIds.filter(
-      (bidderId) => bidderId !== highestBidderId
-    );
-    if(highestBidderId){
-    if(filteredBidders){
 
-   const notificationsToBidders = filteredBidders.map((bidderId) => {
-     return {
-       userId: bidderId,
-       message: messageToBidders,
-     };
-   });
-
-    await Promise.all([
-      notificationToBidder.save(),
-      notificationToVendor.save(),
-      Notification.insertMany(notificationsToBidders),
-    ]);
-  }
-  else{
-    await Promise.all([
-      notificationToBidder.save(),
-      notificationToVendor.save(),
-    ]);
-
-  }
-}
+    if (highestBidderId && bidderIds && bidderIds.length > 0) {
+      const filteredBidders = bidderIds.filter(
+        (bidderId) => bidderId !== highestBidderId
+      );
+    
+    if (filteredBidders.length > 0) {
+        const notificationsToBidders = filteredBidders.map((bidderId) => ({
+          userId: bidderId,
+          message: messageToBidders,
+    }));
+          await Promise.all([
+          notificationToBidder.save(),
+          notificationToVendor.save(),
+          Notification.insertMany(notificationsToBidders),
+        ]);
+      } else {
+        await Promise.all([
+          notificationToBidder.save(),
+          notificationToVendor.save(),
+        ]);
+      }
+    } else {
+      await Promise.all([
+        notificationToVendor.save(),
+      ]);
+    }
 
     console.log("Notifications sent successfully for closed auction");
+    res.status(200).json({ message: "Notifications sent successfully" });
   } catch (error) {
     console.error("Error sending notifications:", error);
+    res.status(500).json({ error: "Error sending notifications" });
   }
 };
 
@@ -145,37 +146,36 @@ async function sendExpirationNotifications() {
          userId: vendorId,
          message: messageToVendor,
       });
-      if(highestBidder){
 
-      const notificationToHighestBidder= new Notification({
-         userId: highestBidderId,
-         message: messageToBidder,
-      });
-      
-      const filteredBidders = bidderIds.filter(
-        (bidderId) => bidderId !== highestBidderId
-      );
-      if(filteredBidders){
+      if (highestBidder) {
+        const notificationToHighestBidder= new Notification({
+           userId: highestBidderId,
+           message: messageToBidder,
+        });
 
-      const notificationsToBidders = filteredBidders.map((bidderId) => {
-        return {
-          userId: bidderId,
-          message: messageToBidders,
-        };
-      });
+        const filteredBidders = bidderIds.filter(
+          (bidderId) => bidderId !== highestBidderId
+        );
 
-      await Promise.all([
-        notificationToHighestBidder.save(),
-        notificationToVendor.save(),
-        Notification.insertMany(notificationsToBidders),
-      ]);
-      } else{
-        await Promise.all([
-          notificationToHighestBidder.save(),
-          notificationToVendor.save(),
-        ]);
+        if (filteredBidders.length > 0) {
+          const notificationsToBidders = filteredBidders.map((bidderId) => ({
+            userId: bidderId,
+            message: messageToBidders,
+          }));
 
-      }
+          await Promise.all([
+            notificationToHighestBidder.save(),
+            notificationToVendor.save(),
+            Notification.insertMany(notificationsToBidders),
+          ]);
+        } else {
+          await Promise.all([
+            notificationToHighestBidder.save(),
+            notificationToVendor.save(),
+          ]);
+        }
+      } else {
+        await notificationToVendor.save();
       }
 
       console.log(
@@ -187,6 +187,7 @@ async function sendExpirationNotifications() {
     console.error("Error sending expiration notifications:", error);
   }
 };
+
 
 
 
@@ -204,27 +205,24 @@ exports.notifyOutbid = async (req, res) => {
 
     highestBidderId = auction.highestBidder;
     auctionName = auction.name;
-    if(highestBidderId){
+    if (highestBidderId) {
+      const message = `You have been outbid in the auction for ${auctionName}. Place a higher bet to win!`;
 
-    const message = `You have been outbid in the auction for ${auctionName}. Place a higher bet to win!`;
+      const notification = new Notification({
+        userId: highestBidderId,
+        message: message,
+      });
 
-    const notification = new Notification({
-      userId: highestBidderId,
-      message: message,
-    });
-
-    await notification.save();
+      await notification.save();
     }
 
     console.log(
       "Notification sent successfully to highest bidder for being outbid"
     );
-     res
-       .status(200)
-       .json({
-         message:
-           "Notification sent successfully to highest bidder for being outbid",
-       });
+    res.status(200).json({
+      message:
+        "Notification sent successfully to highest bidder for being outbid",
+    });
   } catch (error) {
     console.error(
       "Error sending outbid notification to highest bidder:",
@@ -235,7 +233,6 @@ exports.notifyOutbid = async (req, res) => {
       .json({ error: "Error sending outbid notification to highest bidder" });
   }
 };
-
 exports.sendNotificationsAtExtension = async (req, res) => {
   try {
     const { auctionId } = req.params;
@@ -248,16 +245,18 @@ exports.sendNotificationsAtExtension = async (req, res) => {
 
     const bidders = auction.bidderIds;
     const messageToBidders = `The auction for ${auction.name} is extended. Place a bid!`;
-    if(bidders){
-    const notificationsToBidders = bidders.map((bidderId) => {
-      return {
+
+    if (bidders && bidders.length > 0) {
+      const notificationsToBidders = bidders.map((bidderId) => ({
         userId: bidderId,
         message: messageToBidders,
-      };
-    });
+      }));
 
-    await Notification.insertMany([...notificationsToBidders]);
-   }
+      await Notification.insertMany(notificationsToBidders);
+    } else {
+      console.log("No bidders found for the auction");
+    }
+
     console.log("Notifications sent successfully");
     res.status(200).json({ message: "Notifications sent successfully" });
   } catch (error) {

@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
-import '../design/AuctionPage.css';
-import { HeartOutlined, HeartFilled, WarningOutlined } from '@ant-design/icons';
-import { Button, Modal, notification, Form, Input, Select, Carousel } from 'antd';
-import CommentSection from './Comments';
-import ExtendAuctionModal from './ExtendAuctionModal';
-import Caros from './SimilarItemsCarousel'
-import Chatbot from './ChatBot';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
+import "../design/AuctionPage.css";
+import { HeartOutlined, HeartFilled, WarningOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Modal,
+  notification,
+  Form,
+  Input,
+  Select,
+  Carousel,
+} from "antd";
+import CommentSection from "./Comments";
+import ExtendAuctionModal from "./ExtendAuctionModal";
+import Caros from "./SimilarItemsCarousel";
+import Chatbot from "./ChatBot";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -31,13 +39,10 @@ const AuctionPage = ({ setLoggedIn }) => {
   const [reportReason, setReportReason] = useState("");
   const [reportDescription, setReportDescription] = useState("");
 
-
- const handleExtendButtonClick = () => {
-    axios.post(
-        `http://localhost:4000/api/notification/extension/${id}`
-    );
-   setExtendModalVisible(true);
- };
+  const handleExtendButtonClick = () => {
+    axios.post(`http://localhost:4000/api/notification/extension/${id}`);
+    setExtendModalVisible(true);
+  };
 
   const handleBidChange = (event) => {
     setBidAmount(event.target.value);
@@ -49,51 +54,53 @@ const AuctionPage = ({ setLoggedIn }) => {
 
   const handleConfirmCloseAuction = async () => {
     try {
-      axios.post(`http://localhost:4000/api/notification/closing/${id}`);
-      const response = await axios.put(`http://localhost:4000/api/auctions/${id}/close`);
-
-      console.log(response.data.message);
+      const response = await axios.put(
+        `http://localhost:4000/api/auctions/${id}/close`
+      );
       setCloseModalVisible(false);
-      notification.success({
-        message: 'Close Successful',
-        description: 'You have successfully closed your auction.',
-      });
+          notification.success({
+          message: "Close Successful",
+          description: "You have successfully closed your auction.",
+        });
+        
+      axios.post(`http://localhost:4000/api/notification/closing/${id}`);
     } catch (error) {
       console.error("Error closing auction:", error);
       notification.error({
-        message: 'Close Failed',
-        description: 'Error closing auction.',
+        message: "Close Failed",
+        description: "Error closing auction.",
       });
     }
   };
 
- const handlePlaceBid = async () => {
-  const amount = bidAmount;
-   try {
-     const auctionId = item._id;
-     const currentUserId = userId; 
-     const amount = bidAmount; 
-     await axios.post(
-       `http://localhost:4000/api/notification/outbid/${auctionId}`
-     );
-     const response = await axios.post(
-       `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
-     );
+  const handlePlaceBid = async () => {
+    const amount = bidAmount;
+    try {
+      const auctionId = item._id;
+      const currentUserId = userId;
+      const amount = bidAmount;
+      await axios.post(
+        `http://localhost:4000/api/notification/outbid/${auctionId}`
+      );
+      const response = await axios.post(
+        `http://localhost:4000/api/auctions/${auctionId}/placeBid/${currentUserId}/${amount}`
+      );
       notification.success({
-        message: 'Success',
-        description: 'You have placed your bid.',
+        message: "Success",
+        description: "You have placed your bid.",
       });
     } catch (error) {
       if (amount <= item.highestBid) {
         notification.error({
-          message: 'Error',
-          description: 'Your bid must be higher than the currently highest bid.',
+          message: "Error",
+          description:
+            "Your bid must be higher than the currently highest bid.",
         });
       }
       if (amount <= item.minimalBid) {
         notification.error({
-          message: 'Error',
-          description: 'Your bid must be higher than the minimal bid.',
+          message: "Error",
+          description: "Your bid must be higher than the minimal bid.",
         });
       }
       console.error("Error placing bid:", error);
@@ -218,30 +225,40 @@ const AuctionPage = ({ setLoggedIn }) => {
 
   const handleReportSubmit = async () => {
     try {
-      const response = await axios.post(`http://localhost:4000/api/report/report`, {
-        reporter: userId,
-        auction: id,
-        reason: reportReason,
-        description: reportDescription,
-      });
+      const response = await axios.post(
+        `http://localhost:4000/api/report/report`,
+        {
+          reporter: userId,
+          auction: id,
+          reason: reportReason,
+          description: reportDescription,
+        }
+      );
       notification.success({
-        message: 'Report Submitted',
-        description: 'Your report has been submitted successfully.',
+        message: "Report Submitted",
+        description: "Your report has been submitted successfully.",
       });
       setReportModalVisible(false);
     } catch (error) {
       console.error("Error submitting report:", error);
       notification.error({
-        message: 'Report Failed',
-        description: 'There was an error submitting your report. Please try again.',
+        message: "Report Failed",
+        description:
+          "There was an error submitting your report. Please try again.",
       });
     }
   };
 
   const formatDate = (dateString) => {
-    const options = { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    };
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString("en-US", options);
   };
 
   const formatRating = (authorsRate) => {
@@ -274,20 +291,35 @@ const AuctionPage = ({ setLoggedIn }) => {
           )}
           {renderInfoBlock("Likes", item.likedBy.length)}{" "}
         </div>
-      
+
         <div className="photo-bidding">
-          <div className="carousel-container" >
-              <Carousel arrows infinite={false} style={{ width: '100%',  maxHeight: '100%', display: 'flex', alignContent: 'center', justifyContent: 'center', alignItems: 'center' }}>
-                {imagesDisp.map((src, index) => (
-                  <div key={index}  style={{ maxWidth: '100%' }}>
+          <div className="carousel-container">
+            <Carousel
+              arrows
+              infinite={false}
+              style={{
+                width: "100%",
+                maxHeight: "100%",
+                display: "flex",
+                alignContent: "center",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {imagesDisp.map((src, index) => (
+                <div key={index} style={{ maxWidth: "100%" }}>
                   <img
                     src={process.env.PUBLIC_URL + src}
                     alt={`Auction Item ${index}`}
-                    style={{  maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      objectFit: "cover",
+                    }}
                   />
                 </div>
-               ))}
-              </Carousel>
+              ))}
+            </Carousel>
           </div>
           <div className="bidding">
             <div className="highest">
@@ -300,7 +332,11 @@ const AuctionPage = ({ setLoggedIn }) => {
               <p className="minimal-bid">{item.startingBid} KM</p>
             </div>
             <div className="placing-bids">
-              <Button className="bid" onClick={handlePlaceBid} disabled={role === "admin" || userId === item.createdBy}>
+              <Button
+                className="bid"
+                onClick={handlePlaceBid}
+                disabled={role === "admin" || userId === item.createdBy}
+              >
                 Place Bid
               </Button>
               <input
@@ -330,7 +366,7 @@ const AuctionPage = ({ setLoggedIn }) => {
                   <Button
                     onClick={handleAddToFavorites}
                     className="likeButton"
-                    disabled={!setLoggedIn || role==="admin"}
+                    disabled={!setLoggedIn || role === "admin"}
                   >
                     {" "}
                     {/* Changed from loggedIn to isLoggedIn */}
@@ -372,8 +408,11 @@ const AuctionPage = ({ setLoggedIn }) => {
             )}
           </div>
           <div className="report">
-          {(userId && userId !== author._id && role !== 'admin') ? (
-              <Button onClick={handleReportButtonClick} className="reportButton">
+            {userId && userId !== author._id && role !== "admin" ? (
+              <Button
+                onClick={handleReportButtonClick}
+                className="reportButton"
+              >
                 <WarningOutlined /> Report Auction
               </Button>
             ) : (
@@ -408,7 +447,10 @@ const AuctionPage = ({ setLoggedIn }) => {
       { label: "Description", value: item?.description },
       { label: "Condition", value: item?.condition },
       { label: "Category", value: item?.category },
-      { label: "Instant Purchase Available", value: item?.allowInstantPurchase ? "Yes" : "No" },
+      {
+        label: "Instant Purchase Available",
+        value: item?.allowInstantPurchase ? "Yes" : "No",
+      },
       { label: "Location", value: item?.location },
       { label: "Age", value: item?.age },
     ];
@@ -455,7 +497,9 @@ const AuctionPage = ({ setLoggedIn }) => {
               <Option value="hate_speech">Hate Speech</Option>
               <Option value="spam">Spam</Option>
               <Option value="false_information">False Information</Option>
-              <Option value="inappropriate_content">Inappropriate Content</Option>
+              <Option value="inappropriate_content">
+                Inappropriate Content
+              </Option>
               <Option value="other">Other</Option>
             </Select>
           </Form.Item>
