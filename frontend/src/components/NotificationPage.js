@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
+  const [notificationLinks, setNotificationLinks] = useState([]);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -16,14 +17,11 @@ function NotificationPage() {
       const response = await axios.get(
         `http://localhost:4000/api/notification/${userId}`
       );
-      const notifications = response.data.map((notification) => {
-        const auctionName = extractAuctionName(notification.message);
-        return {
-          ...notification,
-          auctionName: auctionName ? auctionName.trim() : null,
-        };
-      });
+      const notifications = response.data.map((notification) => ({
+        ...notification,
+      }));
       setNotifications(notifications);
+      await fetchNotificationLinks(notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
@@ -45,19 +43,21 @@ function NotificationPage() {
       await axios.delete(
         `http://localhost:4000/api/notification/${notificationId}`
       );
-      setNotifications(
-        notifications.filter(
-          (notification) => notification._id !== notificationId
-        )
+      const updatedNotifications = notifications.filter(
+        (notification) => notification._id !== notificationId
       );
+      setNotifications(updatedNotifications);
+      const updatedLinks = notificationLinks.filter(
+        (link, index) => notifications[index]._id !== notificationId
+      );
+      setNotificationLinks(updatedLinks);
     } catch (error) {
       console.error("Error deleting notification:", error);
     }
   };
 
   async function fetchAuctionDetails(name) {
-    const auctionName = name;
-    if (!auctionName) {
+    if (!name) {
       console.error("Auction name not found in message");
       return null;
     }
@@ -65,12 +65,15 @@ function NotificationPage() {
     try {
       const response = await axios.get(
         `http://localhost:4000/api/auctions/search?query=${encodeURIComponent(
-          auctionName
+          name
         )}`
       );
-      const auction = response.data;
-      // Process the fetched auction details as needed
-      return auction;
+
+      const auction = response.data[0];
+      const auctionId = auction._id;
+      const vendor = auction.createdBy;
+      const highestBidder = auction.highestBidder || null;
+      return { auctionId, vendor, highestBidder };
     } catch (error) {
       console.error("Error fetching auction details:", error);
       return null;
@@ -80,42 +83,50 @@ function NotificationPage() {
   const extractAuctionName = (message) => {
     const startIndex = message.indexOf("auction for");
     if (startIndex !== -1) {
-      // Add 12 to skip "auction for" and 1 to skip the following space
-      return message.slice(startIndex + 12);
+      let auctionName = message.slice(startIndex + 12).trim();
+      const delimiters = [" is ", " has ", "."];
+      let endIndex = auctionName.length;
+      delimiters.forEach((delimiter) => {
+        const delimiterIndex = auctionName.indexOf(delimiter);
+        if (delimiterIndex !== -1 && delimiterIndex < endIndex) {
+          endIndex = delimiterIndex;
+        }
+      });
+      auctionName = auctionName.slice(0, endIndex).trim();
+      return auctionName;
     }
     return null;
   };
 
-  const getLink = async (notification) => {
+const getLink = async (notification) => {
+  const name = extractAuctionName(notification.message);
+  if (name) {
     const message = notification.message.toLowerCase();
-    if (message.includes("extended") || message.includes("outbid")) {
-      const auctionName = extractAuctionName(message);
-      if (auctionName) {
-        const auction = await fetchAuctionDetails(auctionName);
-        if (auction) {
-          return `/auction/${auction._id}`;
-        }
-      }
-    } else if (message.includes("congratulations!")) {
-      const auctionName = extractAuctionName(message);
-      if (auctionName) {
-        const auction = await fetchAuctionDetails(auctionName);
-        if (auction) {
-          return `/profile/${auction.vendorId}`;
-        }
-      }
-    } else if (message.includes("highest bid was")) {
-      const auctionName = extractAuctionName(message);
-      if (auctionName) {
-        const auction = await fetchAuctionDetails(auctionName);
-        if (auction) {
-          return `/profile/${auction.highestBidderId}`;
-        }
-      }
-    }
+    const details = await fetchAuctionDetails(name);
+    if (!details) return null;
 
-    return null;
-  };
+    const auctionId = details.auctionId;
+    const vendorId = details.vendor;
+    const bidderId = details.highestBidder;
+
+    if (message.includes("extended") || message.includes("outbid")) {
+      if (auctionId) return `/auction/${auctionId}`;
+    } else if (message.includes("congratulations!")) {
+      if (vendorId) return `/profile/${vendorId}`;
+    } else if (message.includes("highest bid was")) {
+      if (bidderId) return `/profile/${bidderId}`;
+    }
+  }
+  return null;
+};
+
+
+  async function fetchNotificationLinks(notifications) {
+    const links = await Promise.all(
+      notifications.map((notification) => getLink(notification))
+    );
+    setNotificationLinks(links);
+  }
 
   return (
     <div className="notification-container">
@@ -126,6 +137,13 @@ function NotificationPage() {
             <div className="notification-message">{notification.message}</div>
             <div className="notification-time">
               {formatTime(notification.timestamp)}
+            </div>
+            <div>
+            {notificationLinks[index] && (
+              <Link to={notificationLinks[index]} className="notification-link">
+                View Details
+              </Link>
+            )}
             </div>
             <button onClick={() => deleteNotification(notification._id)}>
               Delete
