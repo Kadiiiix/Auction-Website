@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Button, Input, Space, Modal, message } from 'antd';
+import { Table, Button, Input, Space, Pagination, Modal, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
@@ -8,9 +8,14 @@ const CommentsTable = () => {
     const [dataSource, setDataSource] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [open, setOpen] = useState(false);
+    const [openCommentModal, setOpenCommentModal] = useState(false);
+    const [openReportsModal, setOpenReportsModal] = useState(false);
     const [selectedComment, setSelectedComment] = useState(null);
     const searchInput = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
+    const [reportDetails, setReportDetails] = useState([]);
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -25,6 +30,10 @@ const CommentsTable = () => {
                     const auctionResponse = await axios.get(`http://localhost:4000/api/auctions/${comment.auctionId}`);
                     const auctionData = auctionResponse.data;
 
+                    const reportsResponse = await axios.get(`http://localhost:4000/api/report/reports/comment/all/${comment._id}`);
+                    const totalReports = reportsResponse.data.length;
+
+                    console.log(comment._id)
                     return {
                         key: comment._id,
                         commentId: comment._id,
@@ -32,10 +41,13 @@ const CommentsTable = () => {
                         username: userData.username,
                         auctionName: auctionData.name,
                         comment: comment.comment,
+                        totalReports: totalReports,
+                        reports: reportsResponse.data,
                     };
                 }));
 
                 setDataSource(transformedData);
+                setTotalItems(transformedData.length);
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
@@ -44,19 +56,46 @@ const CommentsTable = () => {
         fetchComments();
     }, []);
 
-    const showModal = (comment) => {
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+        setPageSize(pageSize);
+    };
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const currentPageData = dataSource.slice(startIndex, endIndex);
+
+    const showCommentModal = (comment) => {
         setSelectedComment(comment);
-        setOpen(true);
+        setOpenCommentModal(true);
     };
 
-    const handleOk = () => {
-        setOpen(false);
+    const handleCommentModalOk = () => {
+        setOpenCommentModal(false);
         setSelectedComment(null);
     };
 
-    const handleCancel = () => {
-        setOpen(false);
+    const handleCommentModalCancel = () => {
+        setOpenCommentModal(false);
         setSelectedComment(null);
+    };
+
+    const showReportsModal = (comment) => {
+        setSelectedComment(comment);
+        setReportDetails(comment.reports);
+        setOpenReportsModal(true);
+    };
+
+    const handleReportsModalOk = () => {
+        setOpenReportsModal(false);
+        setSelectedComment(null);
+        setReportDetails([]);
+    };
+
+    const handleReportsModalCancel = () => {
+        setOpenReportsModal(false);
+        setSelectedComment(null);
+        setReportDetails([]);
     };
 
     const handleDelete = async () => {
@@ -64,7 +103,7 @@ const CommentsTable = () => {
             await axios.delete(`http://localhost:4000/api/auctions/comments/${selectedComment.commentId}`);
             message.success('Comment deleted successfully.');
 
-            setOpen(false);
+            setOpenCommentModal(false);
             setSelectedComment(null);
 
             const commentsResponse = await axios.get("http://localhost:4000/api/users/all-comments");
@@ -202,10 +241,21 @@ const CommentsTable = () => {
             key: 'timePosted',
         },
         {
+            title: 'Total Reports',
+            dataIndex: 'totalReports',
+            key: 'totalReports',
+            render: (text, record) => (
+                <Button type="link" onClick={() => showReportsModal(record)}>
+                    <p>({record.totalReports}) View Reports</p>
+                </Button>
+            ),
+            align: 'center',
+        },
+        {
             title: 'Actions',
             key: 'actions',
             render: (text, record) => (
-                <Button type="primary" onClick={() => showModal(record)} className='button'>
+                <Button type="primary" onClick={() => showCommentModal(record)} className='button'>
                     View Details
                 </Button>
             ),
@@ -215,19 +265,30 @@ const CommentsTable = () => {
 
     return (
         <>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={currentPageData} pagination={false} columns={columns} />
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={totalItems}
+                    onChange={handlePageChange}
+                    showSizeChanger={true}
+                    pageSizeOptions={['5', '10', '20', '50']}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                />
+            </div>
 
             {selectedComment && (
                 <Modal
-                    visible={open}
+                    visible={openCommentModal}
                     title="Comment Details"
-                    onOk={handleOk}
-                    onCancel={handleCancel}
+                    onOk={handleCommentModalOk}
+                    onCancel={handleCommentModalCancel}
                     footer={[
                         <Button key="delete" type="primary" danger onClick={handleDelete}>
                             Delete Comment
                         </Button>,
-                        <Button key="cancel" onClick={handleCancel}>
+                        <Button key="cancel" onClick={handleCommentModalCancel}>
                             Cancel
                         </Button>,
                     ]}
@@ -237,6 +298,37 @@ const CommentsTable = () => {
                     <p><strong>Auction Name:</strong> {selectedComment.auctionName}</p>
                     <p><strong>Comment:</strong> {selectedComment.comment}</p>
                     <p><strong>Time Posted:</strong> {selectedComment.timePosted}</p>
+                </Modal>
+            )}
+
+            {selectedComment && (
+                <Modal
+                    visible={openReportsModal}
+                    title="Comment Reports"
+                    onOk={handleReportsModalOk}
+                    onCancel={handleReportsModalCancel}
+                    footer={[
+                        <Button key="ok" onClick={handleReportsModalOk}>
+                            OK
+                        </Button>,
+                    ]}
+                >
+                    {reportDetails && reportDetails.length > 0 ? (
+                        <div>
+                            <p><strong>Total Reports:</strong> {reportDetails.length}</p>
+                            {reportDetails.map((report) => (
+                                <div key={report._id} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #f0f0f0', borderRadius: '5px', backgroundColor: '#fafafa' }}>
+                                    <p><strong>Report ID:</strong> {report._id}</p>
+                                    <p><strong>Reporter:</strong> {report.reporter.username}</p>
+                                    <p><strong>Reason:</strong> {report.reason}</p>
+                                    <p><strong>Description:</strong> {report.description}</p>
+                                    <p><strong>Created At:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No report details available.</p>
+                    )}
                 </Modal>
             )}
         </>

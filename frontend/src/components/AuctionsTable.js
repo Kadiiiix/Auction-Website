@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Space, Modal, message, Tag } from 'antd';
+import { Table, Input, Button, Space, Modal, Pagination, message, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
@@ -11,48 +11,69 @@ const AuctionsTable = () => {
     const [open, setOpen] = useState(false);
     const [selectedAuction, setSelectedAuction] = useState(null);
     const searchInput = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
+    const [openReportsModal, setOpenReportsModal] = useState(false);
 
-    useEffect(() => {
-        const fetchAuctions = async () => {
-            try {
-                const auctionsResponse = await axios.get("http://localhost:4000/api/auctions");
-                const auctions = auctionsResponse.data;
-    
-                // Fetch user data for each auction
-                const transformedData = await Promise.all(auctions.map(async auction => {
-                    // Fetch user data
-                    const userResponse = await axios.get(`http://localhost:4000/api/users/${auction.createdBy}`);
-                    const userData = userResponse.data;
 
-                    return {
-                        key: auction._id,
-                        auctionId: auction._id,
-                        name: auction.name,
-                        createdBy: userData.username, // Use username from user data
-                        closingDate: auction.closingDate,
-                        condition: auction.condition,
-                        category: auction.category,
-                        additionalPhotos: auction.additionalPhotos,
-                        startingBid: auction.startingBid,
-                        description: auction.description,
-                        location: auction.location,
-                        age: auction.age,
-                        likedBy: auction.likedBy,
-                        highestBid: auction.highestBid,
-                        highestBidder: auction.highestBidder,
-                        bidderIds: auction.bidderIds,
-                        createdAt: auction.createdAt
-                    };
-                }));
+useEffect (() => {
+    const fetchAuctions = async () => {
+        try {
+            const auctionsResponse = await axios.get("http://localhost:4000/api/auctions");
+            const auctions = auctionsResponse.data;
     
-                setDataSource(transformedData);
-            } catch (error) {
-                console.error('Error fetching auction data:', error);
-            }
-        };
+            // Fetch user data for each auction
+            const transformedData = await Promise.all(auctions.map(async auction => {
+                // Fetch user data
+                const userResponse = await axios.get(`http://localhost:4000/api/users/${auction.createdBy}`);
+                const userData = userResponse.data;
     
-        fetchAuctions();
-    }, []);
+                // Fetch auction reports
+                const auctionReportsResponse = await axios.get(`http://localhost:4000/api/report/reports/auction/all/${auction._id}`);
+                const totalAuctionReports = auctionReportsResponse.data.totalReports;
+    
+                return {
+                    key: auction._id,
+                    auctionId: auction._id,
+                    name: auction.name,
+                    createdBy: userData.username, // Use username from user data
+                    closingDate: auction.closingDate,
+                    condition: auction.condition,
+                    category: auction.category,
+                    additionalPhotos: auction.additionalPhotos,
+                    startingBid: auction.startingBid,
+                    description: auction.description,
+                    location: auction.location,
+                    age: auction.age,
+                    likedBy: auction.likedBy,
+                    highestBid: auction.highestBid,
+                    highestBidder: auction.highestBidder,
+                    bidderIds: auction.bidderIds,
+                    createdAt: auction.createdAt,
+                    totalAuctionReports: totalAuctionReports, // Add total auction reports
+                    auctionReports: auctionReportsResponse.data.auctionReports // Add auction reports
+                };
+            }));
+    
+            setDataSource(transformedData);
+            setTotalItems(transformedData.length);
+        } catch (error) {
+            console.error('Error fetching auction data:', error);
+        }
+    };
+    fetchAuctions();
+}, []);
+    
+
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+        setPageSize(pageSize);
+    };
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const currentPageData = dataSource.slice(startIndex, endIndex);
     
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -155,6 +176,17 @@ const AuctionsTable = () => {
         setSelectedAuction(null);
     };
 
+    const handleReportsModalOk = () => {
+        setOpenReportsModal(false);
+        setSelectedAuction(null);
+    };
+    
+    const handleReportsModalCancel = () => {
+        setOpenReportsModal(false);
+        setSelectedAuction(null);
+    };
+    
+
     const handleDelete = async () => {
         try {
             // Delete the auction
@@ -202,6 +234,12 @@ const AuctionsTable = () => {
             message.error('Failed to delete auction.');
         }
     };
+
+    const showAuctionReportsModal = (auction) => {
+        setSelectedAuction(auction);
+        setOpenReportsModal(true);
+    };
+    
     
     const columns = [
         {
@@ -270,22 +308,45 @@ const AuctionsTable = () => {
                 );
             },
         },
-            {
-                title: 'Actions',
-                key: 'actions',
-                render: (text, record) => (
-                    <Button type="primary" onClick={() => showModal(record)} className='button'>
-                        View Details
-                    </Button>
-                ),
-                align: 'center',
-            },
-        ];
+        {
+            title: 'Total Reports',
+            dataIndex: 'totalReports',
+            key: 'totalReports',
+            render: (text, record) => (
+                <Button type="link" onClick={() => showAuctionReportsModal(record)}>
+                    <p>({record.totalAuctionReports}) View Reports</p>
+                </Button>
+            ),
+            align: 'center',
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text, record) => (
+                <Button type="primary" onClick={() => showModal(record)} className='button'>
+                    View Details
+                </Button>
+            ),
+            align: 'center',
+        },
+    ];
+
     
         return (
             <>
-                <Table dataSource={dataSource} columns={columns} />
-    
+            <Table dataSource={currentPageData}  pagination={false} columns={columns}/> 
+                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={totalItems}
+                        onChange={handlePageChange}
+                        showSizeChanger={true}
+                        pageSizeOptions={['5', '10', '20', '50']}
+                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    />
+                </div>
+        
                 {selectedAuction && (
                     <Modal
                         visible={open}
@@ -316,6 +377,38 @@ const AuctionsTable = () => {
                         {/* Add other fields as needed */}
                     </Modal>
                 )}
+
+{selectedAuction && (
+    <Modal
+        visible={openReportsModal}
+        title="Auction Reports"
+        onOk={handleReportsModalOk}
+        onCancel={handleReportsModalCancel}
+        footer={[
+            <Button key="ok" onClick={handleReportsModalOk}>
+                OK
+            </Button>,
+        ]}
+    >
+        {selectedAuction.auctionReports && selectedAuction.auctionReports.length > 0 ? (
+            <div>
+                <p><strong>Total Reports:</strong> {selectedAuction.totalAuctionReports}</p>
+                {selectedAuction.auctionReports.map((report) => (
+                    <div key={report._id} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #f0f0f0', borderRadius: '5px', backgroundColor: '#fafafa' }}>
+                        <p><strong>Report ID:</strong> {report._id}</p>
+                        <p><strong>Reporter:</strong> {report.reporter.username}</p>
+                        <p><strong>Reason:</strong> {report.reason}</p>
+                        <p><strong>Description:</strong> {report.description}</p>
+                        <p><strong>Created At:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <p>No report details available.</p>
+        )}
+    </Modal>
+)}
+
             </>
         );
     };

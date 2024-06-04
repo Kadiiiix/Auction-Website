@@ -93,7 +93,7 @@ const LoginPage = ({ setLoggedIn }) => {
         </Form.Item>
         <Form.Item>
           <a className="login-form-forgot" href="http://localhost:3000/forgot-password">
-            Forgot password
+            Forgot password?
           </a>
         </Form.Item>
         <Form.Item>
