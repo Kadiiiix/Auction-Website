@@ -71,8 +71,53 @@ mongoose
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+app.post("/api/upload/additional-images", upload.array("additionalImages", 5), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded" });
+    }
+
+    const imageUrls = [];
+
+    for (const file of req.files) {
+      const blob = bucket.file(file.originalname);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+
+      await new Promise((resolve, reject) => {
+        blobStream.on("error", (err) => {
+          console.error("Error uploading image:", err);
+          reject(err);
+        });
+
+        blobStream.on("finish", async () => {
+          try {
+            await blob.makePublic();
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            imageUrls.push(publicUrl);
+            resolve();
+          } catch (err) {
+            console.error("Error making image public:", err);
+            reject(err);
+          }
+        });
+
+        blobStream.end(file.buffer);
+      });
+    }
+
+    res.status(200).json({ imageUrls });
+  } catch (err) {
+    console.error("Error uploading images:", err);
+    res.status(500).json({ error: "Error uploading images" });
+  }
+});
+
 // Image upload route
-app.post("/api/upload", upload.single("image"), async (req, res) => {
+app.post("/api/upload/single-image", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
