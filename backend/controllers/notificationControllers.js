@@ -90,6 +90,8 @@ exports.sendNotificationsAtClosing = async (req, res) => {
     const filteredBidders = bidderIds.filter(
       (bidderId) => bidderId !== highestBidderId
     );
+    if(highestBidderId){
+    if(filteredBidders){
 
    const notificationsToBidders = filteredBidders.map((bidderId) => {
      return {
@@ -98,12 +100,20 @@ exports.sendNotificationsAtClosing = async (req, res) => {
      };
    });
 
-
     await Promise.all([
       notificationToBidder.save(),
       notificationToVendor.save(),
       Notification.insertMany(notificationsToBidders),
     ]);
+  }
+  else{
+    await Promise.all([
+      notificationToBidder.save(),
+      notificationToVendor.save(),
+    ]);
+
+  }
+}
 
     console.log("Notifications sent successfully for closed auction");
   } catch (error) {
@@ -135,15 +145,17 @@ async function sendExpirationNotifications() {
          userId: vendorId,
          message: messageToVendor,
       });
+      if(highestBidder){
 
       const notificationToHighestBidder= new Notification({
          userId: highestBidderId,
          message: messageToBidder,
       });
-
+      
       const filteredBidders = bidderIds.filter(
         (bidderId) => bidderId !== highestBidderId
       );
+      if(filteredBidders){
 
       const notificationsToBidders = filteredBidders.map((bidderId) => {
         return {
@@ -157,6 +169,14 @@ async function sendExpirationNotifications() {
         notificationToVendor.save(),
         Notification.insertMany(notificationsToBidders),
       ]);
+      } else{
+        await Promise.all([
+          notificationToHighestBidder.save(),
+          notificationToVendor.save(),
+        ]);
+
+      }
+      }
 
       console.log(
         "Notifications sent successfully for expired auction:",
@@ -171,9 +191,6 @@ async function sendExpirationNotifications() {
 
 
 cron.schedule("* * * * *", sendExpirationNotifications);
-cron.schedule("* * * * *", () => {
-  console.log("running a task every minute");
-});
 
 exports.notifyOutbid = async (req, res) => {
   try {
@@ -187,6 +204,7 @@ exports.notifyOutbid = async (req, res) => {
 
     highestBidderId = auction.highestBidder;
     auctionName = auction.name;
+    if(highestBidderId){
 
     const message = `You have been outbid in the auction for ${auctionName}. Place a higher bet to win!`;
 
@@ -196,7 +214,7 @@ exports.notifyOutbid = async (req, res) => {
     });
 
     await notification.save();
-    
+    }
 
     console.log(
       "Notification sent successfully to highest bidder for being outbid"
@@ -230,7 +248,7 @@ exports.sendNotificationsAtExtension = async (req, res) => {
 
     const bidders = auction.bidderIds;
     const messageToBidders = `The auction for ${auction.name} is extended. Place a bid!`;
-
+    if(bidders){
     const notificationsToBidders = bidders.map((bidderId) => {
       return {
         userId: bidderId,
@@ -239,7 +257,7 @@ exports.sendNotificationsAtExtension = async (req, res) => {
     });
 
     await Notification.insertMany([...notificationsToBidders]);
-
+   }
     console.log("Notifications sent successfully");
     res.status(200).json({ message: "Notifications sent successfully" });
   } catch (error) {
