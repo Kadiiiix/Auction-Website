@@ -1,31 +1,28 @@
 // src/validators.js
 import moment from 'moment';
 
-const minDays = 2; // Define the minimum number of days for the auction
+const minDays = 3; // Define the minimum number of days for the auction
+const maxDays = 60;
+const minBid = 1;
+const extendDays = 3;
 
-export const validateClosingDate = () => {
-  return (_, value) => {
-    if (!value) {
-      console.log('No value selected');
-      return Promise.resolve();
-    }
+export const disabledDate = (current) => {
+  const minDate = moment().add(minDays, 'days').startOf('day');
+  const maxDate = moment().add(maxDays, 'days').endOf('day');
 
-    // Parse the value as a Date object
-    const closingDate = moment(value);
+  return current && (current < minDate || current > maxDate);
+};
 
-    // Calculate the minimum date allowed
-    const minDate = moment().add(minDays, 'days');
+export const validateStartingBid = (_, value) => {
+  if (value < minBid) {
+    return Promise.reject(new Error(`Starting bid must be at least ${minBid}`));
+  }
+  return Promise.resolve();
+};
 
-    console.log('Closing Date:', closingDate.format('YYYY-MM-DD'));
-    console.log('Minimum Date Allowed:', minDate.format('YYYY-MM-DD'));
-
-    // Compare the closing date with the minimum date allowed
-    if (closingDate.isSameOrAfter(minDate, 'day')) {
-      console.log('Validation Passed');
-      return Promise.resolve();
-    }
-    
-    console.log('Validation Failed');
-    return Promise.reject(new Error(`Closing date must be at least ${minDays} days from today`));
-  };
+export const validateExtensionDays = (_, value) => {
+  if (value && value > extendDays) {
+    return Promise.reject(new Error(`You can only extend the auction for up to ${extendDays} days`));
+  }
+  return Promise.resolve();
 };
