@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Space, Modal, message, Tag } from 'antd';
+import { Table, Input, Button, Space, Modal, Pagination, message, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
@@ -11,6 +11,10 @@ const AuctionsTable = () => {
     const [open, setOpen] = useState(false);
     const [selectedAuction, setSelectedAuction] = useState(null);
     const searchInput = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
+
 
     useEffect(() => {
         const fetchAuctions = async () => {
@@ -46,6 +50,7 @@ const AuctionsTable = () => {
                 }));
     
                 setDataSource(transformedData);
+                setTotalItems(transformedData.length);
             } catch (error) {
                 console.error('Error fetching auction data:', error);
             }
@@ -53,6 +58,15 @@ const AuctionsTable = () => {
     
         fetchAuctions();
     }, []);
+
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+        setPageSize(pageSize);
+    };
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const currentPageData = dataSource.slice(startIndex, endIndex);
     
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -284,8 +298,19 @@ const AuctionsTable = () => {
     
         return (
             <>
-                <Table dataSource={dataSource} columns={columns} />
-    
+            <Table dataSource={currentPageData}  pagination={false} columns={columns}/> 
+                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={totalItems}
+                        onChange={handlePageChange}
+                        showSizeChanger={true}
+                        pageSizeOptions={['5', '10', '20', '50']}
+                        showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                    />
+                </div>
+        
                 {selectedAuction && (
                     <Modal
                         visible={open}

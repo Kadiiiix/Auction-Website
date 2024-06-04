@@ -14,8 +14,9 @@ const UsersTable = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [reportDetails, setReportDetails] = useState(null);
     const searchInput = useRef(null);
-    const [top, setTop] = useState('topLeft');
-    const [bottom, setBottom] = useState('bottomRight');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
 
     useEffect(() => {
         const fetchUsersAndAuctions = async () => {
@@ -57,6 +58,7 @@ const UsersTable = () => {
                 }));
     
                 setDataSource(transformedData);
+                setTotalItems(transformedData.length)
             } catch (error) {
                 console.error('Error fetching user or auction data:', error);
             }
@@ -64,6 +66,15 @@ const UsersTable = () => {
     
         fetchUsersAndAuctions();
     }, []);
+
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+        setPageSize(pageSize);
+    };
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const currentPageData = dataSource.slice(startIndex, endIndex);
     
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -154,13 +165,18 @@ const UsersTable = () => {
         setSelectedUser(user);
         try {
             const response = await axios.get(`http://localhost:4000/api/report/reports/aggregated/${user.userId}`);
-            setReportDetails(response.data);
+            if (response.data) {
+                setReportDetails(response.data);
+            } else {
+                setReportDetails(null);
+            }
             setOpen(true);
         } catch (error) {
             console.error('Error fetching user reports:', error);
             message.error('Failed to fetch user reports.');
         }
     };
+    
 
     const showDetailsModal = (user) => {
         setSelectedUser(user);
@@ -280,7 +296,18 @@ const UsersTable = () => {
 
     return (
         <>
-            <Table dataSource={dataSource} columns={columns}/> 
+            <Table dataSource={currentPageData}  pagination={false} columns={columns}/> 
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={totalItems}
+                    onChange={handlePageChange}
+                    showSizeChanger={true}
+                    pageSizeOptions={['5', '10', '20', '50']}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                />
+            </div>
 
             {selectedUser && (
                 <Modal
@@ -304,34 +331,78 @@ const UsersTable = () => {
                 </Modal>
             )}
 
-            {selectedUser && (
-                <Modal
-                    open={open}
-                    title="User Reports"
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    footer={[
-                        <Button key="ok" onClick={handleOk}>
-                            OK
-                        </Button>,
-                    ]}
-                >
-                    {reportDetails ? (
-                        <div>
-                            <p><strong>Total Reports:</strong> {reportDetails.totalReports}</p>
-                            {reportDetails.reports.map((report) => (
-                                <div key={report.id}>
-                                    <p><strong>Report ID:</strong> {report.id}</p>
-                                    <p><strong>Description:</strong> {report.description}</p>
-                                    <p><strong>Created At:</strong> {report.createdAt}</p>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p>No report details available.</p>
-                    )}
-                </Modal>
-            )}
+{selectedUser && (
+    <Modal
+        open={open}
+        title="User Reports"
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+            <Button key="ok" onClick={handleOk}>
+                OK
+            </Button>,
+        ]}
+    >
+        {reportDetails ? (
+            <div>
+                <p><strong>Total Reports:</strong> {reportDetails.totalReports}</p>
+                {reportDetails.profileReports && reportDetails.profileReports.length > 0 ? (
+                    <div>
+                        <h3>Profile Reports</h3>
+                        {reportDetails.profileReports.map((report) => (
+                            <div key={report._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', backgroundColor: '#f0f0f0', borderRadius: '5px' }}>
+                                <p><strong>Report ID:</strong> {report._id}</p>
+                                <p><strong>Reporter:</strong> {report.reporter.username}</p>
+                                <p><strong>Reason:</strong> {report.reason}</p>
+                                <p><strong>Description:</strong> {report.description}</p>
+                                <p><strong>Created At:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No profile reports available.</p>
+                )}
+                {reportDetails.auctionReports && reportDetails.auctionReports.length > 0 ? (
+                    <div>
+                        <h3>Auction Reports</h3>
+                        {reportDetails.auctionReports.map((report) => (
+                            <div key={report._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', backgroundColor: '#f0f0f0', borderRadius: '5px' }}>
+                                <p><strong>Report ID:</strong> {report._id}</p>
+                                <p><strong>Reporter:</strong> {report.reporter.username}</p>
+                                <p><strong>Auction Name:</strong> {report.auction.name}</p>
+                                <p><strong>Reason:</strong> {report.reason}</p>
+                                <p><strong>Description:</strong> {report.description}</p>
+                                <p><strong>Created At:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No auction reports available.</p>
+                )}
+                {reportDetails.commentReports && reportDetails.commentReports.length > 0 ? (
+                    <div>
+                        <h3>Comment Reports</h3>
+                        {reportDetails.commentReports.map((report) => (
+                            <div key={report._id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', backgroundColor: '#f0f0f0', borderRadius: '5px' }}>
+                                <p><strong>Report ID:</strong> {report._id}</p>
+                                <p><strong>Reporter:</strong> {report.reporter.username}</p>
+                                <p><strong>Comment:</strong> {report.comment.comment}</p>
+                                <p><strong>Reason:</strong> {report.reason}</p>
+                                <p><strong>Description:</strong> {report.description}</p>
+                                <p><strong>Created At:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No comment reports available.</p>
+                )}
+            </div>
+        ) : (
+            <p>No report details available.</p>
+        )}
+    </Modal>
+)}
+
         </>
     );
 };

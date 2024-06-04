@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Button, Input, Space, Modal, message } from 'antd';
+import { Table, Button, Input, Space, Pagination, Modal, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
@@ -11,6 +11,11 @@ const CommentsTable = () => {
     const [open, setOpen] = useState(false);
     const [selectedComment, setSelectedComment] = useState(null);
     const searchInput = useRef(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
+    const [reportDetails, setReportDetails] = useState(null);
+    const [openDetails, setOpenDetails] = useState(false);
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -25,6 +30,10 @@ const CommentsTable = () => {
                     const auctionResponse = await axios.get(`http://localhost:4000/api/auctions/${comment.auctionId}`);
                     const auctionData = auctionResponse.data;
 
+                    try{
+                        const reportsResponse = await axios.get(`http://localhost:4000/api/report/reports/comment/all/${comment._id}`);
+                        const totalReports = reportsResponse.data.totalReports || 0;
+
                     return {
                         key: comment._id,
                         commentId: comment._id,
@@ -32,10 +41,26 @@ const CommentsTable = () => {
                         username: userData.username,
                         auctionName: auctionData.name,
                         comment: comment.comment,
+                        totalReports: totalReports,
                     };
+                }
+                    catch(error) {
+                        console.error("Error catching comment reports", error);
+                        return{
+                            key: comment._id,
+                            commentId: comment._id,
+                            timePosted: new Date(comment.timePosted).toLocaleString(),
+                            username: userData.username,
+                            auctionName: auctionData.name,
+                            comment: comment.comment,
+                            totalReports: 0,
+                        }
+
+                }
                 }));
 
                 setDataSource(transformedData);
+                setTotalItems(transformedData.length)
             } catch (error) {
                 console.error('Error fetching comments:', error);
             }
@@ -43,6 +68,16 @@ const CommentsTable = () => {
 
         fetchComments();
     }, []);
+    
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+        setPageSize(pageSize);
+    };
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+    const currentPageData = dataSource.slice(startIndex, endIndex);
+    
 
     const showModal = (comment) => {
         setSelectedComment(comment);
@@ -58,6 +93,22 @@ const CommentsTable = () => {
         setOpen(false);
         setSelectedComment(null);
     };
+
+    const showDetailsModal = (comment) => {
+        setSelectedComment(comment);
+        setOpenDetails(true);
+    };
+
+    const handleDetailsOk = () => {
+        setOpenDetails(false);
+        setSelectedComment(null);
+    };
+
+    const handleDetailsCancel = () => {
+        setOpenDetails(false);
+        setSelectedComment(null);
+    };
+
 
     const handleDelete = async () => {
         try {
@@ -202,6 +253,17 @@ const CommentsTable = () => {
             key: 'timePosted',
         },
         {
+            title: 'Total Reports',
+            dataIndex: 'totalReports',
+            key: 'totalReports',
+            render: (text, record) => (
+                <Button type="link" onClick={() => showModal(record)}>
+                    <p>({record.totalReports ? <>{record.totalReports}</> : <>0</>}) View Reports</p> 
+                </Button>
+            ),
+            align: 'center',
+        },
+        {
             title: 'Actions',
             key: 'actions',
             render: (text, record) => (
@@ -215,7 +277,18 @@ const CommentsTable = () => {
 
     return (
         <>
-            <Table dataSource={dataSource} columns={columns} />
+        <Table dataSource={currentPageData}  pagination={false} columns={columns}/> 
+            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={totalItems}
+                    onChange={handlePageChange}
+                    showSizeChanger={true}
+                    pageSizeOptions={['5', '10', '20', '50']}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                />
+            </div>
 
             {selectedComment && (
                 <Modal
@@ -237,6 +310,37 @@ const CommentsTable = () => {
                     <p><strong>Auction Name:</strong> {selectedComment.auctionName}</p>
                     <p><strong>Comment:</strong> {selectedComment.comment}</p>
                     <p><strong>Time Posted:</strong> {selectedComment.timePosted}</p>
+                
+                </Modal>
+                
+            )}
+            
+            {selectedComment && (
+                <Modal
+                    open={open}
+                    title="User Reports"
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key="ok" onClick={handleOk}>
+                            OK
+                        </Button>,
+                    ]}
+                >
+                    {reportDetails ? (
+                        <div>
+                            <p><strong>Total Reports:</strong> {reportDetails.totalReports}</p>
+                            {reportDetails.reports.map((report) => (
+                                <div key={report.id}>
+                                    <p><strong>Report ID:</strong> {report.id}</p>
+                                    <p><strong>Description:</strong> {report.description}</p>
+                                    <p><strong>Created At:</strong> {report.createdAt}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No report details available.</p>
+                    )}
                 </Modal>
             )}
         </>
