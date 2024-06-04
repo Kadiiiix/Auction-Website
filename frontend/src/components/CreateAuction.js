@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Navigate } from "react-router-dom";
 import { Form, Input, Select, DatePicker, InputNumber, Checkbox, Button, notification } from 'antd';
 import "../design/CreateAuction.css";
+import { disabledDate, validateStartingBid } from "../rulesEngine/auctionRules"
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -122,6 +123,7 @@ const CreateAuction = ({ userId }) => {
     }
   };
 
+
   return (
     <div className='full-container'>
       <div className='form-container'>
@@ -191,7 +193,7 @@ const CreateAuction = ({ userId }) => {
                 },
               ]}
             >
-              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" disabledDate={disabledDate} />
             </Form.Item>
 
             <Form.Item
@@ -201,6 +203,9 @@ const CreateAuction = ({ userId }) => {
                 {
                   required: true,
                   message: 'Please enter starting bid.',
+                },
+                {
+                  validator: validateStartingBid,
                 },
               ]}
             >

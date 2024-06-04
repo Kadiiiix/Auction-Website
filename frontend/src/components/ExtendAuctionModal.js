@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, Button, notification } from 'antd';
 import axios from 'axios';
+import { validateExtensionDays } from "../rulesEngine/auctionRules";
 
 const ExtendAuctionModal = ({ auctionId, visible, setVisible }) => {
   const [form] = Form.useForm();
@@ -45,6 +46,9 @@ const ExtendAuctionModal = ({ auctionId, visible, setVisible }) => {
             {
               required: true,
               message: 'Please input the number of days to extend!',
+            },
+            {
+              validator: validateExtensionDays, 
             },
           ]}
         >
