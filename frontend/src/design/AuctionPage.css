@@ -36,35 +36,90 @@
     margin-bottom: 10px;
     margin-right: 0;
     margin-left: 0;
-    padding-left: 10px;
+    
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: rgba(185, 201, 209, 0.393);
+    flex-direction: column;
+    /*align-items: ;*/
+    background-color: white;
     border-radius: 5px;
+    border: 1px solid #45474b36;
   }
 
-  .single-comment{
-  
+  .upperComment {
+    display: flex;
   }
+
+  .lowerComment {
+    display: flex;
+  }
+
+  .leftSide {
+    
+    width: 6.55%;
+    /*border-right: 2px solid #000;  */
+  }
+
+  .rightSide {
+    display: flex;
+    flex-direction: collumn;
+    justify-content: center; /* Center items vertically */
+    text-align: center;
+    margin-left: 1vh;
+    font-size: 2vh;
+  }
+
+
+
+  .userAvatar {
+    padding-left: 1vh;
+    border-bottom: 1px solid #45474b36; 
+    /*border-right: 2px solid #000;  
+    */
+    width: 6%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .userInfo {
+    padding: 1vh;
+    border-bottom: 1px solid #45474b36;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+
 
   .username-time{
     margin-top: 5px;
     margin-bottom: 5px;
-    background-color: #45474b36;
+    /*background-color: #45474b36;*/
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between; /* Center items vertically */
     border-radius: 5px;
     padding-left: 3px;
     padding-right: 3px;
-    align-self: center;
+    /*align-self: center;*/
+    height: 100px;
   }
 
-  .username{
+  .lower-title-com {
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-end;
     color: black;
-
+    height: 6.3vh;
+    font-size: 1.8vh;
+    text-decoration: underline;
   }
+
+  .lower-title-com a:hover {
+    text-decoration: underline; /* Underline text on hover */
+    color: rgba(244, 206, 20, 1); /* Change the text color on hover */
+}
+
+
 
   .comment-text{
     margin-left: 10px;
@@ -76,6 +131,10 @@
   .time{
     color: rgba(0, 0, 0, 0.452);
     font-size: small;
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ensure content is positioned at the top */
+    align-items: flex-start; /* Ensure content is aligned to the start horizontally */
   }
 
   .item-name{
@@ -84,7 +143,7 @@
   
   .information {
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     width: 50%;
   }
 
@@ -112,10 +171,7 @@
     font-weight: bold;
   }
   
-  .lower-title {
-    color: rgba(69, 71, 75, 1);
-    height: 6.3vh;
-  }
+
 
   .photo-bidding {
     padding: 15px;
@@ -217,6 +273,10 @@
   .reporting {
     margin-left: auto;
     margin-right: 10px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center; /* Ensure content is positioned at the top */
+    align-items: center; /* Ensure content is aligned to the start horizontally */
   }
   
   .reportButton {
