@@ -33,9 +33,10 @@
     margin-right: 5px;
 }
 
-.links{
+.auction-links{
     display: flex;
     flex-direction: column;
+    font: 16px;
 }
 
 .single-link{

@@ -120,14 +120,14 @@ const items = [
   },
 ];
 
-const NavigationMenu = () => (
+const NavigationMenu = ({ closeMenu }) => (
   <div className="menu-container">
     <Menu mode="vertical" className="menu">
       {items.map((item) => (
         <SubMenu key={item.key} title={item.label}>
           {item.children.map((child) => (
             <Menu.Item key={child.key}>
-              <Link to={`/category/${child.label}`} className="no-underline">
+              <Link to={`/category/${child.label}`} className="no-underline" onClick={closeMenu}>
                 {child.label}
               </Link>
             </Menu.Item>

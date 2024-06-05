@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Card, Button, Space, Avatar, notification, Modal, Select, Input } from "antd";
 import { UserOutlined, ShoppingOutlined, HeartOutlined, CommentOutlined, WarningOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import "../design/UserProfile.css";
 import Rating from "./Rating";
 
@@ -161,12 +161,12 @@ const UserProfileSide = ({ id, loggedIn }) => {
         ];
 
         return (
-            <div className="links">
+            <div className="auction-links">
                 {sideInfo.map((property, index) => (
-                    <Link to={property.url} key={index} className="single-link">
+                    <NavLink to={property.url} key={index} className="single-link">
                         <p>{property.icon && property.icon}</p>
                         <p>{property.label}</p>
-                    </Link>
+                    </NavLink>
                 ))}
             </div>
         );

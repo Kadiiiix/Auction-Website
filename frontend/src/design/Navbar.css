@@ -1,0 +1,79 @@
+.text-with-image {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .navbar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color:#F5F7F8 ;
+  }
+
+  .image {
+    height: 9vh; /* Makes the image the same height as the text */
+    margin-left: 10px; /* Adds some space between the text and the image */
+  }
+
+  h2{
+    font-size: 5vh;
+    margin: 3vh;
+    color: #F4CE14;
+  }
+
+  .links {
+    display: flex;
+    justify-content:flex-start; 
+    flex-direction: row;
+    margin-left: 10px;
+  }
+  
+  .links a {
+    text-decoration: none;
+    color: black; /* Default color */
+    margin: 0; /* Adjust spacing as needed */
+  }
+  
+  .links p {
+    margin: 0 15px;
+    padding: 0;
+    font-size: 2.5vh;
+  }
+
+  .auth-links{
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+  }
+
+  .auth-links a{
+    text-decoration: none;
+    color: black; /* Default color */
+    margin: 0 15px; /* Adjust spacing as needed */
+  }
+
+  .auth-links p{
+    margin: 0;
+    padding: 0;
+    font-size: 2.5vh;
+  }
+
+
+.auth-links a {
+    text-decoration: none;
+    color: black; /* Default color */
+    margin: 0 15px; /* Adjust spacing as needed */
+    position: relative; /* Ensure the pseudo-element is positioned correctly */
+  }
+  
+  .auth-links a + a::before {
+    content: "";
+    position: absolute;
+    left: -15px; /* Adjust position of the vertical line */
+    top: 50%;
+    transform: translateY(-50%);
+    height: 120%;
+    width: 2px;
+    background-color: rgba(0, 0, 0, 0.121); /* Color of the vertical line */
+  }
