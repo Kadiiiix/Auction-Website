@@ -1,65 +1,80 @@
 .messages-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    width: auto;
-  }
-  
-  .messages-list {
-    width: 100%;
-    max-width: 800px;
-    margin-bottom: 20px;
-    max-height: 70vh; /* Adjust as needed */
-    overflow-y: auto;
-  }
-  
-  .message-rectangle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  .message-info {
-    display: flex;
-    flex-direction: column;
-    margin-right: 10px;
-    background-color: #cccccc49;
-    padding: 4px;
-    border-radius: 4px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  max-height: 87%; 
+  position: sticky;
+}
 
-  .message-info p {
-    margin: 0;
-    font-size: 0.9em;
-    color: #555;
-  }
+.photo-info {
+  display: flex;
+}
+
+.messages-list {
+  padding-left:5%;
+  width: 100%;
+  margin-bottom: 20px;
+  max-height: 70vh; 
+  overflow-y:auto;
+}
+
+.message-rectangle {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  width: fit-content;
+}
+
+.message-header {
   
-  .message-text {
-    flex: 1;
-    text-align: left;
-  }
-  
-  .message-input-container {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 800px;
-  }
-  
-  .message-input {
-    flex: 1;
-    margin-right: 10px;
-  }
-  
-  
-  .button{
-    background-color: rgba(244, 206, 20, 1);
-    color: white;
-    white-space: nowrap;
-  }  
+  border-bottom: 0.5px solid #ccc;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.time{
+  padding:2px;
+}
+.message-info {
+  margin-left:10px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.message-info p {
+  font-size: 0.9em;
+}
+
+.message-text {
+  margin-left:10px;
+  margin-right:10px;
+  text-align: left;
+  word-break: break-word; /* Ensure long words break to fit within the container */
+}
+
+.message-input-container {
+  display: flex;
+  max-width: 90%;
+  bottom:0;
+  width: 100%;
+}
+
+.message-input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.button {
+  background-color: rgba(244, 206, 20, 1);
+  color: white;
+  white-space: nowrap;
+}

@@ -3,17 +3,25 @@
     flex-direction: column;
     align-items: center;
     padding: 10px;
+    max-height: 87%; 
+    position: sticky;
     width: auto;
   }
   
   .conversations-list {
     width: 100%;
+    position: sticky;
     max-width: 800px;
-    max-height: 70vh; /* Adjust as needed */
-    overflow-y: auto;
+    max-height: 70%; 
+    overflow-y: scroll;
     align-items: center;
   }
 
+ .convo{
+  line-height: 10%;
+  padding-top:5%;
+  padding-bottom: 5%;
+ }
   .search {
     display: flex;
     flex-direction: column;
@@ -29,7 +37,6 @@
     align-items: center;
     width: 100%;
     background-color: #f0f0f0;
-    padding: 4px;
     border-radius: 4px;
     margin-bottom: 5px;
   }
