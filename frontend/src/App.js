@@ -38,6 +38,8 @@ import AuctionsTable from "./components/AuctionsTable";
 import CommentsTable from "./components/CommentsTable";
 import FilterForm from "./components/FilterForm";
 import RecommendationsCarousel from "./components/SuggestionsCarousel";
+import Navbar from "./components/Navbar";
+import SearchBar from "./components/SearchBar";
 import "../src/design/MainHeader.css";
 
 function App() {
@@ -118,110 +120,11 @@ const closeMenu = () => {
   return (
     <Router>
       <div className="App">
-        <div className="UpperHeader">
-          <ul>
-            {!loggedIn && (
-              <>
-                <li>
-                  <Link to="/login">Login</Link>
-                </li>
-                <li>
-                  <Link to="/register">Register</Link>
-                </li>
-              </>
-            )}
-            {loggedIn && (
-              <>
-                {role === "admin" ? (
-                  <>
-                    <li>
-                      <Link to="/manage/auctions">Manage Auctions</Link>
-                    </li>
-                    <li>
-                      <Link to="/manage/users">Manage Users</Link>
-                    </li>
-                    <li>
-                      <Link to="/manage/comments">Manage Comments</Link>
-                    </li>
-                  </>
-                ) : (
-                  <></>
-                )}
-
-                {role === "admin" ? (
-                  <></>
-                ) : (
-                  <li>
-                    <Link to="/create">Create Auction</Link>
-                  </li>
-                )}
-                <Dropdown overlay={menu} trigger={["hover"]}>
-                  <li>
-                    <Link
-                      icon={<UserOutlined />}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      Account
-                    </Link>
-                  </li>
-                </Dropdown>
-              </>
-            )}
-          </ul>
+        <div className="navbar-m">
+          <Navbar loggedIn={loggedIn} handleLogout={handleLogout} userId={userId} role={role}/>
         </div>
-
-        <div className="LowerHeader">
-          <div className="Title">
-            <div style={{ position: "relative" }}>
-              <a href="/" class="no-underline">
-                <h2 style={{ display: "inline-block" }}>IzložBa</h2>
-              </a>
-            </div>
-          </div>
-          <div class="List">
-            <div onClick={toggleMenu} style={{ cursor: "pointer" }}>
-              <h2> Categories </h2>
-              {showMenu && <NavigationMenu />}
-            </div>
-            <div className="List-elements">
-              <NavLink
-                to="/"
-                className={({ isActive }) => (isActive ? "active" : "inactive")}
-              >
-                <h2> Home </h2>
-              </NavLink>
-            </div>
-            <div>
-              <NavLink
-                to="/recent"
-                className={({ isActive }) => (isActive ? "active" : "inactive")}
-              >
-                <h2> New Auctions </h2>
-              </NavLink>
-            </div>
-            <div>
-              <NavLink
-                to="/popular"
-                className={({ isActive }) => (isActive ? "active" : "inactive")}
-              >
-                <h2> Popular Auctions </h2>
-              </NavLink>
-            </div>
-          </div>
-          <div className="SearchBar">
-            <form>
-              <input
-                type="text"
-                placeholder="Search..."
-                name="search"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-              <Link to={`/search?query=${searchQuery}`}>
-                <button>Search</button>
-              </Link>
-            </form>
-          </div>
+        <div className="searchbar-m">
+          <SearchBar searchQuery={searchQuery} handleSearchChange={handleSearchChange} loggedIn={loggedIn} role={role}/>
         </div>
         <Routes>
           <Route path="/" element={<HomePage />} />
