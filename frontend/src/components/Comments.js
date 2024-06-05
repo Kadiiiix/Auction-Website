@@ -124,23 +124,56 @@ const CommentSection = ({ auctionId }) => {
             <h2>Comments ({comments.length})</h2>
             {comments.map((comment, index) => (
               <div className='single-comment' key={index}>
-                <Avatar shape="square" size={100} src={comment.userId.photo} icon={<UserOutlined />} />
-                <div className='username-time'>
-                  <Link to={`/profile/${comment.userId._id}`} className="lower-title">{comment.userId.username}</Link>
-                  <p className='time'>{formatDate(comment.timePosted)}</p>
-                </div>
-                <p className="comment-text">{comment.comment}</p>
-                <div className='reporting'>
-                {(userId && userId !== comment.userId._id && role !== 'admin') ? (
-                  <Button onClick={() => handleReportButtonClick(comment)} className="reportButton">
-                    <WarningOutlined /> Report Comment
-                  </Button>
-                ) : (
-                  <Button className="reportButton" disabled>
-                    <WarningOutlined /> Report Comment
-                  </Button>
-                )}
-                </div>
+                <div className = 'upperComment'>
+                  <div className='userAvatar'>
+                    <Avatar size={100} src={comment.userId.photo} icon={<UserOutlined />} />
+                  </div>
+
+                  <div className='userInfo'>
+                    <div className='username-time'>
+                    <div className="lower-title-com">
+                      <Link to={`/profile/${comment.userId._id}`} >{comment.userId.username}</Link>
+                    </div>
+                    <div className='time'>
+                      <p>{formatDate(comment.timePosted)}</p>
+                    </div>
+                    </div>
+
+                    <div className='reporting'>
+                    {(userId && userId !== comment.userId._id && role !== 'admin') ? (
+                    <Button onClick={() => handleReportButtonClick(comment)} className="reportButton">
+                      <WarningOutlined /> Report Comment
+                    </Button>
+                      ) : (
+                    <Button className="reportButton" disabled>
+                      <WarningOutlined /> Report Comment
+                    </Button>
+                    )}
+                    </div>
+
+                  </div>
+
+
+                  </div>
+
+                  <div className='lowerComment'>
+
+                    <div className='leftSide'>
+
+                    </div>
+
+                    <div className='rightSide'>
+
+                      <p>{comment.comment}</p>
+
+                    </div>
+
+
+                  </div>
+                
+
+                
+
               </div>
             ))}
         </div>
