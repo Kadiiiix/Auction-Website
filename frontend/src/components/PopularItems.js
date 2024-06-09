@@ -9,7 +9,7 @@ import "../design/NewAndPopularAuctions.css";
 const PopularItems = ({ searchQuery }) => {
   const [auctionListings, setAuctionListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const auctionsPerPage = 5;
+  const auctionsPerPage = 10;
   const currentTime = new Date().getTime();
 
   useEffect(() => {

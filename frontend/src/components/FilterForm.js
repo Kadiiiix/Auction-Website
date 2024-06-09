@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Added useEffect here
+import React, { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Layout,
@@ -8,7 +8,6 @@ import {
   Select,
   DatePicker,
   Radio,
-  Checkbox,
   Button,
   InputNumber,
 } from "antd";
@@ -21,7 +20,6 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AuctionFilterForm = ({ onFilter }) => {
-
   const categories = [
     { id: 1, name: "Antiques" },
     { id: 2, name: "Artwork" },
@@ -42,6 +40,7 @@ const AuctionFilterForm = ({ onFilter }) => {
     { id: 17, name: "Vehicles" },
     { id: 18, name: "Video Games" },
   ];
+
   const [filterCriteria, setFilterCriteria] = useState({
     condition: "",
     category: "",
@@ -50,8 +49,8 @@ const AuctionFilterForm = ({ onFilter }) => {
     location: "",
     maxPrice: "",
   });
-  
- const PageLocation = useLocation();
+
+  const PageLocation = useLocation();
 
   const handleFilter = async () => {
     try {
@@ -71,7 +70,6 @@ const AuctionFilterForm = ({ onFilter }) => {
       [name]: value,
     }));
   };
-
 
   const resetFilters = async () => {
     const emptyCriteria = {
@@ -149,7 +147,7 @@ const AuctionFilterForm = ({ onFilter }) => {
           Apply Filters
         </Button>
         <div>
-          <br></br>
+          <br />
         </div>
         <Button danger onClick={resetFilters}>
           Reset Filters
@@ -169,7 +167,7 @@ const FilterForm = ({ onFilter }) => {
   useEffect(() => {
     const handleScroll = () => {
       const currentPosition = window.pageYOffset;
-      if (currentPosition >= window.innerHeight * 0.05) {
+      if (currentPosition >= window.innerHeight * 0.02) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -182,19 +180,15 @@ const FilterForm = ({ onFilter }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return (
-    <Layout
-      className="sidebar"
-      style={{
-        position: "fixed",
-      }}
-    >
+    <Layout className="sidebar" style={{ position: "fixed" }}>
       <Sider
         width="20%"
         style={{
           background: colorBgContainer,
-          top: isScrolled ? "calc(7% - 100px)" : "0%" , // Adjust the top value accordingly
-          transition: "top 0.0s ease",
+          top: isScrolled ? "-10%" : "0%", // Adjust the top value to move up by 2%
+          transition: "top 0.1s ease",
         }}
       >
         {!collapsed && <AuctionFilterForm onFilter={onFilter} />}
@@ -204,3 +198,4 @@ const FilterForm = ({ onFilter }) => {
 };
 
 export default FilterForm;
+

@@ -1,32 +1,30 @@
-.conj{
-    width: 85%;
-    margin-right: 0%;
-    margin-left: 1.5%;
-    padding-left: 15%; /* Remove padding */
-    height: 100%;
-    background-color: white; /* Black background color */
-    /*display: flex; /* Use flexbox */
-     /* flex-direction: column;
+.conj {
+  width: 85%;
+  margin-right: 5%;
+  margin-left: 1.5%;
+  padding-left: 15%; /* Remove padding */
+  height: 100%;
+  background-color: white; /* Black background color */
+  /*display: flex; /* Use flexbox */
+  /* flex-direction: column;
     justify-content: flex-start; /* Center horizontally */
-    align-items: right; /* Center vertically */
-    min-height: 100vh; /* Take up the whole viewport height */
-    
+  align-items: right; /* Center vertically */
+  min-height: 100vh; /* Take up the whole viewport height */
 }
 
-
 .cont {
-    width: 85%;
-    margin-right: 3%;
-    margin-left: 3%;
-    padding-left: 15%; /* Remove padding */
-    height: 100%;
-    background-color: white; /* Black background color */
-    /*display: flex; /* Use flexbox */
-     /* flex-direction: column;
+  padding-top:5%;
+  width: 85%;
+  margin-right: 3%;
+  margin-left: 3%;
+  padding-left: 10%; /* Remove padding */
+  height: 100%;
+  background-color: white; /* Black background color */
+  /*display: flex; /* Use flexbox */
+  /* flex-direction: column;
     justify-content: flex-start; /* Center horizontally */
-    align-items: right; /* Center vertically */
-    min-height: 100vh; /* Take up the whole viewport height */
-    
+  align-items: right; /* Center vertically */
+  min-height: 100vh; /* Take up the whole viewport height */
 }
 
 .recommendations-carousel {
@@ -49,4 +47,11 @@
     align-content: center;
     margin-left: 12vh;
 }
-  
+
+.auction-items {
+  display: flex;
+  height: auto;
+  flex-wrap: wrap;
+  align-content: center;
+  margin-left: 15vh;
+}

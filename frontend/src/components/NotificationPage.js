@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../design/NotificationPage.css";
 import { Link } from "react-router-dom";
+import { DeleteOutlined } from "@ant-design/icons";
 
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
@@ -130,24 +131,34 @@ const getLink = async (notification) => {
 
   return (
     <div className="notification-container">
-      <h1>Notifications</h1>
+      <h1 className="head">Notifications</h1>
       <div className="notification-list">
         {notifications.map((notification, index) => (
           <div key={index} className="notification-item">
-            <div className="notification-message">{notification.message}</div>
-            <div className="notification-time">
-              {formatTime(notification.timestamp)}
+            <div className="mes">
+              <div className="notification-message">{notification.message}</div>
+              <div className="notification-time">
+                {formatTime(notification.timestamp)}
+              </div>
             </div>
-            <div>
-            {notificationLinks[index] && (
-              <Link to={notificationLinks[index]} className="notification-link">
-                View Details
-              </Link>
-            )}
+            <div class="bb">
+              {notificationLinks[index] && (
+                <button  class="but">
+                  <Link
+                    to={notificationLinks[index]}
+                    className="notification-link"
+                  >
+                    View Details
+                  </Link>
+                </button>
+              )}
             </div>
-            <button onClick={() => deleteNotification(notification._id)}>
-              Delete
-            </button>
+            <div class="del">
+              <DeleteOutlined
+                className="dele"
+                onClick={() => deleteNotification(notification._id)}
+              />
+            </div>
           </div>
         ))}
       </div>

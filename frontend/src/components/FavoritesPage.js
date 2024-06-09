@@ -58,20 +58,18 @@ const FavoritesPage = () => {
       ) : (
         <h1 className="page-title">{author}'s Favorite Auctions</h1>
       )}
-      
-      <ul className="list-elements">
+
+      <div className="auctions">
         {currentFavorites.map((favorite) => (
-          <li key={favorite._id}>
-            <Link
-              to={`/auction/${favorite._id}`}
-              key={favorite._id}
-              className="no-underline"
-            >
-              <AuctionItem item={favorite} />
-            </Link>
-          </li>
+          <div
+            to={`/auction/${favorite._id}`}
+            key={favorite._id}
+            className="no-underline"
+          >
+            <AuctionItem item={favorite} />
+          </div>
         ))}
-      </ul>
+      </div>
       <div className="pagination">
         <Pagination
           current={currentPage}

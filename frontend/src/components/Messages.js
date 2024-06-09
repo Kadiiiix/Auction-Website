@@ -1,15 +1,15 @@
-import axios from 'axios';
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Input, Button ,Avatar} from 'antd';
-import { UserOutlined} from "@ant-design/icons";
+import axios from "axios";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, Link } from "react-router-dom";
+import { Input, Button, Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import { format } from "date-fns";
-import './../design/Message.css'; 
+import "./../design/Message.css";
 const { TextArea } = Input;
 
 function Messages() {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const userId = localStorage.getItem("userId");
   const { id } = useParams();
   const [oldMessages, setOldMessages] = useState([]);
@@ -19,22 +19,25 @@ function Messages() {
 
   const sendMessage = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/messages/send', {
-        sender: userId,
-        receiver: id,
-        message: newMessage,
-      });
-      
-       setMessages([
-         ...messages,
-         {
-           sender: { _id: userId, photo: sender.photo },
-           message: newMessage,
-           timestamp: new Date(),
-         },
-       ]);
-      setNewMessage('');
-      scrollToBottom();
+      const response = await axios.post(
+        "http://localhost:4000/api/messages/send",
+        {
+          sender: userId,
+          receiver: id,
+          message: newMessage,
+        }
+      );
+
+      setMessages([
+        ...messages,
+        {
+          sender: { _id: userId, photo: sender.photo },
+          message: newMessage,
+          timestamp: new Date(),
+        },
+      ]);
+      setNewMessage("");
+      //scrollToBottom();
       getMessages();
     } catch (error) {
       console.error("Error sending message: ", error);
@@ -43,7 +46,9 @@ function Messages() {
 
   const fetchUser = async (user) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/users/${user}`);
+      const response = await axios.get(
+        `http://localhost:4000/api/users/${user}`
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -54,7 +59,9 @@ function Messages() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/messages/conversation/${id}?senderId=${userId}`);
+        const response = await axios.get(
+          `http://localhost:4000/api/messages/conversation/${id}?senderId=${userId}`
+        );
         setOldMessages(response.data);
 
         const senderData = await fetchUser(userId);
@@ -62,18 +69,20 @@ function Messages() {
 
         if (senderData) setSender(senderData.username);
         if (receiverData) setReceiver(receiverData.username);
-        scrollToBottom();
+        //scrollToBottom();
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
     getMessages();
-    scrollToBottom();
+   //scrollToBottom();
   }, [id, userId]);
 
   const getMessages = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/messages/conversation/${id}?senderId=${userId}`);
+      const response = await axios.get(
+        `http://localhost:4000/api/messages/conversation/${id}?senderId=${userId}`
+      );
       setOldMessages(response.data);
 
       const senderData = await fetchUser(userId);
@@ -89,30 +98,29 @@ function Messages() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const month = months[date.getMonth()];
-  const day = date.getDate();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
 
-  return `${month} ${day},  ${hours}:${minutes}`;
-}
-
+    return `${month} ${day},  ${hours}:${minutes}`;
+  }
 
   return (
     <div className="messages-container">
@@ -121,7 +129,7 @@ function formatTimestamp(timestamp) {
       )}
       {id !== "user" && oldMessages.length > 0 && <h2>Chat with {receiver}</h2>}
       {id !== "user" && oldMessages.length > 0 && (
-        <div className="messages-list">
+        <div className="messages-list" >
           {oldMessages.map((message, index) => (
             <div className="message-rectangle" key={index}>
               <div className="message-header">
@@ -164,6 +172,6 @@ function formatTimestamp(timestamp) {
       {id === "user" && <h2>Select conversation or start a new one.</h2>}
     </div>
   );
-}  
+}
 
 export default Messages;

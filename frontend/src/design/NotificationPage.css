@@ -1,23 +1,58 @@
 .notification-container {
   margin: 20px;
+  
+}
+.head{
+  color:#F4CE14;
 }
 
 .notification-list {
   display: grid;
+  
   grid-gap: 10px;
 }
 
 .notification-item {
-  padding: 10px;
+  
+  padding:1%;
+  align-items: center;
+  display: flex;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
+  background-color: #f3eff0;
 }
 
 .notification-message {
-  font-weight: bold;
+  
+  font-size:large;
+  width:80%;
 }
 
 .notification-time {
-  font-size: 0.8rem;
+  margin-top:0.5%;
+  font-size: 1rem;
   color: #777;
+}
+.but{
+  background-color: #d1cfd0;
+  padding: 10px;
+  border: none; 
+  border-radius: 10px;
+}
+.del{
+  display: flex;
+  width: 15px; 
+  height: 15px;
+  padding: 1%;
+  margin-left:2%;
+  background-color: #d1cfd0;
+  border: none;
+  border-radius: 50%; /* Make it a circle */
+}
+.bb{
+  padding-left:2%;
+}
+
+.mes{
+  width:85%;
 }
