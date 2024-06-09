@@ -13,6 +13,7 @@
     
 }
 
+
 .cont {
     width: 85%;
     margin-right: 3%;
@@ -35,6 +36,16 @@
     margin-left:5.5%;
     background-color: #f5f5f5;
     }
+
 .paragraph{
     padding-left:35%;
 }
+
+.auctions {
+    display: flex;
+    height: auto;
+    flex-wrap: wrap;
+    align-content: center;
+    margin-left: 15vh;
+}
+  
