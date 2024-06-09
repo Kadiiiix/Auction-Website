@@ -13,7 +13,7 @@ const SearchBar = ({ searchQuery, handleSearchChange, loggedIn, role }) => {
   };
 
   const redirectCreate = () => {
-    <Navigate to="/create"></Navigate>
+    navigate('/create');
   }
 
   return (

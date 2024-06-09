@@ -1,43 +1,46 @@
 .ContainerAuctionItem {
   display: flex;
   flex-direction: row;
-  /*alignItems: flex-start;*/
-  border: 1px solid black;
-  margin: 10vh;
-  padding: 2%;
-  background-color: #f5f7f8;
-  width: 85%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 20px 20px 20px;
+  padding: 10px;
+  background-color: white;
+  width: 500px;
 }
 
 .ImageAuctionItem {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-    width:72vh;
-    height: 30vh;
-    border: 1px solid black;
-
+.auction-title{
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .ImageAuctionItem img{
-
-    width:50vh;
-    height: 30vh;
+    width: 100%;
+    height: auto;
     border: 1px solid black;
 
 }
 
-.InfoAndButton{
+.InfoAndButton {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin: 1vh;
+  justify-content: flex-start;
+  margin-left: 1vh;
   width: 100%;
+  padding: 0;
+  margin-top: auto; /* Add this line */
 }
 
-.InfoAuctionItem h2 {
-  text-decoration: none;
-  color: #45474b;
-  font-size: 3vh;
-}
 
 .InfoAuctionItem p {
   color: black;
@@ -46,18 +49,18 @@
 
 .ButtonAuctionItem {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  margin-top: 2px;
 }
 
-.ButtonAuctionItem button {
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 30vh; /* Adjust the width of the input field */
-  height: 5vh; /* Adjust the height of the input field */
-  font-size: 16px; /* Adjust the font size of the input text */
-  padding: 5px; /* Adjust the padding inside the input field */
-  border-radius: 1vh; /* Optional: Add rounded corners */
+.ButtonAuctionItem Button {
   background-color: #f4ce14;
   border: none;
   color: white;
+  margin-right: 10px;
+}
+
+.reporting-dots{
+  color: #ccc;
+  font-size: 20px;
 }

@@ -13,7 +13,7 @@ const role = localStorage.getItem("role");
 const ItemListingsPage = () => {
   const [auctionListings, setAuctionListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const auctionsPerPage = 5;
+  const auctionsPerPage = 10;
   const userId = localStorage.getItem("userId");
   const isLoggedIn = userId ? true : false;
 
@@ -79,13 +79,13 @@ const ItemListingsPage = () => {
 
         <div className="auctions">
           {currentAuctions.map((listing) => (
-            <Link
+            <div
               to={`/auction/${listing._id}`}
               key={listing._id}
               className="no-underline"
             >
-              <AuctionItem item={listing} />
-            </Link>
+              <AuctionItem item={listing} isLoggedIn={isLoggedIn}/>
+            </div>
           ))}
         </div>
         <div className="pagination">
