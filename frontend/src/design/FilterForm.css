@@ -2,7 +2,6 @@
 
 .sidebar {
   background-color: #ffffff; /* Set the background color of the entire sidebar to white */
-  color: white; /* Set text color to white */
   position: sticky; /* Set the position to fixed */
   top: 23%;
   left: 1%;

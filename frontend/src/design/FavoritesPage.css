@@ -7,7 +7,7 @@
 .favorite-list {
   align-items: center;
   display: inline;
-  padding: 0; 
+  padding-left: 5%; 
 }
 .list-elements{
   list-style-type: none; 
@@ -19,4 +19,12 @@
 
 .page-title {
   text-align: center; /* Center the text horizontally */
+}
+.auctions {
+  display: flex;
+  height: auto;
+  flex-wrap: wrap;
+  align-content: center;
+  margin-left: 15vh;
+
 }
