@@ -1,6 +1,6 @@
 .App {
-    display: flex; /* Use flexbox */
-    flex-direction: column; /* Stack elements vertically */
+    display: flex; 
+    flex-direction: column; 
     min-height: 100vh;
     width: 100%;
 }
@@ -10,124 +10,9 @@
     font-size: 14;
     border: #45474b00;
 }
-/* SidebarForm.css */
-.UpperHeader {
-    width: 100%;
-    margin: 0; /* Remove margin */
-    padding: 0; /* Remove padding */
-    height: 5vh;
-    background-color: #45474B; /* Black background color */
-    display: flex; /* Use flexbox */
-    justify-content: flex-end; /* Align items to the right */
-    align-items: flex-end; /* Align items vertically */
-    margin-bottom:0;
-    top:0;
-    z-index:1;
-}
-
-.LowerHeader {
-    width: 100%;
-    margin: 0; /* Remove margin */
-    padding: 0; /* Remove padding */
-    height: 17vh;
-    background-color:#F5F7F8; /* Black background color */
-    /* Black background color */
-    display: flex; /* Use flexbox */
-    flex-direction: row; /* Stack elements vertically */
-    justify-content: space-between;
-    align-items: flex-end; 
-    border-radius: 1px;
-    border-bottom: 1px solid black; /* Add border with 1px width and solid black color */
-    border-radius: 1px;
-    position: sticky; /* Set position to sticky */
-    top: 0; /* Stick it to the top of the viewport */
-    z-index:10;
-}
-
-
-.UpperHeader ul {
-    list-style-type: none; /* Remove default list styles */
-    padding: 0;
-    margin-bottom: 0.7vh;
-}
-
-.UpperHeader li {
-    display: inline; /* Display list items inline */
-    margin-right: 5vh; /* Optional: Add some spacing between list items */
-}
-
-.UpperHeader li a {
-    text-decoration: none; /* Remove underline from anchor elements */
-    color: white; /* Change text color */
-    font-size: 2.3vh;
-}
-
-.UpperHeader li:first-child {
-    margin-left: 0;
-}
-
-
-
-.Title {
-    width: 100%;
-    margin: 0; /* Remove margin */
-    padding: 0; /* Add padding for spacing */
-    height: 17vh;
-    background-color: #F5F7F8; /* Black background color */
-    text-align: center; /* Center the content horizontally */
-    display: flex; /* Use flexbox */
-    /*align-items: center; */
-    justify-content: flex-start;
-
-}
-
-.Title h2 {
-    align-self: flex-end; /* Align the h2 element to the bottom */
-    font-size: 5vh;
-    margin: 3vh;
-    color: #F4CE14;
-}
-
-.List {
-    width: 100%;
-    margin: 0px 50px 0px 0px; /* Remove margin */
-    padding: 0px; /* Remove padding */
-    height: 17vh;
-    background-color: #F5F7F8; /* Black background color */
-    display: flex; /* Use flexbox */
-    justify-content: space-between; /* Align items to the right */
-    align-items: flex-end; /* Align items vertically */
-}
-
-.List ul {
-    list-style-type: none; /* Remove default list styles */
-    padding: 0;
-    margin-bottom: 3vh;
-}
-
-.List li {
-    display: inline; /* Display list items inline */
-    margin-right: 10vh; /* Optional: Add some spacing between list items */
-}
-
-.List li a {
-    text-decoration: none; /* Remove underline from anchor elements */
-    color: #45474B; /* Change text color */
-    font-size: 3vh;
-}
 
 .account-menu{
+    position: sticky;
+    z-index: 1000;
     width: 140px;
-}
-
-.active {
-  text-decoration: underline;
-}
-
-.inactive {
-  text-decoration: none;
-}
-.List-elements{
-    margin-right: 5%;
-    margin-left:5%;
 }

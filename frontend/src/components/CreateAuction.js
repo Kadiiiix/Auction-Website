@@ -251,14 +251,6 @@ const CreateAuction = ({ userId }) => {
               <Input />
             </Form.Item>
 
-            <Form.Item
-              label="Allow Instant Purchase"
-              name="allowInstantPurchase"
-              valuePropName="checked"
-              initialValue={false}
-            >
-              <Checkbox></Checkbox>
-            </Form.Item>
 
             <Form.Item
               label="Image"
