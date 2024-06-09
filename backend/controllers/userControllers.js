@@ -261,11 +261,9 @@ exports.addVendorRating = async (req, res) => {
   }
 };
 
-
 exports.getRecommendations = async (req, res) => {
   try {
     const { userId } = req.params;
-
 
     // Find user by userId
     const user = await User.findById(userId).populate("favorites");
@@ -287,13 +285,14 @@ exports.getRecommendations = async (req, res) => {
       const categoryRecommendations = await Auction.find({
         category,
         _id: { $nin: likedAuctions.map((auction) => auction._id) }, // Exclude liked auctions
-      }).limit(5 - recommendedAuctions.length);
+        closingDate: { $gte: new Date() }, // Filter out expired auctions
+      }).limit(6 - recommendedAuctions.length);
 
       // Append category recommendations to the overall recommendedAuctions array
       recommendedAuctions.push(...categoryRecommendations);
 
       // Break the loop if the maximum number of recommended auctions (5) is reached
-      if (recommendedAuctions.length >= 5) {
+      if (recommendedAuctions.length >= 6) {
         break;
       }
     }
@@ -304,6 +303,7 @@ exports.getRecommendations = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 
 exports.getAllUsers = async (req, res) => {
