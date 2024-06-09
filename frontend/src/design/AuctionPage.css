@@ -153,6 +153,11 @@
     /*background-color: gray;*/
 
   }
+
+  .carousel {
+    padding-top: 15px;
+
+  }
   
   .one-block {
     flex: 1;
