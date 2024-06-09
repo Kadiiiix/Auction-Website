@@ -23,21 +23,23 @@ const sendMessage = async (req, res) => {
 const getMessages = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { senderId } = req.query;  // Ensure this matches the query parameter you are sending
-    
+    const { senderId } = req.query; // Ensure this matches the query parameter you are sending
+
     const messages = await Message.find({
       $or: [
         { sender: senderId, receiver: userId },
-        { sender: userId, receiver: senderId }
-      ]
-    }).sort({ timestamp: 1 });
+        { sender: userId, receiver: senderId },
+      ],
+    }).populate({
+      path: "sender",
+      select: "photo", // Select only the 'photo' field from the referenced User model
+    });
 
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: "Failed to get messages", error });
   }
 };
-
 // Get all chats for a user
 const getAllMessages = async (req, res) => {
   try {

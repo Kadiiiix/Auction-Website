@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "antd";
-import "./../design/MessageSider.css"; // Import custom CSS for styling
+import "./../design/MessageSider.css";
 import SearchUser from "./SearchUser";
 
 function MessagesSider() {
