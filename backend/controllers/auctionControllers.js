@@ -252,7 +252,8 @@ exports.getSimilar = async (req, res) => {
     const similarProducts = await Auction.find({
       category: auction.category,
       _id: { $ne: auctionId },
-    }).limit(5); // Limit to 10 similar products
+      closingDate: { $gte: new Date() },
+    }).limit(8); // Limit to 10 similar products
 
     res.status(200).json(similarProducts);
   } catch (error) {
