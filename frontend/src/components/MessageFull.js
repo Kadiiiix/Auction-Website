@@ -12,7 +12,7 @@ const MessageFull = ({loggedIn}) => {
     const { Sider, Content } = Layout;
 
       const contentStyle = {
-        textAlign: 'center',
+        textAlign: "center",
       };
       const siderStyle = {
         textAlign: 'center',
@@ -22,25 +22,21 @@ const MessageFull = ({loggedIn}) => {
       };
       const layoutStyle = {
         borderRadius: 8,
-        overflow: "visible",
-        width: 'calc(100% - 8px)',
-        maxWidth: 'calc(100% - 8px)',
+        height:"auto",
       };
 
 
     return (
-        <>
-            <Layout style={layoutStyle}>
-                <Layout>
-                    <Sider width="25%" style={siderStyle}>
-                      <MessagesSider/>
-                    </Sider>
-                    <Content style={contentStyle}>
-                        <Messages/>
-                    </Content>
-                </Layout>
-            </Layout>
-        </>
+      <>
+        <Layout height="50%" style={layoutStyle}>
+            <Sider width="25%" style={siderStyle}>
+              <MessagesSider height="75%" />
+            </Sider>
+            <Content height="75%" style={contentStyle}>
+              <Messages />
+            </Content>
+        </Layout>
+      </>
     );
 };
 
