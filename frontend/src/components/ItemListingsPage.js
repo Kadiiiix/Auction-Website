@@ -77,7 +77,7 @@ const ItemListingsPage = () => {
           </div>
         ) : null}
 
-        <div className="auctions">
+        <div className="auctions-home">
           {currentAuctions.map((listing) => (
             <div
               to={`/auction/${listing._id}`}
