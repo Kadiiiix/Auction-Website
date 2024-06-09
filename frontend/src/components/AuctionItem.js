@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import { Link } from "react-router-dom";
 import { Button, notification, Form, Input, Select, Modal} from 'antd';
 import { HeartOutlined, InfoCircleOutlined, HeartFilled } from "@ant-design/icons";
 import "../design/AuctionItem.css";
@@ -145,15 +146,18 @@ function AuctionItem({ item, isLoggedIn }) {
 
       <div className="InfoAndButton">
         <div className="InfoAuctionItem">
+        <Link to={`/auction/${_id}`}>
           <p className="auction-title" style={{fontSize:"3vh"}}>{name}</p>
           <p>Condition: {condition}</p>
           <p>Closing Date: <Timer closingDate={closingDate}/></p>
           <p>Age: {age}</p>
           <p>Location: {location}</p>
+          </Link>
         </div>
 
+
         <div className="ButtonAuctionItem">
-          <Button>BID NOW</Button>
+          <Link to={`auction/${_id}`}><Button>BID NOW</Button></Link>
           {liked ? (
                 <>
                     <HeartFilled style={{ color: "grey", fontSize: "25px"}} onClick={handleRemoveFromFavorites}
