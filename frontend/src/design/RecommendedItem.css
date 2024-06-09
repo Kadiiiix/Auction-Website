@@ -1,0 +1,19 @@
+.ContainerRecommendedItem{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 0 20px 20px 20px;
+    padding: 10px;
+    background-color: white;
+    width: 300px;
+}
+
+  
+.ImageRecommendedItem {
+    width: 100%; /* Adjust as necessary */
+    height: 200px; /* Adjust as necessary */
+    background-size: cover;
+    background-position: center;
+  }
+  

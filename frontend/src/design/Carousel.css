@@ -43,3 +43,14 @@
   margin:0;
 }
 
+.recommended-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.carousel-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; /* Add space between items */
+  width: 100%;
+}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Carousel } from "antd";
 import "../design/Carousel.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import AuctionItem from "./AuctionItem";
+import { useNavigate } from "react-router-dom";
+import RecommendedItem from "./RecommendedItem";
 
 const RecommendationsCarousel = ({ userId }) => {
   const [recommendations, setRecommendations] = useState([]);
@@ -33,22 +33,37 @@ const RecommendationsCarousel = ({ userId }) => {
     window.location.reload();
   };
 
+  // Function to group recommendations into chunks of 3
+  const chunkArray = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  };
+
+  const groupedRecommendations = chunkArray(recommendations, 3);
+
   return (
-    <>
-      <Carousel arrows className="arrows">
-        {recommendations.map((product) => (
-          <div className="contents" key={product._id}>
-            <a
-              href={`/auction/${product._id}`}
-              onClick={(event) => handleItemClick(event, product._id)}
-              className="no-underline"
-            >
-              <AuctionItem margin="0" item={product} />
-            </a>
+    <Carousel arrows className="arrows">
+      {groupedRecommendations.map((group, index) => (
+        <div className="recommended-container">
+        <div className="carousel-group" key={index}>
+          {group.map((product) => (
+            <div className="carousel-item" key={product._id}>
+              <a
+                href={`/auction/${product._id}`}
+                onClick={(event) => handleItemClick(event, product._id)}
+                className="no-underline"
+              >
+                <RecommendedItem item={product} />
+              </a>
+            </div>
+          ))}
           </div>
-        ))}
-      </Carousel>
-    </>
+        </div>
+      ))}
+    </Carousel>
   );
 };
 
