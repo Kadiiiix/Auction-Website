@@ -92,7 +92,7 @@ const UserProfileSide = ({ id, loggedIn }) => {
         setUploading(true);
 
         try {
-            const response = await axios.post('http://localhost:4000/api/upload', formData, {
+            const response = await axios.post('http://localhost:4000/api/upload/single-image', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
