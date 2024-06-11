@@ -19,12 +19,21 @@
 
 .page-title {
   text-align: center; /* Center the text horizontally */
+  color:#F4CE14;
 }
 .auctions {
   display: flex;
   height: auto;
   flex-wrap: wrap;
   align-content: center;
-  margin-left: 30vh;
+  margin-left: 13%;
+
+}
+.list-elements {
+  display: flex;
+  height: auto;
+  flex-wrap: wrap;
+  align-content: center;
+  margin-left: 10%;
 
 }

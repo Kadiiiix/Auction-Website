@@ -69,22 +69,26 @@ exports.sendNotificationsAtClosing = async (req, res) => {
       return res.status(404).json({ error: "Auction not found" });
     }
 
-    // Get the highest bidder and the vendor
     const highestBidderId = auction.highestBidder;
     const vendorId = auction.createdBy;
     const bidderIds = auction.bidderIds;
     const highestBidder = await User.findById(highestBidderId);
-    const messageToBidders = `The auction for ${auction.name} has ended`;
 
-    // Create notifications for the highest bidder and the vendor
+    if(highestBidderId){
     const notificationToBidder = new Notification({
       userId: highestBidderId,
       message: `Congratulations! You won the auction for ${auction.name}.`,
     });
+    
 
-    const notificationToVendor = new Notification({
+    const notificationToVendor1 = new Notification({
       userId: vendorId,
-      message: `The auction for ${auction.name} has ended. The highest bid was ${auction.highestBid} by ${highestBidder.name}.`,
+      message: `The auction for ${auction.name} has ended. The highest bid was ${auction.highestBid} by ${highestBidder.username}.`,
+    });
+    }
+    const notificationToVendor2 = new Notification({
+      userId: vendorId,
+      message: `The auction for ${auction.name} has ended. There was no highest bidder.`,
     });
 
     if (highestBidderId && bidderIds && bidderIds.length > 0) {
@@ -95,22 +99,22 @@ exports.sendNotificationsAtClosing = async (req, res) => {
     if (filteredBidders.length > 0) {
         const notificationsToBidders = filteredBidders.map((bidderId) => ({
           userId: bidderId,
-          message: messageToBidders,
+          message: `The auction for ${auction.name} has ended`,
     }));
           await Promise.all([
           notificationToBidder.save(),
-          notificationToVendor.save(),
+          notificationToVendor1.save(),
           Notification.insertMany(notificationsToBidders),
         ]);
       } else {
         await Promise.all([
           notificationToBidder.save(),
-          notificationToVendor.save(),
+          notificationToVendor1.save(),
         ]);
       }
     } else {
       await Promise.all([
-        notificationToVendor.save(),
+        notificationToVendor2.save(),
       ]);
     }
 
@@ -139,12 +143,16 @@ async function sendExpirationNotifications() {
 
       // Create notifications for the highest bidder and the vendor
       const messageToBidder = `Congratulations! You won the auction for ${auction.name}.`;
-      const messageToVendor = `The auction for ${auction.name} has ended. The highest bid was ${auction.highestBid} by ${highestBidder.username}.`;
       const messageToBidders = `The auction for ${auction.name} has ended`;
-      
-      const notificationToVendor = new Notification({
+      if(highestBidderId){
+      const notificationToVendor1 = new Notification({
          userId: vendorId,
-         message: messageToVendor,
+         message:`The auction for ${auction.name} has ended. The highest bid was ${auction.highestBid} by ${highestBidder.username}.`,
+      });
+      }
+      const notificationToVendor2 = new Notification({
+         userId: vendorId,
+         message:`The auction for ${auction.name} has ended. There was no highest bid`,
       });
 
       if (highestBidder) {
@@ -165,17 +173,17 @@ async function sendExpirationNotifications() {
 
           await Promise.all([
             notificationToHighestBidder.save(),
-            notificationToVendor.save(),
+            notificationToVendor1.save(),
             Notification.insertMany(notificationsToBidders),
           ]);
         } else {
           await Promise.all([
             notificationToHighestBidder.save(),
-            notificationToVendor.save(),
+            notificationToVendor1.save(),
           ]);
         }
       } else {
-        await notificationToVendor.save();
+        await notificationToVendor2.save();
       }
 
       console.log(
